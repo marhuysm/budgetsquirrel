@@ -2,14 +2,20 @@
 <html>
 
 <head>
+    <meta charset="utf-8">
     <title>Inscription</title>
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100;200;300;400;500&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="css/skeleton.css">
+    <link rel="stylesheet" href="css/normalize.css">
+    <link rel="stylesheet" href="css/app.css">
 </head>
 
 <body>
     <header>Budget Squirrel</header>
 
-    <div>
+    <div class="container">
         <h1>Créez votre profil</h1>
         <form>
             <!-- add action = "action_page.php"-->
@@ -47,20 +53,20 @@
             </section>
 
             <section>
-                <fieldset>
+                <fieldset class="pic-selector">
                     <legend>Choisissez votre photo de profil :</legend>
-                    <input type="radio" id="photo1" name="photoprofil" value="photo1">
-                    <label for="photoprofil">Photo 1 </label>
+                    <input type="radio" id="politecat" name="photoprofil" value="politecat">
+                    <label for="politecat" class="drinkpic-cc politecat">Polite cat </label>
 
-                    <input type="radio" id="photo2" name="photoprofil" value="photo2">
-                    <label for="photo2">Photo2</label>
+                    <input type="radio" id="froggy" name="photoprofil" value="froggy">
+                    <label for="froggy">Froggy</label>
 
                     <input type="radio" id="photo3" name="photoprofil" value="photo3">
                     <label for="photo3">Photo3</label>
                 </fieldset>
             </section>
 
-            <input type="submit" value="Inscription">
+            <input type="submit" class="mybutton full_button" value="Inscription">
         </form>
     </div>
     <footer>
