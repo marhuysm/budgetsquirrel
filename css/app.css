@@ -45,7 +45,7 @@ p{
     top: -25px;
 }
 
-.landing_message {
+.centered_message {
     width: 100%;
     height: 500px;
     display: block;
@@ -54,7 +54,7 @@ p{
     text-align: center;
 }
 
-.landing_message h2{
+.centered_message h2{
     font-style: normal;
     font-weight: normal;
     font-size: 25px;
@@ -93,9 +93,15 @@ footer {
     transform: translate(-2px, -1px);
     
 }
-
+.pic-selector{
+    border: none;
+}
 .pic-selector input:active +.drinkpic-cc{
     opacity: .9;
+}
+
+.pic-selector input[type="radio"]{
+    visibility:hidden;
 }
 
 .pic-selector input:checked +.drinkpic-cc{
@@ -124,10 +130,107 @@ footer {
 }
 
 .politecat{
-    background-image: url(../img/politecat.jpeg);
+    background-image: url(../img/politecat.jpeg); 
+    width: 70px;
+    border-radius: 100%;
+
 }
 
-.politecat{
+.froggy{
     background-image: url(../img/froggy.png);
+    width: 70px;
+    border-radius: 100%;
 }
 
+.racoon{
+    background-image: url(../img/racoon.jpg);
+    width: 70px;
+    border-radius: 100%;
+
+}
+
+
+header{
+    size:100%;
+    background-color: #5D4037 ;
+    display: flex;
+    align-items: center;
+}
+
+header p {
+    color: #FAF4EA;
+    font-size: 20px;
+    margin: 0px;
+}
+
+header img{
+    height: 60px;
+    width: 60px;
+    margin: 2px 10px 2px 10px;
+}
+
+.container {
+    background-color: white;
+    padding: 5px 40px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    border-radius: 20px;
+    box-shadow: 5px 5px 10px 2px rgba(0, 0, 0, .1);
+    
+}
+
+.landing_container{
+    background-color: transparent;
+    box-shadow: none;
+}
+
+.container h1 {
+    text-align: center;
+    font-size: 35px;
+}
+
+.container h2 {
+    font-size: 25px;
+}
+
+.container h3{
+    font-size: 18px;
+}
+
+.footsize_text {
+    font-size: 12px;
+}
+
+nav ul{
+    list-style: none;
+    margin-bottom: 0px;
+}
+
+nav ul li {
+    display: inline;
+    padding: 0px 20px 0px 20px;
+}
+
+nav.menu {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    flex-grow: 1;
+    justify-content: space-between;
+}
+
+input[type="submit"]{
+    font-size: 15px;
+}
+
+.transaction-selection{
+    display: flex;
+    justify-content: space-around;
+    
+}
+
+.logo-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}

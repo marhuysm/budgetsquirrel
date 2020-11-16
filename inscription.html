@@ -13,7 +13,12 @@
 </head>
 
 <body>
-    <header>Budget Squirrel</header>
+    <header>
+        
+        <img src="img/logo.png">
+        <p>Budget Squirrel</p>
+
+    </header>
 
     <div class="container">
         <h1>Créez votre profil</h1>
@@ -22,49 +27,68 @@
 
             <section>
                 <h2>Complétez les informations suivantes :</h2>
-                <p>
-                    <label for="prenom">
-                       <span>Prénom</span>
-                    </label>
-                    <input type="text" id="prenom" name="prenom"><br>
-                </p>
-                <p>
-                    <label for="nom">
-                        
-                        <span>Nom</span>
-                    </label>
-                    <input type="text" id="nom" name="nom"><br>
-                </p>
+                <div class="row">
+                    <div class="six columns">
+                        <p>
+                            <label for="prenom">
+                               <span>Prénom</span>
+                            </label>
+                            <input type="text" id="prenom" name="prenom"><br>
+                        </p>
+                    </div>
 
-                <p>
-                    <label for="datenaiss">
-                        <span>Date de naissance</span>
-                    </label>
-                    <input type="date" id="datenaiss" name="datenaiss"><br>
-                </p>
+                    <div class="six columns">
+                        <p>
+                            <label for="nom">
+                                
+                                <span>Nom</span>
+                            </label>
+                            <input type="text" id="nom" name="nom"><br>
+                        </p>
+                    </div>
+                </div>
 
-                <p>
-                    <label for="niss">
-                        <span>NISS</span>
-                    </label>
-                    <input type="text" id="niss" name="niss" , placeholder="00 00 00 000 00" minlength="11" maxlength="11" pattern="[0-9]{2}[.\- ]{0,1}[0-9]{2}[.\- ]{0,1}[0-9]{2}[.\- ]{0,1}[0-9]{3}[.\- ]{0,1}[0-9]{2}"><br>
-                    <span>Rappel : un NISS est composé de exactement 11 chiffres (vous n'avez pas besoin d'introduire d'espace ou d'autres caractères)</span>
-                </p>
+                <div class="row">
+                    <div class="six columns">
+                        <p>
+                            <label for="datenaiss">
+                                <span>Date de naissance</span>
+                            </label>
+                            <input type="date" id="datenaiss" name="datenaiss"><br>
+                        </p>
+                    </div>
+                    
+                    <div class="six columns">
+                        <p>
+                            <label for="niss">
+                                <span>NISS</span>
+                            </label>
+                            <input type="text" id="niss" name="niss" , placeholder="00 00 00 000 00" minlength="11" maxlength="11" pattern="[0-9]{2}[.\- ]{0,1}[0-9]{2}[.\- ]{0,1}[0-9]{2}[.\- ]{0,1}[0-9]{3}[.\- ]{0,1}[0-9]{2}"><br>
+                            <span class="footsize_text">Rappel : un NISS est composé de exactement 11 chiffres (vous n'avez pas besoin d'introduire d'espace ou d'autres caractères)</span>
+                        </p>
+                    </div>
+                </div>
+
+
+
+
+
+
             </section>
 
             <section>
                 <fieldset class="pic-selector">
                     <legend>Choisissez votre photo de profil :</legend>
                     <input type="radio" id="politecat" name="photoprofil" value="politecat">
-                    <label for="politecat" class="drinkpic-cc politecat">Polite cat </label>
+                    <label for="politecat" class="drinkpic-cc politecat"></label>
 
                     <input type="radio" id="froggy" name="photoprofil" value="froggy">
-                    <label for="froggy">Froggy</label>
+                    <label for="froggy" class="drinkpic-cc froggy"></label>
 
-                    <input type="radio" id="photo3" name="photoprofil" value="photo3">
-                    <label for="photo3">Photo3</label>
+                    <input type="radio" id="racoon" name="photoprofil" value="racoon">
+                    <label for="racoon" class="drinkpic-cc racoon"></label>
                 </fieldset>
-            </section>
+            </section> <br>
 
             <input type="submit" class="mybutton full_button" value="Inscription">
         </form>

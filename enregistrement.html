@@ -2,8 +2,14 @@
 <html>
 
 <head>
+    <meta charset="utf-8">
     <title>Enregistrement</title>
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100;200;300;400;500&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="css/skeleton.css">
+    <link rel="stylesheet" href="css/normalize.css">
+    <link rel="stylesheet" href="css/app.css">
 </head>
 
 <body>
@@ -19,189 +25,228 @@
     </nav>
 
     <!-- Selection hide / parties grisées en fonction du bouton de type de transaction -->
-    <div>
-        <div>
-            <h2>Enregistrer une nouvelle dépense</h2>
-            <form>
-                <p>
-                    <label for="montanttransaction">
-                        <span>Montant</span>
-                    </label>
-                    <input type="number" id="montant" name="montant">
-                </p>
+    <div class="container">
+        <h1>Enregistrer une nouvelle dépense</h1>
+        <h2>Complétez les informations suivantes :</h2>
+        <form>
+            <div class="row">
+                <div class="four columns">
+                    <p>
+                        <label for="montanttransaction">
+                            <span>Montant</span>
+                        </label>
+                        <input type="number" id="montant" name="montant">
+                    </p>
 
-                <p>
-                    <label for="datetransaction">
-                        <span>Date</span>
-                    </label>
-                    <input type="date" id="datetransaction" name="datetransaction">
-                </p>
+                </div>
 
+                <div class="four columns">
+
+                    <p>
+                        <label for="datetransaction">
+                            <span>Date</span>
+                        </label>
+                        <input type="date" id="datetransaction" name="datetransaction">
+                    </p>
+
+                </div>
+
+                <div class="four columns">
+                    <p>
+                        <label for="catégorietransact">
+                            <span>Catégorie de transaction</span>
+                        </label>
+                        <input list="catégorietransact" name="catégorieselect">
+                        <datalist id="catégorietransact">
+
+                            <option value="accessoires">
+                            <option value="argent de poche">
+                            <option value="autre">
+                            <option value="cadeau">
+                            <option value="culture">
+                            <option value="courses alimentaires">
+                            <option value="frais médicaux">
+                            <option value="pension">
+                            <option value="restaurant">
+                            <option value="salaire">
+                            <option value="transports">
+                            <option value="vêtements">
+                            <option value="voyage">
+
+                        </datalist>
+                    </p>
+                </div>
+
+            </div>
+
+            <h3>Sélectionnez le type de transaction effectuée :</h3>
+
+            <div class="transaction-selection">
+
+                <input type="radio" id="cash" name="typetransact" value="cash">
+                <label for="cash">Payement en liquide</label>
+    
+                <input type="radio" id="virement" name="typetransact" value="virement">
+                <label for="virement">Virement banquaire</label>
+    
+                <input type="radio" id="carte" name="typetransact" value="carte">
+                <label for="carte">Payement par carte</label> <br>
+        
+            </div>
+            
+            <fieldset>
+                <legend>Payement par carte</legend>
                 <p>
-                    <label for="catégorietransact">
-                        <span>Catégorie de transaction</span>
+                    <label for="carteselect">
+                        <span>Carte utilisée</span>
                     </label>
-                    <input list="catégorietransact" name="catégorieselect">
-                    <datalist id="catégorietransact">
-                    
-                        <option value="accessoires">
-                        <option value="argent de poche">
-                        <option value="autre">
-                        <option value="cadeau">
-                        <option value="culture">
-                        <option value="courses alimentaires">
-                        <option value="frais médicaux">
-                        <option value="pension">
-                        <option value="restaurant">
-                        <option value="salaire">
-                        <option value="transports">
-                        <option value="vêtements">
-                        <option value="voyage">
+                    <input list="carteselect" name="carteselect">
+                    <datalist id="carteselect">
+                        <option value="Visa Carrefour">
+                        <option value="Prepaid Bpost">
+                        <option value="Débit BNP">
 
                     </datalist>
                 </p>
+            </fieldset>
 
-                <fieldset>
-                    <legend>Sélectionnez le type de transaction effectuée :</legend>
-                    <input type="radio" id="cash" name="typetransact" value="cash">
-                    <label for="cash">Payement en liquide</label>
-
-                    <input type="radio" id="virement" name="typetransact" value="virement">
-                    <label for="virement">Virement banquaire</label>
-
-                    <input type="radio" id="carte" name="typetransact" value="carte">
-                    <label for="carte">Payement par carte</label> <br>
-                </fieldset>
-
-
-                <fieldset>
-                    <legend>Payement par carte</legend>
-                    <p>
-                        <label for="carteselect">
-                            <span>Carte utilisée</span>
-                        </label>
-                        <input list="carteselect" name="carteselect">
-                        <datalist id="carteselect">
-                            <option value="Visa Carrefour">
-                            <option value="Prepaid Bpost">
-                        <option value="Débit BNP">
-    
-                        </datalist> 
-                    </p>
-                </fieldset>
-
-                <fieldset>
-                    <legend>Virement banquaire</legend>
-                    <p>
-                        <label for="benefdest">
-                            <span>Bénéficiaire</span>
-                        </label> <br>
-                        <input type="text" id="benefdest" name="benefdest" placeholder="Nom du bénéficiaire">
+            <fieldset>
+                <legend>Virement banquaire</legend>
+                <p>
+                    <label for="benefdest">
+                        <span>Bénéficiaire</span>
+                    </label> <br>
+                    <input type="text" id="benefdest" name="benefdest" placeholder="Nom du bénéficiaire">
                     </input>
-                    </p>
-                    <p>
-                        <label for="benefdest">
-                            <span>Communication</span>
-                        </label> <br>
-                        <textarea id="benefdest" name="benefdest" rows="4" cols="50" placeholder="Rentrez éventuellement la communication utilisée"></textarea>
-                    </p>
-                </fieldset>
-
-                <input type="submit" value="Ajouter cette dépense">
-            </form>
-        </div>
-
-        <div>
-            <h2>Enregistrer un nouveau revenu</h2>
-            <form>
-                <p>
-                    <label for="montanttransaction">
-                        <span>Montant</span>
-                    </label>
-                    <input type="number" id="montant" name="montant">
                 </p>
-
                 <p>
-                    <label for="datetransaction">
-                        <span>Date</span>
-                    </label>
-                    <input type="date" id="datetransaction" name="datetransaction">
+                    <label for="benefdest">
+                        <span>Communication</span>
+                    </label> <br>
+                    <textarea id="benefdest" name="benefdest" rows="4" cols="50"
+                        placeholder="Rentrez éventuellement la communication utilisée"></textarea>
                 </p>
+            </fieldset>
+            <br>
 
-                <p>
-                    <label for="catégorietransact">
-                        <span>Catégorie de transaction</span>
-                    </label>
-                    <input list="catégorietransact" name="catégorieselect">
-                    <datalist id="catégorietransact">
-                    
-                        <option value="accessoires">
-                        <option value="argent de poche">
-                        <option value="autre">
-                        <option value="cadeau">
-                        <option value="culture">
-                        <option value="courses alimentaires">
-                        <option value="frais médicaux">
-                        <option value="pension">
-                        <option value="restaurant">
-                        <option value="salaire">
-                        <option value="transports">
-                        <option value="vêtements">
-                        <option value="voyage">
-
-                    </datalist>
-                </p>
-
-                <fieldset>
-                    <legend>Sélectionnez le type de transaction effectuée :</legend>
-                    <input type="radio" id="cash" name="typetransact" value="cash">
-                    <label for="cash">Payement en liquide</label>
-
-                    <input type="radio" id="virement" name="typetransact" value="virement">
-                    <label for="virement">Virement banquaire</label>
-
-                    <input type="radio" id="carte" name="typetransact" value="carte">
-                    <label for="carte">Payement par carte</label> <br>
-                </fieldset>
-
-
-                <fieldset>
-                    <legend>Payement par carte</legend>
-                    <p>
-                        <label for="carteselect">
-                            <span>Carte utilisée</span>
-                        </label>
-                        <input list="carteselect" name="carteselect">
-                        <datalist id="carteselect">
-                            <option value="Visa Carrefour">
-                            <option value="Prepaid Bpost">
-                        <option value="Débit BNP">
-    
-                        </datalist> 
-                    </p>
-                </fieldset>
-
-                <fieldset>
-                    <legend>Virement banquaire</legend>
-                    <p>
-                        <label for="benefdest">
-                            <span>Bénéficiaire</span>
-                        </label> <br>
-                        <input type="text" id="benefdest" name="benefdest" placeholder="Nom du bénéficiaire">
-                    </input>
-                    </p>
-                    <p>
-                        <label for="benefdest">
-                            <span>Communication</span>
-                        </label> <br>
-                        <textarea id="benefdest" name="benefdest" rows="4" cols="50" placeholder="Rentrez éventuellement la communication utilisée"></textarea>
-                    </p>
-                </fieldset>
-
-                <input type="submit" value="Ajouter ce revenu">
-            </form>
-        </div>
+            <input type="submit" class="mybutton full_button" value="Ajouter cette dépense">
+        </form>
     </div>
+
+    <div class="container">
+        <h1>Enregistrer un nouveau revenu</h1>
+        <h2>Complétez les informations suivantes :</h2>
+        <form>
+            <div class="row">
+                <div class="four columns">
+                    <p>
+                        <label for="montanttransaction">
+                            <span>Montant</span>
+                        </label>
+                        <input type="number" id="montant" name="montant">
+                    </p>
+
+                </div>
+
+                <div class="four columns">
+
+                    <p>
+                        <label for="datetransaction">
+                            <span>Date</span>
+                        </label>
+                        <input type="date" id="datetransaction" name="datetransaction">
+                    </p>
+
+                </div>
+
+                <div class="four columns">
+                    <p>
+                        <label for="catégorietransact">
+                            <span>Catégorie de transaction</span>
+                        </label>
+                        <input list="catégorietransact" name="catégorieselect">
+                        <datalist id="catégorietransact">
+
+                            <option value="accessoires">
+                            <option value="argent de poche">
+                            <option value="autre">
+                            <option value="cadeau">
+                            <option value="culture">
+                            <option value="courses alimentaires">
+                            <option value="frais médicaux">
+                            <option value="pension">
+                            <option value="restaurant">
+                            <option value="salaire">
+                            <option value="transports">
+                            <option value="vêtements">
+                            <option value="voyage">
+
+                        </datalist>
+                    </p>
+                </div>
+
+            </div>
+
+            <h3>Sélectionnez le type de transaction effectuée :</h3>
+
+            <div class="transaction-selection">
+
+                <span>
+                    <input type="radio" id="cash" name="typetransact" value="cash">
+                    <label for="cash">Payement en liquide</label>    
+                </span>
+
+                <span>
+                    <input type="radio" id="virement" name="typetransact" value="virement">
+                    <label for="virement">Virement banquaire</label>
+                </span>
+
+                <span>
+                    <input type="radio" id="carte" name="typetransact" value="carte">
+                    <label for="carte">Payement par carte</label> <br>
+                </span>
+            </div>
+
+
+            <fieldset>
+                <legend>Payement par carte</legend>
+                <p>
+                    <label for="carteselect">
+                        <span>Carte utilisée</span>
+                    </label>
+                    <input list="carteselect" name="carteselect">
+                    <datalist id="carteselect">
+                        <option value="Visa Carrefour">
+                        <option value="Prepaid Bpost">
+                        <option value="Débit BNP">
+
+                    </datalist>
+                </p>
+            </fieldset>
+
+            <fieldset>
+                <legend>Virement banquaire</legend>
+                <p>
+                    <label for="benefdest">
+                        <span>Bénéficiaire</span>
+                    </label> <br>
+                    <input type="text" id="benefdest" name="benefdest" placeholder="Nom du bénéficiaire">
+                    </input>
+                </p>
+                <p>
+                    <label for="benefdest">
+                        <span>Communication</span>
+                    </label> <br>
+                    <textarea id="benefdest" name="benefdest" rows="4" cols="50"
+                        placeholder="Rentrez éventuellement la communication utilisée"></textarea>
+                </p>
+            </fieldset>
+            <br>
+
+            <input type="submit" class="mybutton full_button" value="Ajouter ce revenu">
+        </form>
+    </div>
+
     <footer>
         <p>Ce projet a été développé dans le cadre du cours de conception et gestion de banques de données (MA2 STIC
             ULB)
