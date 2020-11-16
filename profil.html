@@ -2,12 +2,12 @@
 <html>
 
 <head>
-    <title>nscription</title>
+    <title>Profil</title>
     <!-- <link rel="stylesheet" href="style.css"> -->
 </head>
 
 <body>
-    <nav class = menu>
+    <nav class=menu>
         <header><a href="landing.html">Budget Squirrel</a></header>
         <ul>
             <li><a href="historique.html">Historique</a></li>
@@ -15,7 +15,7 @@
             <li><a href="stat.html">Statistiques</a></li>
             <li><a href="profil.html">Profil</a></li>
             <li>Déconnexion</li>
-          </ul>
+        </ul>
     </nav>
 
     <div>
@@ -30,19 +30,34 @@
             <div>
                 <h3>Ajouter une nouvelle carte :</h3>
                 <form>
-                    <label for="nomcarte">Nom de carte</label>
-                    <input type="text" id="nomcarte" name="nomcarte">
-    
-                    <label for="numerocarte">N° de carte</label>
-                    <input type="text" id="nom" name="nom">
+                    <p>
+                        <label for="nomcarte">
+                            <span>Nom de carte</span>
+                        </label>
+                        <input type="text" id="nomcarte" name="nomcarte">
+                    </p>
 
-                    <input list="typecarte" name="typec">
+                    <p>
+                        <label for="numerocarte">
+                            <span>N° de carte</span>
+                        </label>
+                        <input type="text" id="nom" name="nom">
+                    </p>
+
+                    <p>
+                        <label for="typecarte">
+                            <span>Type de carte</span>
+                        </label> 
+                        <input list="typecarte" name="typec">
                         <datalist id="typecarte">
-                        <option value="Visa">
-                        <option value="Mastercard">
-                        <option value="Visa Prepaid">
-                        <option value="Maestro">
+                            <option value="Visa">
+                            <option value="Mastercard">
+                            <option value="Visa Prepaid">
+                            <option value="Maestro">
                         </datalist>
+                    </p>
+
+
                     <input type="submit" value="Ajouter">
                 </form>
             </div>
@@ -50,12 +65,17 @@
             <div>
                 <h3>Suprimer une carte :</h3>
                 <form>
-                    <input list="cartesdispo" name="cartesuppr">
-                        <datalist id="cartesdispo">
+                    <p>
+                        <label for="cartedispo">
+                            <span>Carte sélectionnée</span>
+                        </label>
+                        <input list="cartesdispo" name="cartesuppr">
+                    </p>
+                    <datalist id="cartesdispo">
                         <option value="Visa Carrefour">
                         <option value="Prepaid Bpost">
                         <option value="Débit BNP">
-                        </datalist>
+                    </datalist>
                     <input type="submit" value="Supprimer">
                 </form>
             </div>
@@ -81,7 +101,8 @@
 
     </div>
     <footer>
-        <p>Ce projet a été développé dans le cadre du cours de conception et gestion de banques de données (MA2 STIC ULB)
+        <p>Ce projet a été développé dans le cadre du cours de conception et gestion de banques de données (MA2 STIC
+            ULB)
         </p>
     </footer>
 </body>
