@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>nscription</title>
+    <!-- <link rel="stylesheet" href="style.css"> -->
+</head>
+
+<body>
+    <header>Budget Squirrel</header>
+
+    <div>
+        <form> <!-- add action = "action_page.php"-->
+            <h2>Choisissez votre photo de profil :</h2>
+                <input type="radio" id="photo1" name="photoprofil" value="photo1">
+                <label for="photoprofil">Photo 1 </label>
+
+                <input type="radio" id="photo2" name="photoprofil" value="photo2">
+                <label for="photo2">Photo2</label>
+
+                <input type="radio" id="photo3" name="photoprofil" value="photo3">
+                <label for="photo3">Photo3</label>
+
+            <h2>Complétez les informations suivantes :</h2>
+                <label for="prenom">Prénom</label>
+                <input type="text" id="prenom" name="prenom"><br>
+
+                <label for="nom">Nom</label>
+                <input type="text" id="nom" name="nom"><br>
+
+                <label for="datenaiss">Date de naissance</label>
+                <input type="date" id="datenaiss" name="datenaiss"><br>
+
+                <label for="niss">NISS</label>
+                <input type="number" id="niss" name="niss", minlength="11" maxlength="11"><br>
+                <p>N'oubliez pas que votre NISS doit contenir 11 chiffres</p>
+            <input type="submit" value="Inscription">
+        </form>
+    </div>
+    <footer>
+        <p>Ce projet a été développé dans le cadre du cours de conception et gestion de banques de données (MA2 STIC
+            ULB)
+        </p>
+    </footer>
+</body>
+
+</html>
