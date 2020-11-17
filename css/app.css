@@ -72,7 +72,8 @@ footer {
     border-width: 4px;
     border-color: #77B02F !important;
     font-weight: bold;
-
+    justify-content: center;
+    align-items: center;
 }
 
 .transp_button{
@@ -233,4 +234,35 @@ input[type="submit"]{
     display: flex;
     flex-direction: row;
     align-items: center;
+}
+
+.logo-container a{
+    color: #FAF4EA;
+    text-decoration: none;
+    font-size: 20px;
+    transition: color ease 200ms;
+    
+}
+
+.logo-container a:hover{
+    color: #77B02F;
+}
+
+.menu ul a{
+    color: #FAF4EA;
+    text-decoration: none;
+    transition: color ease 200ms;
+}
+
+.menu ul a:hover{
+    color: #77B02F;
+}
+
+.pages{
+    font-weight: bold;
+}
+
+.container input[type="submit"]{
+    display: flex;
+    justify-content: center;
 }
