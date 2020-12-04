@@ -16,7 +16,12 @@ A PHP project for our M2 database course
 - stat.html : simple version html de l'écran de statistiques
 - utils.js : fichier javascript. Pour l'instant seulement utilisé pour faire le lien entre les pages (onclick), mais sera aussi utile pour afficher / cacher des éléments du formulaire d'ajout de transaction
 
-Pour faire fonctionner le projet : 
+### Note Marie : 
+
+Hello ! Pour l'instant, je n'ai pas pu encore avancer sur la partie php, j'ai passé la journée à étudier les scripts sql! Mais je m'occupe d'au moins la page d'inscription pour samedi 5 décembre. Mais n'hésite pas à explorer et modifier des trucs en attendant. J'ai aussi mis des commentaires sur les données à enregistrer dans le drive (Trad EA-relationnel)
+
+
+## Pour faire fonctionner le projet : 
 1. Démarrer xammp
 2. Tout mettre dans un dossier budgetsquirrel dans xammp/htdocs
 3. Ouvrir localhost/phpmyadmin sur son navigateur
