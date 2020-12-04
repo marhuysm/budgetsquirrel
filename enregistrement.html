@@ -1,6 +1,18 @@
 <!DOCTYPE html>
 <html>
 
+    <script src= 
+    "https://code.jquery.com/jquery-1.12.4.min.js"> 
+     $(document).ready(function() { 
+                $('input[type="radio"]').click(function() { 
+                    var inputValue = $(this).attr("value"); 
+                    var targetBox = $("." + inputValue); 
+                    $(".selectt").not(targetBox).hide(); 
+                    $(targetBox).show(); 
+                }); 
+            }); 
+        </script> 
+
 <head>
     <meta charset="utf-8">
     <title>Enregistrement</title>
@@ -37,16 +49,18 @@
 
     <!-- Selection hide / parties grisées en fonction du bouton de type de transaction -->
     <div class="container">
-        <h1>Enregistrer une nouvelle dépense</h1>
+        <h1>Enregistrer une nouvelle transaction</h1>
         <h2>Complétez les informations suivantes :</h2>
-        <form>
+        <form action="valider_transaction.php">
             <div class="row">
                 <div class="four columns">
                     <p>
                         <label for="montanttransaction">
                             <span>Montant</span>
                         </label>
-                        <input type="number" id="montant" name="montant">
+                        <input type="number" id="montant" name="montant"> <br> 
+                        <span class="footsize_text">Vous pouvez entrer un montant négatif (précédé de "-"), qui sera donc considéré comme une dépense, ou positif, et ce sera alors un revenu .</span>
+
                     </p>
 
                 </div>
@@ -67,24 +81,25 @@
                         <label for="catégorietransact">
                             <span>Catégorie de transaction</span>
                         </label>
-                        <input list="catégorietransact" name="catégorieselect">
-                        <datalist id="catégorietransact">
+                        <select name="catégorietransact">
 
-                            <option value="accessoires">
-                            <option value="argent de poche">
-                            <option value="autre">
-                            <option value="cadeau">
-                            <option value="culture">
-                            <option value="courses alimentaires">
-                            <option value="frais médicaux">
-                            <option value="pension">
-                            <option value="restaurant">
-                            <option value="salaire">
-                            <option value="transports">
-                            <option value="vêtements">
-                            <option value="voyage">
+                            <option value="accessoires">accessoires</option>
+                            <option value="argent de poche">argent de poche</option>
+                            <option value="autre">autre</option>
+                            <option value="cadeau">cadeau</option>
+                            <option value="culture">culture</option>
+                            <option value="courses alimentaires">courses alimentaires</option>
+                            <option value="frais médicaux">frais médicaux</option>
+                            <option value="pension">pension</option>
+                            <option value="restaurant">restaurant</option>
+                            <option value="salaire">salaire</option>
+                            <option value="transports">transports</option>
+                            <option value="vêtements">vêtements</option>
+                            <option value="voyage">voyage</option>
 
-                        </datalist>
+                        </select> <br> 
+                        <span class="footsize_text">Description de la catégorie sélectionnée</span>
+
                     </p>
                 </div>
 
@@ -140,117 +155,7 @@
             </fieldset>
             <br>
 
-            <input type="submit" class="mybutton full_button" value="Ajouter cette dépense">
-        </form>
-    </div>
-
-    <div class="container">
-        <h1>Enregistrer un nouveau revenu</h1>
-        <h2>Complétez les informations suivantes :</h2>
-        <form>
-            <div class="row">
-                <div class="four columns">
-                    <p>
-                        <label for="montanttransaction">
-                            <span>Montant</span>
-                        </label>
-                        <input type="number" id="montant" name="montant">
-                    </p>
-
-                </div>
-
-                <div class="four columns">
-
-                    <p>
-                        <label for="datetransaction">
-                            <span>Date</span>
-                        </label>
-                        <input type="date" id="datetransaction" name="datetransaction">
-                    </p>
-
-                </div>
-
-                <div class="four columns">
-                    <p>
-                        <label for="catégorietransact">
-                            <span>Catégorie de transaction</span>
-                        </label>
-                        <input list="catégorietransact" name="catégorieselect">
-                        <datalist id="catégorietransact">
-
-                            <option value="accessoires">
-                            <option value="argent de poche">
-                            <option value="autre">
-                            <option value="cadeau">
-                            <option value="culture">
-                            <option value="courses alimentaires">
-                            <option value="frais médicaux">
-                            <option value="pension">
-                            <option value="restaurant">
-                            <option value="salaire">
-                            <option value="transports">
-                            <option value="vêtements">
-                            <option value="voyage">
-
-                        </datalist>
-                    </p>
-                </div>
-
-            </div>
-
-            <h3>Sélectionnez le type de transaction effectuée :</h3>
-
-            <div class="transaction-selection">
-
-                    <input type="radio" id="cash" name="typetransact" value="cash">
-                    <label for="cash">Payement en liquide</label>    
-
-
-                    <input type="radio" id="virement" name="typetransact" value="virement">
-                    <label for="virement">Virement banquaire</label>
-
-                    
-                    <input type="radio" id="carte" name="typetransact" value="carte">
-                    <label for="carte">Payement par carte</label> <br>
-            </div>
-
-
-            <fieldset>
-                <legend>Payement par carte</legend>
-                <p>
-                    <label for="carteselect">
-                        <span>Carte utilisée</span>
-                    </label>
-                    <input list="carteselect" name="carteselect">
-                    <datalist id="carteselect">
-                        <option value="Visa Carrefour">
-                        <option value="Prepaid Bpost">
-                        <option value="Débit BNP">
-
-                    </datalist>
-                </p>
-            </fieldset>
-
-            <fieldset>
-                <legend>Virement banquaire</legend>
-                <p>
-                    <label for="benefdest">
-                        <span>Bénéficiaire</span>
-                    </label> <br>
-                    <input type="text" id="benefdest" name="benefdest" placeholder="Nom du bénéficiaire">
-                    </input>
-                </p>
-                <p>
-                    <label for="benefdest">
-                        <span>Communication</span>
-                    </label> <br>
-                    <textarea id="benefdest" name="benefdest" rows="4" cols="50"
-                        placeholder="Rentrez éventuellement la communication utilisée"></textarea>
-                </p>
-            </fieldset>
-            <br>
-
-            <input type="submit" class="mybutton full_button" value="Ajouter ce revenu">
+            <input type="submit" class="mybutton full_button" value="Ajouter cette transaction">
         </form>
     </div>
 

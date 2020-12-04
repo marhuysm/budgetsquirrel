@@ -22,17 +22,16 @@
     </div>
     <div class="container landing_container">
         <div class="centered_message">
-            <h2>Recherchez / selectionnez votre profil :</h2>
 
             <form>  <!-- add action = "action_page.php"-->
+
+                <h2>Sélectionnez votre profil</h2>
                 <p>
-                    <input list="profils" name="profil">
-                    <datalist id="profils">
-                      <option value="Profil A">
-                      <option value="Profil B">
-                      <option value="Profil C">
-                      <option value="Profil D">
-                    </datalist>
+                    <select name="profil">
+                        <option value="Jean-Kevin">Jean-Kevin</option>
+                        <option value="Vanessa Kikoo">Vanessa Kikoo</option>
+                        <option value="Euripides">Euripides</option>
+                    </select>
                 </p>
                 <p>
                     <input type="submit" class="mybutton full_button" value="Connexion">

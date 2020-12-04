@@ -13,6 +13,30 @@
 </head>
 
 <body>
+
+<?php 
+        $bdd = new PDO('mysql:host=localhost;dbname=testdb', 'root');
+        
+        if(isset($_POST['inscription'])) {
+            $prenom = htmlspecialchars($_POST['prenom']);
+            $nom = htmlspecialchars($_POST['nom']);
+            $datenaiss = htmlspecialchars($_POST['datenaiss']);
+            $niss = htmlspecialchars($_POST['niss']);
+            $picture = htmlspecialchars($_POST['picture']);
+
+            
+            $query = $bdd->prepare("INSERT INTO testdb.inscription (prenom, nom, datenaiss, niss, picture) 
+            VALUES (?,?,?,?,?)");
+            $query->execute(array($prenom, $nom, $datenaiss, $niss, $picture));
+            
+        }
+
+
+        $getUsers = $bdd->prepare("SELECT * FROM testdb.inscription");
+        $getUsers->execute();
+        $users = $getUsers->fetchAll();
+		?>
+
     <header>
         
         <img src="img/logo.png">
@@ -22,8 +46,7 @@
 
     <div class="container">
         <h1>Créez votre profil</h1>
-        <form>
-            <!-- add action = "action_page.php"-->
+        <form method="POST">
 
             <section>
                 <h2>Complétez les informations suivantes :</h2>
@@ -69,29 +92,34 @@
                     </div>
                 </div>
 
-
-
-
-
-
             </section>
 
             <section>
                 <fieldset class="pic-selector">
                     <legend>Choisissez votre photo de profil :</legend>
-                    <input type="radio" id="politecat" name="photoprofil" value="politecat">
+                    <input type="radio" id="politecat" name="picture" value="politecat.jpg">
                     <label for="politecat" class="drinkpic-cc politecat"></label>
 
-                    <input type="radio" id="froggy" name="photoprofil" value="froggy">
+                    <input type="radio" id="froggy" name="picture" value="froggy.png">
                     <label for="froggy" class="drinkpic-cc froggy"></label>
 
-                    <input type="radio" id="racoon" name="photoprofil" value="racoon">
+                    <input type="radio" id="racoon" name="picture" value="racoon.jpg">
                     <label for="racoon" class="drinkpic-cc racoon"></label>
                 </fieldset>
             </section> <br>
 
-            <input type="submit" class="mybutton full_button" value="Inscription">
+            <button type="submit" class="mybutton full_button" name="inscription">Inscription</button>
         </form>
+
+        <div style="display: flex; flex-direction: column">
+            <?php foreach ($users as $user): ?>
+                <div style="display: flex; flex-direction: row;">
+                    <img src="img/<?php echo $user['picture']?>" style="width: 25px; object-fit: cover; height: 25px;"/>
+                    <p><?php echo $user['prenom'] ?></p>
+                </div>
+            <?php endforeach; ?>
+        </div>
+
     </div>
     <footer>
         <p>Ce projet a été développé dans le cadre du cours de conception et gestion de banques de données (MA2 STIC
