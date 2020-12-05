@@ -20,7 +20,14 @@
         $getUtilisateurs = $bdd->prepare("SELECT * FROM budgetsquirrel.utilisateur");
         $getUtilisateurs->execute();
         $utilisateurs = $getUtilisateurs->fetchAll();
-		?>
+        
+        if(isset($_POST["connexion"])){
+
+            echo 'Le niss de l utilisateur sélectionné est ' . $niss = htmlspecialchars($_POST['niss']) . '.';
+
+           }
+
+           ?>
 
     <div class="landing_header">
         <div class="glass_box">
@@ -38,14 +45,15 @@
                 <p>
                     <select name="profil">
                         <?php foreach ($utilisateurs as $utilisateur): ?>
-                            <option value ="<?php echo $utilisateur['nom']; echo " "; echo $utilisateur['prenom']?>"><?php echo $utilisateur['nom']; echo " "; echo $utilisateur['prenom']?></option>
+                            <option value ="<?php echo $utilisateur['niss']?>"><?php echo $utilisateur['nom']; echo " "; echo $utilisateur['prenom']?></option>
                     <?php endforeach; ?>
                         </select>
                 </p>
 
                 <p>
-                    <input type="submit" class="mybutton full_button" value="Connexion">
+                <button type="submit" class="mybutton full_button" name="connexion">Connexion</button>
                 </p>
+
               </form>
         </div>
     </div>
