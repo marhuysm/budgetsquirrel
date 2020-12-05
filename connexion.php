@@ -43,7 +43,7 @@
                 <h2>Sélectionnez votre profil</h2>
 
                 <p>
-                    <select name="profil">
+                    <select name="niss">
                         <?php foreach ($utilisateurs as $utilisateur): ?>
                             <option value ="<?php echo $utilisateur['niss']?>"><?php echo $utilisateur['nom']; echo " "; echo $utilisateur['prenom']?></option>
                     <?php endforeach; ?>
