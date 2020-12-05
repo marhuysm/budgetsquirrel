@@ -42,10 +42,13 @@
                 <li><a href="stat.html">Statistiques</a></li>
             </ul>
 
-            <ul>
-                <li><a href="profil.html">Profil</a></li>
-                <li><a href="">Déconnexion</a></li>
-            </ul>
+            <div class="profile-container">
+                <img  class = "photo-profil" src="img/<?php echo $connexion['photo']?>">
+                <ul>
+                    <li><a href="profil.php"><?php ?>Profil</a></li>
+                    <li><a href="index.html">Déconnexion</a></li>
+              </ul>
+            </div>
         </nav>
 
     </header>
@@ -54,15 +57,15 @@
             <h1>Mes informations</h1>
 
             <div class="four columns">
-                <p><?php echo $connexion['nom']; echo ","; echo $connexion['prenom'] ?></p>
+                <p><?php echo $connexion['nom']; echo ", "; echo $connexion['prenom'] ?></p>
             </div>
 
             <div class="four columns">
-                <p>NISS</p>
+                <p><?php echo $connexion['niss'] ?></p>
             </div>
 
             <div two="four columns">
-                <p>jj/mm/aaaa</p>
+                <p><?php echo $connexion['date_naissance'] ?></p>
             </div>
 
         </div>
@@ -144,14 +147,14 @@
                 <form>
                     <fieldset class="pic-selector">
                         <legend>Sélectionnez votre nouvelle photo de profil :</legend>
-                        <input type="radio" id="politecat" name="photoprofil" value="politecat">
-                        <label for="politecat" class="drinkpic-cc politecat"></label>
+                        <input type="radio" id="politecat.jpg" name="photoprofil" value="politecat.jpg">
+                        <label for="politecat.jpg" class="drinkpic-cc politecat"></label>
     
-                        <input type="radio" id="froggy" name="photoprofil" value="froggy">
-                        <label for="froggy" class="drinkpic-cc froggy"></label>
+                        <input type="radio" id="froggy.png" name="photoprofil" value="froggy.png">
+                        <label for="froggy.png" class="drinkpic-cc froggy"></label>
     
-                        <input type="radio" id="racoon" name="photoprofil" value="racoon">
-                        <label for="racoon" class="drinkpic-cc racoon"></label>
+                        <input type="radio" id="raccoon.jpg" name="photoprofil" value="raccoon.jpg">
+                        <label for="raccoon.jpg" class="drinkpic-cc raccoon"></label>
                     </fieldset> <br>
 
                     <input type="submit" class="mybutton full_button" value="Changer">

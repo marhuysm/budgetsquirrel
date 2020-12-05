@@ -45,11 +45,14 @@
                 <li><a href="enregistrement.html">Enregistrement</a></li>
                 <li><a href="stat.html">Statistiques</a></li>
             </ul>
-
-            <ul>
-                <li><a href="profil.php"><?php ?>Profil</a></li>
-                <li><a href="">Déconnexion</a></li>
-            </ul>
+            <div class="profile-container">
+                <img  class = "photo-profil" src="img/<?php echo $connexion['photo']?>">
+                <ul>
+                    <li><a href="profil.php"><?php ?>Profil</a></li>
+                    <li><a href="index.html">Déconnexion</a></li>
+              </ul>
+            </div>
+        
         </nav>
 
     </header>

@@ -254,6 +254,24 @@ input[type="submit"]{
     color: #77B02F;
 }
 
+.profile-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.profile-container a{
+    color: #FAF4EA;
+    text-decoration: none;
+    font-size: 16px;
+    transition: color ease 200ms;
+    
+}
+
+.profile-container a:hover{
+    color: #77B02F;
+}
+
 .menu ul a{
     color: #FAF4EA;
     text-decoration: none;
@@ -271,4 +289,15 @@ input[type="submit"]{
 .container input[type="submit"]{
     display: flex;
     justify-content: center;
+}
+
+.profil-box{
+    align-self: right;
+}
+
+.photo-profil{
+    width: 60px;
+    height : 60px;
+    border-radius: 90px;
+
 }
