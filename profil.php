@@ -39,6 +39,18 @@
             VALUES (?,?,?,?)");
             $query->execute(array($nom_carte, $numero_carte, $type_carte, $niss_util));
         }
+
+        $getCartes = $bdd->prepare("SELECT * FROM budgetsquirrel.carte WHERE niss_util = $niss");
+        $getCartes->execute();
+        $cartes = $getCartes->fetchAll();
+
+        if (isset($_POST['suppr_carte'])) {
+            $nom_carte = htmlspecialchars($_POST['carte_suppr']);
+
+            $query = $bdd->prepare("DELETE FROM budgetsquirrel.carte WHERE niss_util = $niss AND nom_carte = $nom_carte");
+            $query->execute();
+
+        }
         
   ?>
     <header>
@@ -140,20 +152,23 @@
 
             <div>
                 <h3>Suprimer une carte :</h3>
-                <form>
-                    <p>
-                        <label for="cartedispo">
-                            <span>Carte sélectionnée</span>
-                        </label>
-                        <input list="cartesdispo" name="cartesuppr">
-                    </p>
-                    <datalist id="cartesdispo">
-                        <option value="Visa Carrefour">
-                        <option value="Prepaid Bpost">
-                        <option value="Débit BNP">
-                    </datalist>
-                    <input type="submit" class="mybutton full_button" value="Supprimer">
+                <form method = "POST">
+                <select name="carte_suppr">
+                        <?php foreach ($cartes as $carte): ?>
+                            <option value ="<?php echo $carte['nom_carte']?>"><?php echo $carte['nom_carte']?></option>
+                    <?php endforeach; ?>
+                        </select>
+                </p>
+                <button type="submit" class="mybutton full_button" name="suppr_carte">Supprimer</button>
                 </form>
+
+                <?php
+            if(isset($_POST['suppr_carte'])) {
+                echo("Votre carte ".$nom_carte." a bien été supprimée !");
+                $_POST['suppr_carte'] = null; // Evite la réécriture des données à chaque refresh
+
+            } 
+            ?>
             </div>
 
         </div>
