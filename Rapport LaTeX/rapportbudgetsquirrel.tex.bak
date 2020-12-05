@@ -1,0 +1,151 @@
+\documentclass[a4paper,12pt]{article}
+
+\usepackage[utf8]{inputenc} % encodé en utf-8
+\usepackage[T1]{fontenc} % compatible avec les accents
+
+\usepackage[french]{babel} % rédigé en français
+\usepackage[hyphens]{url} % formatte les liens en autorisant la césure au niveau des traits d'union
+\usepackage[urlcolor=black,colorlinks=true,linkcolor=black,citecolor=black]{hyperref} % liens cliquables mais non colorés
+
+\usepackage[top=25mm, bottom=25mm, left=35mm, right=25mm]{geometry} % définit les marges
+\usepackage{array} % permet l'alignement vertical dans les tableaux
+\usepackage{setspace} % permet de régler l'interligne
+\onehalfspacing % définit l'interligne 1,5 par défaut
+
+\usepackage{graphicx} % gestion des images
+\graphicspath{ {../images/}}
+\usepackage{array} % gestion des tableaux
+\usepackage{csquotes} % gestion des guillemets
+
+\usepackage{fourier} % utilise une autre police que celle par défaut (Computer Modern) fourier - venturis - libertine - tgtermes - kpfonts - lmodern - txfonts - newtxtext,newtxmath - mathptmx - stix 
+
+\usepackage[backend = biber, style = authoryear, useprefix = true, maxbibnames = 99]{biblatex}
+
+
+%\addbibresource{}
+
+\DefineBibliographyExtras{french}{%
+\protected\def\mkbibnamefamily#1{%
+\textsc{\textnohyphenation{#1}}}
+}%
+
+\DefineBibliographyStrings{french}{%
+    page  = {\lowercase{p.}}, % for single page number
+    pages = {\lowercase{pp.}}, % for multiple page numbers
+}
+
+\DefineBibliographyExtras{french}{\renewcommand*{\bibrangedash}{\textendash}} % Pour rendre les "--" correctement
+
+% \renewcommand*{\mkibid}{\emph} %ibid en italique  if authoryear-ibid
+
+\usepackage{float}
+
+\setcounter{secnumdepth}{3} %Ne compte pas plus loin que 1.1.1
+\setcounter{tocdepth}{3}
+
+\usepackage{enumitem} %% utilisé pour la présentation de fausse table des matières dans la table des matières commentée
+
+\newlist{legal}{enumerate}{10}
+\setlist[legal]{label*=\arabic*.}
+
+\usepackage{ragged2e} % Permet de placer plus facilement les tableaux
+
+\newcolumntype{R}[1]{>{\RaggedRight}p{#1}}
+
+\title{Projet STIC-B505 : Budgetsquirrel, une application de gestion de budget} 
+\author{Milena Albu \and Marie Huysman} % vos prénom et nom
+\date{} % pas de date
+
+%\usepackage{fancyhdr}
+%\pagestyle{fancy} % Turn on the style
+%\fancyhf{}
+%\fancyhead[L]{\footnotesize \nouppercase \leftmark}
+%\fancyhead[R]{\footnotesize \nouppercase \rightmark}
+%\fancyfoot[C]{\thepage}
+%
+%\renewcommand{\chaptermark}[1]{%
+%\markboth{#1}{}}
+%
+%    \renewcommand{\sectionmark}[1]{\markright{\thesection \ #1}{}}
+
+\usepackage{longtable}
+
+
+\begin{document} % début du corps du texte
+\sloppy
+
+\begin{titlepage} % style spécial pour la page de garde
+\singlespacing % remet l'interligne normal pour cette page
+
+%%alternative à la bannière image
+%\begin{center} 
+%\huge{\textsc{Université Libre de Bruxelles}}\\
+%\vspace{.5cm}
+%\LARGE{Faculté de Lettres, Traduction et Communication}
+%\end{center}
+%% Bannière image
+\begin{figure}[h]
+\noindent
+\makebox[\textwidth]{\includegraphics[scale=0.6]{banner.png}}
+\end{figure}
+
+\vfill % laisse LaTeX gérer l'espacement vertical
+
+%VOIR SI LE TITRE CONVIENT
+
+\begin{center}
+\Huge{Budgetsquirrel}\\ % ajoutez votre titre ici
+\LARGE{Application de gestion de budget - PHP et SQL}
+\vspace{.5cm}
+\end{center}
+
+\vfill
+
+\begin{tabular}{b{5.5cm}b{7.5cm}} % taille et alignement des cellules du tableau
+ \\ Milena \textsc{Albu} \\ Marie \textsc{Huysman} \\ & Rapport de projet écrit dans le cadre du cours STIC-B505 : Conception et gestion de banques de données \\
+\end{tabular}
+
+\vfill
+
+\begin{center}
+Année académique 2020--2021 % vérifiez que l'année est correcte !
+\end{center}
+
+\end{titlepage}
+
+% Nécessaire d'avoir une TOC pour un travail aussi court?
+%\tableofcontents
+\thispagestyle{plain}
+
+\section{Introduction}
+
+Si besoin de citer : \parencite[pages]{SOURCE}
+Notes de bas de page \footnote{informations suppl.}
+
+\section{Schéma conceptuel}
+
+\section{Schéma logique relationnel}
+
+\section{Description du code de création de la base de données}
+
+\section{Description de l'application Web}
+
+\section{Conclusion}
+
+\newpage
+
+%voir si bibliographie nécessaire
+%\chapter*{Bibliographie} 
+%\addcontentsline{toc}{chapter}{Bibliographie}
+%\markboth{Bibliographie}{}
+%
+%\printbibliography[heading=none]
+%
+%\fussy
+
+%Voir si annexes nécessaire
+%\chapter*{Annexes}
+%\addcontentsline{toc}{chapter}{Annexes}
+%\markboth{Annexes}{}
+
+\end{document} % fin du corps du texte
