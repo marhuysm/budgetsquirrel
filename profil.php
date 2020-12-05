@@ -1,3 +1,7 @@
+<?php
+    session_start();
+?>
+
 <!DOCTYPE html>
 <html>
 
@@ -15,9 +19,10 @@
 <body>
 
 <?php 
+
         $bdd = new PDO('mysql:host=localhost;dbname=budgetsquirrel', 'root');
 
-        session_start();
+        $niss = $_SESSION['niss'];
 
         $getConnexion = $bdd->prepare("SELECT * FROM budgetsquirrel.utilisateur WHERE niss = $niss");
         $getConnexion-> execute();

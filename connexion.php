@@ -1,3 +1,7 @@
+<?php
+    session_start();
+?>
+
 <!DOCTYPE html>
 <html>
 
@@ -20,12 +24,6 @@
         $getUtilisateurs = $bdd->prepare("SELECT * FROM budgetsquirrel.utilisateur");
         $getUtilisateurs->execute();
         $utilisateurs = $getUtilisateurs->fetchAll();
-        
-        if(isset($_POST["connexion"])){
-
-            echo 'Le niss de l utilisateur sélectionné est ' . $niss = htmlspecialchars($_POST['niss']) . '.';
-
-           }
 
            ?>
 

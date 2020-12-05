@@ -1,3 +1,7 @@
+<?php
+    session_start();
+?>
+
 <!DOCTYPE html>
 <html>
 
@@ -15,13 +19,13 @@
 <body>
 
 <?php 
+        if (isset($_POST['niss'])) {
+            $_SESSION['niss'] = htmlspecialchars($_POST['niss']);
+        }
+
         $bdd = new PDO('mysql:host=localhost;dbname=budgetsquirrel', 'root');
+        $niss = $_SESSION['niss'];
 
-        session_start();
-
-        $_SESSION['niss'] = htmlspecialchars($_POST['niss']);
-
-        $niss = htmlspecialchars($_POST['niss']);
         $getConnexion = $bdd->prepare("SELECT * FROM budgetsquirrel.utilisateur WHERE niss = $niss");
         $getConnexion-> execute();
         $connexion = $getConnexion->fetch();
