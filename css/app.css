@@ -137,7 +137,7 @@ footer {
 }
 
 .politecat{
-    background-image: url(../img/politecat.jpeg); 
+    background-image: url(../img/politecat.jpg); 
     width: 70px;
     border-radius: 100%;
 
@@ -149,8 +149,8 @@ footer {
     border-radius: 100%;
 }
 
-.racoon{
-    background-image: url(../img/racoon.jpg);
+.raccoon{
+    background-image: url(../img/raccoon.jpg);
     width: 70px;
     border-radius: 100%;
 

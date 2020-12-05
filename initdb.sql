@@ -1,4 +1,4 @@
---SCRIPT DE CREATION DE LA DB BUDGETSQUIRREL
+/*SCRIPT DE CREATION DE LA DB BUDGETSQUIRREL */
 
 CREATE DATABASE budgetsquirrel CHARACTER SET 'utf8';
 
@@ -10,7 +10,7 @@ CREATE TABLE utilisateur(
         niss VARCHAR(11),
         date_naissance DATE,
         photo VARCHAR(100),
-       	nombre_transactions INT,
+        nombre_transactions INT DEFAULT 0,
         CONSTRAINT pk_utilisateur PRIMARY KEY(niss)
         );
         

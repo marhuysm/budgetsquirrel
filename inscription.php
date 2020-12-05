@@ -15,26 +15,26 @@
 <body>
 
 <?php 
-        $bdd = new PDO('mysql:host=localhost;dbname=testdb', 'root');
+        $bdd = new PDO('mysql:host=localhost;dbname=budgetsquirrel', 'root');
         
         if(isset($_POST['inscription'])) {
-            $prenom = htmlspecialchars($_POST['prenom']);
             $nom = htmlspecialchars($_POST['nom']);
-            $datenaiss = htmlspecialchars($_POST['datenaiss']);
+            $prenom = htmlspecialchars($_POST['prenom']);
+            $date_naissance = htmlspecialchars($_POST['date_naissance']);
             $niss = htmlspecialchars($_POST['niss']);
-            $picture = htmlspecialchars($_POST['picture']);
-
+            $photo = htmlspecialchars($_POST['photo']);
             
-            $query = $bdd->prepare("INSERT INTO testdb.inscription (prenom, nom, datenaiss, niss, picture) 
+            $query = $bdd->prepare("INSERT INTO budgetsquirrel.utilisateur (nom, prenom, niss, date_naissance, photo) 
             VALUES (?,?,?,?,?)");
-            $query->execute(array($prenom, $nom, $datenaiss, $niss, $picture));
-            
+            $query->execute(array($nom, $prenom, $niss, $date_naissance, $photo));
+
+
         }
 
 
-        $getUsers = $bdd->prepare("SELECT * FROM testdb.inscription");
-        $getUsers->execute();
-        $users = $getUsers->fetchAll();
+        $getUtilisateurs = $bdd->prepare("SELECT * FROM budgetsquirrel.utilisateur");
+        $getUtilisateurs->execute();
+        $utilisateurs = $getUtilisateurs->fetchAll();
 		?>
 
     <header>
@@ -74,10 +74,10 @@
                 <div class="row">
                     <div class="six columns">
                         <p>
-                            <label for="datenaiss">
+                            <label for="date_naissance">
                                 <span>Date de naissance</span>
                             </label>
-                            <input type="date" id="datenaiss" name="datenaiss"><br>
+                            <input type="date" id="date_naissance" name="date_naissance"><br>
                         </p>
                     </div>
                     
@@ -97,14 +97,14 @@
             <section>
                 <fieldset class="pic-selector">
                     <legend>Choisissez votre photo de profil :</legend>
-                    <input type="radio" id="politecat" name="picture" value="politecat.jpg">
-                    <label for="politecat" class="drinkpic-cc politecat"></label>
+                    <input type="radio" id="politecat.jpg" name="photo" value="politecat.jpg">
+                    <label for="politecat.jpg" class="drinkpic-cc politecat"></label>
 
-                    <input type="radio" id="froggy" name="picture" value="froggy.png">
-                    <label for="froggy" class="drinkpic-cc froggy"></label>
+                    <input type="radio" id="froggy.png" name="photo" value="froggy.png">
+                    <label for="froggy.png" class="drinkpic-cc froggy"></label>
 
-                    <input type="radio" id="racoon" name="picture" value="racoon.jpg">
-                    <label for="racoon" class="drinkpic-cc racoon"></label>
+                    <input type="radio" id="raccoon.jpg" name="photo" value="raccoon.jpg">
+                    <label for="raccoon.jpg" class="drinkpic-cc raccoon"></label>
                 </fieldset>
             </section> <br>
 
@@ -112,12 +112,24 @@
         </form>
 
         <div style="display: flex; flex-direction: column">
-            <?php foreach ($users as $user): ?>
+            <?php foreach ($utilisateurs as $utilisateur): ?>
                 <div style="display: flex; flex-direction: row;">
-                    <img src="img/<?php echo $user['picture']?>" style="width: 25px; object-fit: cover; height: 25px;"/>
-                    <p><?php echo $user['prenom'] ?></p>
+                    <img src="img/<?php echo $utilisateur['photo']?>" style="width: 25px; object-fit: cover; height: 25px;"/>
+                    <p><?php echo $utilisateur['prenom'] ?></p>
                 </div>
             <?php endforeach; ?>
+        </div>
+
+        <div> 
+            <?php
+            if(isset($_POST['inscription'])) {
+                echo("Votre inscription a bien été enregistrée !");
+                echo("<a href='connexion.php'>Connectez-vous</a>");
+                $_POST['inscription'] = null; // Evite la réécriture des données à chaque refresh
+
+            } 
+            ?>
+        
         </div>
 
     </div>

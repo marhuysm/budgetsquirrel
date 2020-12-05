@@ -6,6 +6,7 @@ A PHP project for our M2 database course
 - Dossier css : complet , skeleton + adaptations css perso
 - Dossier img : images de l'appli (logo, photos de profil...)
 - connexion.html : simple version html de l'écran de connexion
+- connexion.php : version php de l'écran de connexion:  le select va chercher, via php, les différents utilisateurs présents dans la bdd
 - enregistrement.html : simple version html de l'écran d'enregistrement de transaction
 - historique.html : simple version html de l'écran d'historique
 - homepage.html : simple version html de l'écran principal/ tuto de l'app
