@@ -27,6 +27,19 @@
         $getConnexion = $bdd->prepare("SELECT * FROM budgetsquirrel.utilisateur WHERE niss = $niss");
         $getConnexion-> execute();
         $connexion = $getConnexion->fetch();
+
+        if(isset($_POST['ajout_carte'])) {
+
+            $nom_carte = htmlspecialchars($_POST['nom_carte']);
+            $numero_carte = htmlspecialchars($_POST['numero_carte']);
+            $type_carte = htmlspecialchars($_POST['type_carte']);
+            $niss_util = $_SESSION['niss'];
+            
+            $query = $bdd->prepare("INSERT INTO budgetsquirrel.carte (nom_carte, numero_carte, type_carte, niss_util) 
+            VALUES (?,?,?,?)");
+            $query->execute(array($nom_carte, $numero_carte, $type_carte, $niss_util));
+        }
+        
   ?>
     <header>
 
@@ -73,51 +86,56 @@
         <div>
             <div>
                 <h3>Ajouter une nouvelle carte :</h3>
-                <form>
+                <form method="POST">
                     <div class="row">
                         <div class="four columns">
                             <p>
-                                <label for="nomcarte">
+                                <label for="nom_carte">
                                     <span>Nom de carte</span>
                                 </label>
-                                <input type="text" id="nomcarte" name="nomcarte">
+                                <input type="text" id="nom_carte" name="nom_carte">
                             </p>
                         </div>
 
                         <div class="four columns">
                             <p>
-                                <label for="numerocarte">
+                                <label for="numero_carte">
                                     <span>N° de carte</span>
                                 </label>
-                                <input type="text" id="numero" name="numero">
+                                <input type="text" id="numero_carte" name="numero_carte">
                             </p>
                         </div>
 
                         <div class="four columns">
                             <p>
-                                <label for="typecarte">
+                                <label for="type_carte">
                                     <span>Type de carte</span>
                                 </label>
-                                <input list="typecarte" name="typec">
-                                <datalist id="typecarte">
-                                    <option value="Visa">
-                                    <option value="Mastercard">
-                                    <option value="Visa Prepaid">
-                                    <option value="Maestro">
-                                </datalist>
+                                <select name="type_carte">
+                                    <option value="Visa">Visa</option>
+                                    <option value="Mastercard">Mastercard</option>
+                                    <option value="Visa Prepaid">Visa Prepaid</option>
+                                    <option value="Maestro">Maestro</option>
+                                </select>
                             </p>
         
                         </div>
 
                     </div>
 
-
-
-
-
-
-                    <input type="submit" class="mybutton full_button" value="Ajouter">
+                    <button type="submit" class="mybutton full_button" name="ajout_carte">Ajouter</button>
                 </form>
+                <div> 
+            <?php
+            if(isset($_POST['ajout_carte'])) {
+                echo("Votre carte ".$nom_carte." a bien été enregistrée !");
+                $_POST['ajout_carte'] = null; // Evite la réécriture des données à chaque refresh
+
+            } 
+            ?>
+         <br>
+        </div>
+
             </div>
 
             <div>
