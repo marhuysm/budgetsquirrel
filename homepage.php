@@ -17,6 +17,10 @@
 <?php 
         $bdd = new PDO('mysql:host=localhost;dbname=budgetsquirrel', 'root');
 
+        session_start();
+
+        $_SESSION['niss'] = htmlspecialchars($_POST['niss']);
+
         $niss = htmlspecialchars($_POST['niss']);
         $getConnexion = $bdd->prepare("SELECT * FROM budgetsquirrel.utilisateur WHERE niss = $niss");
         $getConnexion-> execute();
@@ -29,7 +33,7 @@
         <nav class=menu>
             <div class="logo-container">
                 <img src="img/logo.png">
-                <a href="homepage.html">Budget Squirrel</a>
+                <a href="homepage.php">Budget Squirrel</a>
             </div>
         
             <ul class = "pages">
@@ -39,7 +43,7 @@
             </ul>
 
             <ul>
-                <li><a href="profil.html"><?php ?>Profil</a></li>
+                <li><a href="profil.php"><?php ?>Profil</a></li>
                 <li><a href="">Déconnexion</a></li>
             </ul>
         </nav>
