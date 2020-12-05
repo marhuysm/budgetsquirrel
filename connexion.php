@@ -38,7 +38,7 @@
     <div class="container landing_container">
         <div class="centered_message">
 
-            <form method="POST">
+            <form method="POST" action="homepage.php">
 
                 <h2>Sélectionnez votre profil</h2>
 
