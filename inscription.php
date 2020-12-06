@@ -25,7 +25,7 @@
                 $niss = htmlspecialchars($_POST['niss']);
                 $photo = htmlspecialchars($_POST['photo']);
 
-                $check = $bdd->prepare("SELECT count(1) as total FROM utilisateur WHERE niss = $niss");  
+                $check = $bdd->prepare("SELECT count(1) as total FROM utilisateur WHERE niss = $niss");  //Verif si il n'existe pas déjà un utilisateur avec ce niss
                 $check->execute();
                 $donnees = $check-> fetch();
 

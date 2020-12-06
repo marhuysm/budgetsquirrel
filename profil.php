@@ -24,20 +24,28 @@
 
         $niss = $_SESSION['niss'];
 
-        $getConnexion = $bdd->prepare("SELECT * FROM budgetsquirrel.utilisateur WHERE niss = $niss");
-        $getConnexion-> execute();
-        $connexion = $getConnexion->fetch();
-
         if(isset($_POST['ajout_carte'])) {
 
             $nom_carte = htmlspecialchars($_POST['nom_carte']);
             $numero_carte = htmlspecialchars($_POST['numero_carte']);
             $type_carte = htmlspecialchars($_POST['type_carte']);
             $niss_util = $_SESSION['niss'];
+
+            //Verif si il n'existe pas déjà une carte avec ce num et cet utilisateur
             
-            $query = $bdd->prepare("INSERT INTO budgetsquirrel.carte (nom_carte, numero_carte, type_carte, niss_util) 
-            VALUES (?,?,?,?)");
-            $query->execute(array($nom_carte, $numero_carte, $type_carte, $niss_util));
+            $check = $bdd->prepare("SELECT count(1) as total FROM carte WHERE numero_carte = $numero_carte AND niss_util = $niss");  
+            $check->execute();
+            $donnees = $check-> fetch();
+            
+            if ($donnees['total'] == 0){
+                $query = $bdd->prepare("INSERT INTO budgetsquirrel.carte (nom_carte, numero_carte, type_carte, niss_util) 
+                VALUES (?,?,?,?)");
+                $query->execute(array($nom_carte, $numero_carte, $type_carte, $niss_util));
+            }
+            else if ($donnees['total'] == 1){
+                ;
+            }
+           
         }
 
         $getCartes = $bdd->prepare("SELECT * FROM budgetsquirrel.carte WHERE niss_util = $niss");
@@ -45,12 +53,29 @@
         $cartes = $getCartes->fetchAll();
 
         if (isset($_POST['suppr_carte'])) {
-            $nom_carte = htmlspecialchars($_POST['carte_suppr']);
 
-            $query = $bdd->prepare("DELETE FROM budgetsquirrel.carte WHERE niss_util = $niss AND nom_carte = $nom_carte");
+            $nom_carte = htmlspecialchars($_POST['carte_suppr']); 
+
+            //PB : foreign key empêche la suppression : comment gérer la supr de carte?
+
+            $query = $bdd->prepare("DELETE FROM budgetsquirrel.carte WHERE niss_util = $niss AND nom_carte = $nom_carte"); 
             $query->execute();
 
         }
+
+        if (isset($_POST['changer_photo'])) {
+
+            $photo = htmlspecialchars($_POST['photo']);
+
+            $query = $bdd->prepare("UPDATE budgetsquirrel.utilisateur SET photo = :photo WHERE niss = $niss"); 
+            $query->bindParam(':photo', $photo, PDO::PARAM_STR);
+            $query->execute();
+
+        }
+
+        $getConnexion = $bdd->prepare("SELECT * FROM budgetsquirrel.utilisateur WHERE niss = $niss");
+        $getConnexion-> execute();
+        $connexion = $getConnexion->fetch();
         
   ?>
     <header>
@@ -98,7 +123,7 @@
         <div>
             <div>
                 <h3>Ajouter une nouvelle carte :</h3>
-                <form method="POST">
+                <form method= "POST">
                     <div class="row">
                         <div class="four columns">
                             <p>
@@ -140,9 +165,15 @@
                 <div> 
             <?php
             if(isset($_POST['ajout_carte'])) {
-                echo("Votre carte ".$nom_carte." a bien été enregistrée !");
-                $_POST['ajout_carte'] = null; // Evite la réécriture des données à chaque refresh
 
+                if ($donnees['total'] == 0){
+                    echo("Votre carte ".$nom_carte." a bien été enregistrée !");
+                }
+                else if ($donnees['total'] == 1){
+                    echo("Vous avez déjà enregistré une carte avec ce numéro.");
+                }
+
+                $_POST['ajout_carte'] = null; // Evite la réécriture des données à chaque refresh
             } 
             ?>
          <br>
@@ -177,22 +208,29 @@
             <h3>Changer de photo de profil :</h3>
 
             <section>
-                <form>
+                <form method = "POST">
                     <fieldset class="pic-selector">
                         <legend>Sélectionnez votre nouvelle photo de profil :</legend>
-                        <input type="radio" id="politecat.jpg" name="photoprofil" value="politecat.jpg">
+                        <input type="radio" id="politecat.jpg" name="photo" value="politecat.jpg">
                         <label for="politecat.jpg" class="drinkpic-cc politecat"></label>
     
-                        <input type="radio" id="froggy.png" name="photoprofil" value="froggy.png">
+                        <input type="radio" id="froggy.png" name="photo" value="froggy.png">
                         <label for="froggy.png" class="drinkpic-cc froggy"></label>
     
-                        <input type="radio" id="raccoon.jpg" name="photoprofil" value="raccoon.jpg">
+                        <input type="radio" id="raccoon.jpg" name="photo" value="raccoon.jpg">
                         <label for="raccoon.jpg" class="drinkpic-cc raccoon"></label>
                     </fieldset> <br>
 
-                    <input type="submit" class="mybutton full_button" value="Changer">
+                    <button type="submit" class="mybutton full_button" name="changer_photo">Changer</button>
 
                 </form>
+
+                <?php
+                        if (isset($_POST['changer_photo'])) {
+
+                            echo("Photo de profil changée");
+                        }
+                ?>
 
             </section> <br>
         </div>
