@@ -18,16 +18,25 @@
         $bdd = new PDO('mysql:host=localhost;dbname=budgetsquirrel', 'root');
         
         if(isset($_POST['inscription'])) {
-            $nom = htmlspecialchars($_POST['nom']);
-            $prenom = htmlspecialchars($_POST['prenom']);
-            $date_naissance = htmlspecialchars($_POST['date_naissance']);
-            $niss = htmlspecialchars($_POST['niss']);
-            $photo = htmlspecialchars($_POST['photo']);
-            
-            $query = $bdd->prepare("INSERT INTO budgetsquirrel.utilisateur (nom, prenom, niss, date_naissance, photo) 
-            VALUES (?,?,?,?,?)");
-            $query->execute(array($nom, $prenom, $niss, $date_naissance, $photo));
 
+                $nom = htmlspecialchars($_POST['nom']);
+                $prenom = htmlspecialchars($_POST['prenom']);
+                $date_naissance = htmlspecialchars($_POST['date_naissance']);
+                $niss = htmlspecialchars($_POST['niss']);
+                $photo = htmlspecialchars($_POST['photo']);
+
+                $check = $bdd->prepare("SELECT count(1) as total FROM utilisateur WHERE niss = $niss");  
+                $check->execute();
+                $donnees = $check-> fetch();
+
+            if ($donnees['total'] == 0){
+                $query = $bdd->prepare("INSERT INTO budgetsquirrel.utilisateur (nom, prenom, niss, date_naissance, photo) 
+                VALUES (?,?,?,?,?)");
+                $query->execute(array($nom, $prenom, $niss, $date_naissance, $photo));
+            }
+            else if ($donnees['total'] == 1){
+            }
+            
 
         }
 
@@ -111,23 +120,23 @@
             <button type="submit" class="mybutton full_button" name="inscription">Inscription</button>
         </form>
 
-        <div style="display: flex; flex-direction: column">
-            <?php foreach ($utilisateurs as $utilisateur): ?>
-                <div style="display: flex; flex-direction: row;">
-                    <img src="img/<?php echo $utilisateur['photo']?>" style="width: 25px; object-fit: cover; height: 25px;"/>
-                    <p><?php echo $utilisateur['prenom'] ?></p>
-                </div>
-            <?php endforeach; ?>
-        </div>
+
 
         <div> 
             <?php
-            if(isset($_POST['inscription'])) {
-                echo("Votre inscription a bien été enregistrée !");
+            if(isset($_POST['inscription'])){
+
+                if ($donnees['total'] == 0){
+                    echo("Votre inscription a bien été enregistrée !");
                 echo("<a href='connexion.php'>Connectez-vous</a>");
                 $_POST['inscription'] = null; // Evite la réécriture des données à chaque refresh
-
-            } 
+                }
+                else if($donnees['total'] == 1){
+                echo("Votre inscription n'a pas été enregistrée, car un utilisateur utilise déjà ce NISS. Veuillez réésayer en entrant un autre NISS, ou ");
+                echo("<a href='connexion.php'>connectez-vous</a>");
+                $_POST['inscription'] = null; // Evite la réécriture des données à chaque refresh
+              } 
+            }
             ?>
         
         </div>
