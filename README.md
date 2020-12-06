@@ -6,6 +6,7 @@ A PHP project for our M2 database course
 - Dossier css : complet , skeleton + adaptations css perso
 - Dossier img : images de l'appli (logo, photos de profil...)
 - Dossier Rapport LaTex : self explanatory, pour l'instant, rapport vide, il y a seulement la structure
+- basicdata.sql : fichier d'écriture des premières données : pour l'instant, il y a seulement qq utilisateurs
 - connexion.html : simple version html de l'écran de connexion
 - connexion.php : version php de l'écran de connexion:  le select va chercher, via php, les différents utilisateurs présents dans la bdd. Fonctionnel. Ouvre une session avec le niss utilisateur, session est appelée à chaque page de l'appli, et ça permet de récupérer slmt les infos liées à l'utilisateur.Le POST du formulaire redirige directement vers homepage.php et est récupéré par SESSION.
 - enregistrement.html : simple version html de l'écran d'enregistrement de transaction
