@@ -56,19 +56,25 @@
             $date_tf = htmlspecialchars($_POST['date_transaction']);
             $cat_tf = htmlspecialchars($_POST['categorie_transaction']);
 
-            /* Il faut créer et initialiser le budget_id s'il n'existe pas encore, 
-            et lier la transaction au bon budget_id correspondant au mois et à l'année enregistrée */
-         
-            try {
-                $query = $bdd->prepare("INSERT INTO budgetsquirrel.transaction_financiere (montant, date_tf, niss_util, cat_tf) 
-                VALUES (?,?,?,?)");
-                $query->execute(array($montant, $date_tf, $niss, $cat_tf));
-
-                echo ("transaction enregistrée");
+            // if (isset($_POST['montant_transaction']) && isset($_POST['date_transaction']) && isset($_POST['categorie_transaction'])){
+             if ($montant != null&& $montant != 0 && isset($_POST['date_transaction']) && isset($_POST['categorie_transaction'])){
+                try {
+                    /* Il faut créer et initialiser le budget_id s'il n'existe pas encore, 
+                    et lier la transaction au bon budget_id correspondant au mois et à l'année enregistrée */
+                    $query = $bdd->prepare("INSERT INTO budgetsquirrel.transaction_financiere (montant, date_tf, niss_util, cat_tf) 
+                    VALUES (?,?,?,?)");
+                    $query->execute(array($montant, $date_tf, $niss, $cat_tf));
+    
+                    echo ("transaction enregistrée");
+                }
+                catch(Error $e){
+                   echo $e->getMessage();
+                }
             }
-            catch(Error $e){
-               echo $e->getMessage();
-            }
+            else{
+                echo("Vous n'avez pas entré toutes les valeurs pour la transaction");
+            }         
+           
         }
   ?>
 
@@ -138,6 +144,7 @@
                              <?php endforeach; ?>
                         </select> <br> 
                         <span class="footsize_text"><?php echo $categorie['description_tf']?></span> 
+                        
                         <!-- Voir comment adapter la description à chaque sélection : javascript?-->
 
                     </p>
