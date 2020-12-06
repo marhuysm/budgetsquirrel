@@ -219,6 +219,10 @@
     
                         <input type="radio" id="raccoon.jpg" name="photo" value="raccoon.jpg">
                         <label for="raccoon.jpg" class="drinkpic-cc raccoon"></label>
+
+                        <input type="radio" id="gollum.jpg" name="photo" value="gollum.jpg">
+                        <label for="gollum.jpg" class="drinkpic-cc gollum"></label>
+
                     </fieldset> <br>
 
                     <button type="submit" class="mybutton full_button" name="changer_photo">Changer</button>
