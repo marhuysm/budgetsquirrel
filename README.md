@@ -15,6 +15,7 @@ A PHP project for our M2 database course
 - index.html : simple version html de la landing page. normalement, pas besoin de php ici. Permet juste d'avoir une landing page, accessible également via localhost/budgetsquirrel/ (sans aucun nom de fichier)
 - initdb.sql : fichier de création de la base de donnée et des tables. Assez basique pour l'instant, à modifier et optimiser (en ajoutant suppression de la bdd au début ou en utilisant IF NOT EXISTS? Besoin également de rajouter toutes les contraintes et de voir s'il ne faut pas des infos supplémentaires)
 - inscription.php : WIP fonctionel de la page d'inscription d'un nouvel utilisateur. Il est donc possible d'enregistrer un nouvel utilisateur dans la table utilisateur. Si le NISS est déjà utilisé, un message d'erreur est prévu (avec possibilité de se rediriger vers connexion.php). Il y a aussi un message de succès lorsque les données sont enregistrées, ainsi qu'un lien vers connexion.php.
+- logout.php : écran de déconnexion. Permet d'effacer les données de session de l'utilisateur, qui est ensuite redirigé vers index.html via un bouton
 - profil.html : simple version html de l'écran de présentation / modif du profil
 - profil.php : wip de l'écran de présentation et de modif du profil. Il est pour l'instant possible de consulter ses infos et d'ajouter une carte à son utilisateur connecté (wip sur la suppression et le changement de photo)
 - stat.html : simple version html de l'écran de statistiques
