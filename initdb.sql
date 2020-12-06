@@ -39,7 +39,7 @@ CREATE TABLE budget_mensuel(
         
 CREATE TABLE categorie_tf(
     nom_tf VARCHAR(100),
-     description TEXT,
+     description_tf TEXT,
      CONSTRAINT pk_categorie_tf PRIMARY KEY(nom_tf)
     );
 
