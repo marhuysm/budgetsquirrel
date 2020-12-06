@@ -49,6 +49,27 @@
         $getCategories = $bdd->prepare("SELECT * FROM budgetsquirrel.categorie_tf");
         $getCategories->execute();
         $categories = $getCategories->fetchAll();
+
+        if(isset($_POST['ajout_transaction'])){
+           
+            $montant = htmlspecialchars($_POST['montant_transaction']);
+            $date_tf = htmlspecialchars($_POST['date_transaction']);
+            $cat_tf = htmlspecialchars($_POST['categorie_transaction']);
+
+            /* Il faut créer et initialiser le budget_id s'il n'existe pas encore, 
+            et lier la transaction au bon budget_id correspondant au mois et à l'année enregistrée */
+         
+            try {
+                $query = $bdd->prepare("INSERT INTO budgetsquirrel.transaction_financiere (montant, date_tf, niss_util, cat_tf) 
+                VALUES (?,?,?,?)");
+                $query->execute(array($montant, $date_tf, $niss, $cat_tf));
+
+                echo ("transaction enregistrée");
+            }
+            catch(Error $e){
+               echo $e->getMessage();
+            }
+        }
   ?>
 
     <header>
@@ -80,14 +101,14 @@
     <div class="container">
         <h1>Enregistrer une nouvelle transaction</h1>
         <h2>Complétez les informations suivantes :</h2>
-        <form action="valider_transaction.php">
+        <form method = "POST">
             <div class="row">
                 <div class="four columns">
                     <p>
-                        <label for="montanttransaction">
+                        <label for="montant_transaction">
                             <span>Montant</span>
                         </label>
-                        <input type="number" id="montant" name="montant"> <br> 
+                        <input type="number" id="montant_transaction" name="montant_transaction"> <br> 
                         <span class="footsize_text">Vous pouvez entrer un montant négatif (précédé de "-"), qui sera donc considéré comme une dépense, ou positif, et ce sera alors un revenu .</span>
 
                     </p>
@@ -97,26 +118,27 @@
                 <div class="four columns">
 
                     <p>
-                        <label for="datetransaction">
+                        <label for="date_transaction">
                             <span>Date</span>
                         </label>
-                        <input type="date" id="datetransaction" name="datetransaction">
+                        <input type="date" id="date_transaction" name="date_transaction">
                     </p>
 
                 </div>
 
                 <div class="four columns">
                     <p>
-                        <label for="catégorietransact">
+                        <label for="categorie_transaction">
                             <span>Catégorie de transaction</span>
                         </label>
-                        <select name="carte_select">
+                        <select name="categorie_transaction">
                              <span>Carte utilisée</span>
                             <?php foreach ($categories as $categorie): ?>
                                 <option value ="<?php echo $categorie['nom_tf']?>"><?php echo $categorie['nom_tf']?></option>
                              <?php endforeach; ?>
                         </select> <br> 
-                        <span class="footsize_text"><?php echo $categorie['description_tf']?></span> <!-- Voir comment adapter la description à chaque sélection : javascript?-->
+                        <span class="footsize_text"><?php echo $categorie['description_tf']?></span> 
+                        <!-- Voir comment adapter la description à chaque sélection : javascript?-->
 
                     </p>
                 </div>
@@ -170,7 +192,7 @@
             </fieldset>
             <br>
 
-            <input type="submit" class="mybutton full_button" value="Ajouter cette transaction">
+            <button type="submit" class="mybutton full_button" name="ajout_transaction">Ajouter cette transaction</button>
         </form>
     </div>
 
