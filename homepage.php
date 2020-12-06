@@ -42,7 +42,7 @@
         
             <ul class = "pages">
                 <li><a href="historique.html">Historique</a></li>
-                <li><a href="enregistrement.html">Enregistrement</a></li>
+                <li><a href="enregistrement.php">Enregistrement</a></li>
                 <li><a href="stat.html">Statistiques</a></li>
             </ul>
             <div class="profile-container">

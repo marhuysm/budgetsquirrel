@@ -48,8 +48,10 @@
 
     <header>
         
-        <img src="img/logo.png">
-        <p>Budget Squirrel</p>
+    <div class="logo-container">
+                <img src="img/logo.png">
+                <a href="index.html">Budget Squirrel</a>
+            </div>
 
     </header>
 

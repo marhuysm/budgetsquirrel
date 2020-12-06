@@ -13,3 +13,46 @@ INSERT INTO utilisateur (nom, prenom, niss, date_naissance, photo) VALUES ('Tart
 INSERT INTO utilisateur (nom, prenom, niss, date_naissance, photo) VALUES ('Skywalker', 'Anakin', '19960225111', '1996-02-25', 'froggy.jpg');
 
 INSERT INTO utilisateur (nom, prenom, niss, date_naissance, photo) VALUES ('Baggins', 'Bilbo', '19650922666', '1965-09-22', 'froggy.jpg');
+
+
+/*Ajout des catégories disponibles */
+
+INSERT INTO categorie_tf (nom_tf, description_tf) VALUES ('accessoires', 'Objets physiques inutiles');
+
+INSERT INTO categorie_tf (nom_tf, description_tf) VALUES ('vêtements', 'Tout ce qui est porté : veste, pull, chaussures...');
+
+INSERT INTO categorie_tf (nom_tf, description_tf) VALUES ('courses alimentaires', 'nourriture : ingrédients, fruits, épices, pâtes...');
+
+INSERT INTO categorie_tf (nom_tf, description_tf) VALUES ('frais médicaux', 'opérations médicales, visites chez le généraliste, chez le dentiste, frais de pharmacie...');
+
+INSERT INTO categorie_tf (nom_tf, description_tf) VALUES ('transports', "transports en commun, essence...");
+
+INSERT INTO categorie_tf (nom_tf, description_tf) VALUES ('culture', "ticket de cinéma, entrée de musée...");
+
+INSERT INTO categorie_tf (nom_tf, description_tf) VALUES ('restauration', "Tout ce qui est mangé à l'exterieur : sandwich, café, restaurant,... ");
+
+INSERT INTO categorie_tf (nom_tf, description_tf) VALUES ('voyage', "Billet d'avion, agence de voyage...");
+
+INSERT INTO categorie_tf (nom_tf, description_tf) VALUES ('salaire', "Salaire régulier");
+
+INSERT INTO categorie_tf (nom_tf, description_tf) VALUES ('revenu indépendant', "Revenu indépendant de quelque nature qu'il soit");
+
+INSERT INTO categorie_tf (nom_tf, description_tf) VALUES ('pension', "Pension");
+
+INSERT INTO categorie_tf (nom_tf, description_tf) VALUES ('argent de poche', "Argent de poche reçu par la famille, les connaissances...");
+
+INSERT INTO categorie_tf (nom_tf, description_tf) VALUES ('remboursement', "Argent reçu ou donné dans le contexte d'un remboursement");
+
+INSERT INTO categorie_tf (nom_tf, description_tf) VALUES ('cadeau', "Argent reçu ou donné dans le contexte d'un cadeau");
+
+INSERT INTO categorie_tf (nom_tf, description_tf) VALUES ('chèque-repas', "???");
+
+INSERT INTO categorie_tf (nom_tf, description_tf) VALUES ('autre', "Toute autre nature de transaction");
+
+
+
+
+
+
+
+

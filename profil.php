@@ -88,7 +88,7 @@
 
             <ul class="pages">
                 <li><a href="historique.html">Historique</a></li>
-                <li><a href="enregistrement.html">Enregistrement</a></li>
+                <li><a href="enregistrement.php">Enregistrement</a></li>
                 <li><a href="stat.html">Statistiques</a></li>
             </ul>
 
@@ -177,6 +177,7 @@
             } 
             ?>
          <br>
+         <br>
         </div>
 
             </div>
@@ -189,8 +190,12 @@
                             <option value ="<?php echo $carte['nom_carte']?>"><?php echo $carte['nom_carte']?></option>
                     <?php endforeach; ?>
                         </select>
-                </p>
-                <button type="submit" class="mybutton full_button" name="suppr_carte">Supprimer</button>
+                        <br>
+                        <br>
+                        <p>
+                        <button type="submit" class="mybutton full_button" name="suppr_carte">Supprimer</button>
+                        </p>
+                
                 </form>
 
                 <?php
@@ -200,6 +205,8 @@
 
             } 
             ?>
+            <br>
+            <br>
             </div>
 
         </div>
@@ -223,7 +230,7 @@
                         <input type="radio" id="gollum.jpg" name="photo" value="gollum.jpg">
                         <label for="gollum.jpg" class="drinkpic-cc gollum"></label>
 
-                    </fieldset> <br>
+                    </fieldset> 
 
                     <button type="submit" class="mybutton full_button" name="changer_photo">Changer</button>
 
