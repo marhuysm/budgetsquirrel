@@ -55,9 +55,10 @@
             $montant = htmlspecialchars($_POST['montant_transaction']);
             $date_tf = htmlspecialchars($_POST['date_transaction']);
             $cat_tf = htmlspecialchars($_POST['categorie_transaction']);
+            $type_tf = htmlspecialchars($_POST['type_tf']);
 
             // if (isset($_POST['montant_transaction']) && isset($_POST['date_transaction']) && isset($_POST['categorie_transaction'])){
-             if ($montant != null&& $montant != 0 && isset($_POST['date_transaction']) && isset($_POST['categorie_transaction'])){
+             if ($montant != null&& $montant != 0&& $date_tf != null&& $date_tf != null&& !empty($type_tf)){
                 try {
                     /* Il faut créer et initialiser le budget_id s'il n'existe pas encore, 
                     et lier la transaction au bon budget_id correspondant au mois et à l'année enregistrée */
@@ -72,7 +73,9 @@
                 }
             }
             else{
-                echo("Vous n'avez pas entré toutes les valeurs pour la transaction");
+                echo("Vous n'avez pas entré toutes les valeurs pour la transaction.");
+                echo("Veillez à entrer le montant, la date, la catégorie et le type de transaction effectuée.");
+
             }         
            
         }
@@ -87,7 +90,7 @@
             </div>
         
             <ul class = "pages">
-                <li><a href="historique.html">Historique</a></li>
+                <li><a href="historique.php">Historique</a></li>
                 <li><a href="enregistrement.php">Enregistrement</a></li>
                 <li><a href="stat.html">Statistiques</a></li>
             </ul>
@@ -156,13 +159,13 @@
 
             <div class="transaction-selection">
                 
-                <input type="radio" id="cash" name="typetransact" value="cash">
+                <input type="radio" id="cash" name="type_tf" value="cash" checked="checked">
                 <label for="cash">Payement en liquide</label>
     
-                <input type="radio" id="virement" name="typetransact" value="virement">
+                <input type="radio" id="virement" name="type_tf" value="virement">
                 <label for="virement">Virement banquaire</label>
     
-                <input type="radio" id="carte" name="typetransact" value="carte">
+                <input type="radio" id="carte" name="type_tf" value="carte">
                 <label for="carte">Payement par carte</label> <br>
         
             </div>
