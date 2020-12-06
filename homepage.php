@@ -48,8 +48,8 @@
             <div class="profile-container">
                 <img  class = "photo-profil" src="img/<?php echo $connexion['photo']?>">
                 <ul>
-                    <li><a href="profil.php"><?php ?>Profil</a></li>
-                    <li><a href="index.html">Déconnexion</a></li>
+                    <li><a href="profil.php"><?php ?>Profil de <?php echo $connexion['prenom']; echo " "; echo $connexion['nom'] ?></a></li>
+                    <li><a  href="logout.php">Déconnexion</a></li>
               </ul>
             </div>
         
