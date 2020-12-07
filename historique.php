@@ -32,6 +32,11 @@
         // Afficher un formulaire de sélection de mois, puis, une fois envoyé, montrer le tableau des transactions financières pour le mois
         // et donner la possibilité à l'utilisateur de visualiser son total pour ce mois ainsi que de clore le mois sélectionné.
         
+        // A essayer si on a le temps : get le dernier budget en cours et l'afficher "par défaut"
+
+        // une fois que l'utilisateur a sélectionné le mois qu'il veut consulté, on récupère les données du get
+        // ainsi que le mois et l'année , afin de pouvoir afficher le bon budget mensuel par la suite.
+
         if(isset($_GET['selection_mois'])){
             $table_month = htmlspecialchars($_GET['table_month']);
             $parsed_date = date_parse_from_format('Y-m', $table_month);
@@ -39,7 +44,6 @@
             $annee_choisie = $parsed_date["year"]; // année en int
 
             echo($table_month . " <br>" . $mois_choisi . "<br>" . "$annee_choisie");
-
 
             $getTransactions = $bdd->prepare("SELECT * FROM budgetsquirrel.transaction_financiere WHERE niss_util = $niss");
             $getTransactions->execute();
@@ -96,8 +100,13 @@
             </form>
         </div>
 
+
         <div class="centered_message">
-            <h2>Mois Année</h2>
+            <?php
+                if (isset($_GET['selection_mois'])){
+                    echo("<h2>". "Budget du " . $mois_choisi ."-". $annee_choisie ."<h2>");   
+                }
+            ?>
         </div>
 
         <table class="u-full-width">
@@ -113,12 +122,14 @@
 
     <?php
 
-    foreach ($transactions as $transaction) {
-        echo "<tr>";
-        echo "<td>" . $transaction["montant"] ."€" ."</td>";
-        echo "<td>" . $transaction["date_tf"] . "</td>";
-        echo "<td>" . $transaction["cat_tf"] . "</td>";
-        echo "</tr>";
+    if (isset($_GET['selection_mois'])){
+        foreach ($transactions as $transaction) {
+                echo "<tr>";
+                echo "<td>" . $transaction["montant"] ."€" ."</td>";
+                echo "<td>" . $transaction["date_tf"] . "</td>";
+                echo "<td>" . $transaction["cat_tf"] . "</td>";
+                echo "</tr>";
+        }
     }
 
     ?>
