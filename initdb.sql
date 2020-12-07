@@ -27,7 +27,7 @@ CREATE TABLE carte(
         );
 
 CREATE TABLE budget_mensuel(
-    budget_id INT NOT NULL AUTO_INCREMENT,
+     budget_id INT NOT NULL AUTO_INCREMENT,
      mois INT,
      annee INT,
      statut VARCHAR(100) DEFAULT("en_cours"),
@@ -37,6 +37,8 @@ CREATE TABLE budget_mensuel(
      CONSTRAINT fk_niss_util_budget FOREIGN KEY (niss_util) REFERENCES utilisateur(niss),
      CONSTRAINT pk_budget_mensuel PRIMARY KEY(budget_id)
         );
+
+        -- Comment définir que pour budget_mensuel, budget_id est un alias définissant une combinaison unique niss-année-mois?
         
 CREATE TABLE categorie_tf(
     nom_tf VARCHAR(100),

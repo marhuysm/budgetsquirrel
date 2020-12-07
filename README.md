@@ -36,6 +36,7 @@ Je bosse sur la partie php et j'ai créé une bdd basique (cf initdb.sql), à vo
 page de profil : suppression de carte (suppression logique) fonctionne parfaitement. Ajouté une colonne gérant la suprr logique dans la table carte. Ajouté également un tableau montrant les cartes dispos/non supprimées
 
 page d'enregistrement: WIP budget_id. à 11:18 : l'id de budget est soit créé, soit récupéré, en fonction de s'il existe ou non, cf "enregistrement.php"
+WIP à 12:00 : lorsque l'utilisateur entre toutes les données requises, on cherche si un budget_id correspond déjà au mois et à l'année sélectionnée. Si oui, on extrait le budget id, sinon, on crée le budget mensuel correspondant, et ensuite, on extrait le budget id. Le budget id récupéré, on peut créer la transaction de l'utilisateur, liée à son niss, et au budget id correspondant
 
 
 ## Pour faire fonctionner le projet : 
