@@ -66,15 +66,31 @@
                 }
                 else{
 
-
                     echo($budget_id);
+
+                    // sélection de toutes les transactions pour le mois, pour ensuite les afficher dans un tableau
 
                     $getTransactions = $bdd->prepare("SELECT * FROM budgetsquirrel.transaction_financiere WHERE niss_util = $niss AND budget_id = $budget_id");
                     $getTransactions->execute();
                     $transactions = $getTransactions->fetchAll();
-                }
 
-                // enfin, on peut n'afficher que les transactions qui sont liées à ce budget_id
+                    // total à afficher : besoin d'écrire la somme des transactions pour le mois dans la colonne bilan de budget mensuel
+                    
+                    //calcul de la somme : 
+
+                    $GetTotalMois = $bdd->prepare("SELECT SUM(montant) as total FROM budgetsquirrel.transaction_financiere WHERE niss_util = $niss AND budget_id = $budget_id");
+                    $GetTotalMois->execute();
+                    $fetchedTotal = $GetTotalMois->fetch();
+                    $total_mois = $fetchedTotal["total"];
+
+                    //réécriture de bilan dans la table budget_mensuel : 
+
+                    $WriteTotal = $bdd->prepare("UPDATE budgetsquirrel.budget_mensuel SET bilan = $total_mois WHERE budget_id = $budget_id");
+                    $WriteTotal->execute();
+
+                    // Est-ce mieux de directement utiliser $total_mois dans le total, ou d'appeler la valeur de la colonne bilan du 
+                    //budget mensuel pour afficher le total de chaque mois? Pour l'instant, j'utilise total_mois
+                }
         
             }
             // catch inutile?
@@ -84,8 +100,6 @@
             }
     }
         
-
-
 
   ?>
 
@@ -145,40 +159,52 @@
         </div>
 
         <table class="u-full-width">
-    <tr>
-                   <th>Montant</th>
-                    <th>Date</th>
-                    <th>Catégorie</th>
-                    <th>type de transaction</th>
-                    <th>Carte utilisée</th>
-                    <th>Destinataire/Bénéficiaire</th>
-                    <th>Communication</th>
-    </tr>
+            <tr>
+                <th>Montant</th>
+                <th>Date</th>
+                <th>Catégorie</th>
+                <th>type de transaction</th>
+                <th>Carte utilisée</th>
+                <th>Destinataire/Bénéficiaire</th>
+                <th>Communication</th>
+            </tr>
 
-    <?php
+            <?php
 
-    // si l'utilisateur a sélectionné un mois ET qu'un budget_id valide a été défini
-    if (isset($_GET['selection_mois']) && (isset($budget_id))){
-        foreach ($transactions as $transaction) {
-                echo "<tr>";
-                echo "<td>" . $transaction["montant"] ."€" ."</td>";
-                echo "<td>" . $transaction["date_tf"] . "</td>";
-                echo "<td>" . $transaction["cat_tf"] . "</td>";
-                echo "</tr>";
-        }
-    }
+            // si l'utilisateur a sélectionné un mois ET qu'un budget_id valide a été défini
+            if (isset($_GET['selection_mois']) && (isset($budget_id))){
+                foreach ($transactions as $transaction) {
+                    echo "<tr>";
+                    echo "<td>" . $transaction["montant"] ."€" ."</td>";
+                    echo "<td>" . $transaction["date_tf"] . "</td>";
+                    echo "<td>" . $transaction["cat_tf"] . "</td>";
+                    echo "</tr>";
+                }
+            }
 
-    ?>
+            ?>
 
-</table>
+        </table>
 
         <hr>
 
         <div class="centered_message">
-            <p>Total : 4567€</p>
-            <button class="mybutton full_button" onclick="">Cloturer ce mois</button>
+            <?php 
+                if (isset($_GET['selection_mois']) && isset($budget_id)){
+                    echo("<div class='centered_message'>");
+                    echo("<p>Total: " . $total_mois ."€</p>");
+
+                    echo("<button class='mybutton full_button' onclick=''>Cloturer ce mois</button>");
+
+                }
+                else{
+                    ;
+                }
+                ?>
+
         </div>
-    </div>
+
+        
 
     <footer>
         <p>Ce projet a été développé dans le cadre du cours de conception et gestion de banques de données (MA2 STIC
