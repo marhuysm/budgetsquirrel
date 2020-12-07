@@ -31,6 +31,12 @@ Hello ! Pour l'instant, je n'ai pas pu encore avancer sur la partie php, j'ai pa
 
 Je bosse sur la partie php et j'ai créé une bdd basique (cf initdb.sql), à voir si c'est ok pour les données enregistrées, et il manque encore bcp de contraintes. L'écran d'inscription.php est plus ou moins fini, la gestion de connexion.php permet d'ouvrir une session de l'app aussi. J'essaie de peaufiner l'affichage des infos utilisateurs dans homepage.php et profil.php (+modifs possibles à faire dans profil.php : ajout de carte, suprr de carte, et changement de photo de profil)
 
+#### lu 7/12 : 
+
+page de profil : suppression de carte (suppression logique) fonctionne parfaitement. Ajouté une colonne gérant la suprr logique dans la table carte. Ajouté également un tableau montrant les cartes dispos/non supprimées
+
+page d'enregistrement: WIP budget_id. à 11:18 : l'id de budget est soit créé, soit récupéré, en fonction de s'il existe ou non, cf "enregistrement.php"
+
 
 ## Pour faire fonctionner le projet : 
 1. Démarrer xammp

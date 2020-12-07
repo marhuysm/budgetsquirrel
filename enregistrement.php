@@ -5,7 +5,8 @@
 <!DOCTYPE html>
 <html>
 
-    <script src= 
+    <!-- Script à utiliser et adapter pour l'affichage du formulaire
+        <script src= 
     "https://code.jquery.com/jquery-1.12.4.min.js"> 
      $(document).ready(function() { 
                 $('input[type="radio"]').click(function() { 
@@ -15,7 +16,7 @@
                     $(targetBox).show(); 
                 }); 
             }); 
-        </script> 
+        </script>  --> 
 
 <head>
     <meta charset="utf-8">
@@ -41,13 +42,10 @@
         $getConnexion-> execute();
         $connexion = $getConnexion->fetch();
 
-        //$getCartes = $bdd->prepare("SELECT * FROM budgetsquirrel.carte WHERE niss_util = $niss");
-        //si suppression logique, alors 
         $getCartes = $bdd->prepare("SELECT * FROM budgetsquirrel.carte WHERE niss_util = $niss AND is_deleted = 0");
         $getCartes->execute();
         $cartes = $getCartes->fetchAll();
         
-
         $getCategories = $bdd->prepare("SELECT * FROM budgetsquirrel.categorie_tf");
         $getCategories->execute();
         $categories = $getCategories->fetchAll();
@@ -56,41 +54,73 @@
            
             $montant = htmlspecialchars($_POST['montant_transaction']);
             $date_tf = htmlspecialchars($_POST['date_transaction']);
+            $parsed_date = date_parse_from_format('Y-m', $date_tf);
+            $mois_tf = $parsed_date["month"]; // mois en int
+            $annee_tf = $parsed_date["year"]; // année en int
             $cat_tf = htmlspecialchars($_POST['categorie_transaction']);
             $type_tf = htmlspecialchars($_POST['type_tf']);
+
+
+            // Une fois le mois et l'année récupérée, on peut voir : 
+            //s'il existe déjà un budget pour ce mois et cette année
+            // ou s'il faut créer un nouveau budget_mensuel
+            
+            // Tout d'abord, voir si le resultat de fetched_budget == 0 ou 1, autrement dit: s'il existe déjà un budget_id correspondant ou non.
+            $getBudgets = $bdd->prepare("SELECT budget_id as budget_id FROM budget_mensuel WHERE mois = $mois_tf AND annee = $annee_tf");
+            $getBudgets->execute();
+            $fetchedBudget = $getBudgets->fetch();
+
+            // s'il n'existe pas encore: le créer et récupérer son id
+            if($fetchedBudget == 0){
+                $query = $bdd->prepare("INSERT INTO budgetsquirrel.budget_mensuel (mois, annee, niss_util)
+                VALUES(?,?,?)");
+                $query->execute(array($mois_tf, $annee_tf, $niss));
+
+                echo("budget mensuel créé! ");
+
+                $getBudgetId = $bdd->prepare("SELECT budget_id as budget_id FROM budget_mensuel WHERE mois = $mois_tf AND annee = $annee_tf");
+                $getBudgets->execute();
+                $fetchedBudget = $getBudgets->fetch();
+
+                echo("numero de budget_id créé:". $fetchedBudget["budget_id"]);
+            }
+            // s'il existe déjà : simplement récupérer l'id
+            else if ($fetchedBudget >= 1){
+                echo("numero de budget_id présent :". $fetchedBudget["budget_id"]);
+            }
 
             //ajout d'une verification de l'existence d'un budget en cours pour la date donnée
             //ajoud d'une verification de l'existence d'un reste du bilan précedent
             //Pour le travail sur la partie budget il faut envisager une contrainte relative au clôture du budget, envisageant que
             //un utilisateur peut clôturer son budget pendant le mois en cours, MAIS
             //si l'utilisateur ne clôture pas son budget, le système le fera le premier jour du mois suivant au minuit
-            $check = $bdd->prepare("SELECT count(1) as total FROM budgetsquirrel.budget_mensuel WHERE statut = 'EnCours')");  //Verif si il n'existe pas déjà un budget
-            $check->execute();
-            $budget = $check-> fetch();
+            // Note : je pense que garder juste une cloture manuelle peut être utile (et plus simple)
+            // $check = $bdd->prepare("SELECT count(1) as total FROM budgetsquirrel.budget_mensuel WHERE statut = 'EnCours')");  //Verif si il n'existe pas déjà un budget
+            // $check->execute();
+            // $budget = $check-> fetch();
 
-            $check = $bdd->prepare("SELECT MAX(budget_id), reste FROM budgetsquirrel.budget_mensuel WHERE statut = 'Clos' GROUP BY reste)"); //Verif si il n'y a pas un reste du bilan précedent
-            $check->execute();
-            $resteBilanPrecedent = $check-> fetch();   // <- il faut corriger le query puis qu'il retourne une seule valeur avec fetch, vu que le select porte sur deux colonnes
+            // $check = $bdd->prepare("SELECT MAX(budget_id), reste FROM budgetsquirrel.budget_mensuel WHERE statut = 'Clos' GROUP BY reste)"); //Verif si il n'y a pas un reste du bilan précedent
+            // $check->execute();
+            // $resteBilanPrecedent = $check-> fetch();   // <- il faut corriger le query puis qu'il retourne une seule valeur avec fetch, vu que le select porte sur deux colonnes
 
-            if ($budget['total'] == 0){
-                $query = $bdd->prepare("INSERT INTO budgetsquirrel.budget_mensuel (mois, annee, statut, bilan, reste, niss_util) 
-                VALUES (?,?,?,?,?,?)");
-                $query->execute(array(MONTH($date_tf), YEAR($date_tf), 'EnCours', $resteBilanPrecedent + $montant, 0, $niss));
-            }
+            // if ($budget['total'] == 0){
+            //     $query = $bdd->prepare("INSERT INTO budgetsquirrel.budget_mensuel (mois, annee, statut, bilan, reste, niss_util) 
+            //     VALUES (?,?,?,?,?,?)");
+            //     $query->execute(array(MONTH($date_tf), YEAR($date_tf), 'EnCours', $resteBilanPrecedent + $montant, 0, $niss));
+            // }
             
-            //recuperer le budget_id du budget_mensuel en cours
-            $check = $bdd->prepare("SELECT budget_id FROM budgetsquirrel.budget_mensuel WHERE statut = 'EnCours')");  //Verif si il n'existe pas déjà un budget
-            $check->execute();
-            $budgetId = $check-> fetch();
+            // //recuperer le budget_id du budget_mensuel en cours
+            // $check = $bdd->prepare("SELECT budget_id FROM budgetsquirrel.budget_mensuel WHERE statut = 'EnCours')");  //Verif si il n'existe pas déjà un budget
+            // $check->execute();
+            // $budgetId = $check-> fetch();
 
-            // if (isset($_POST['montant_transaction']) && isset($_POST['date_transaction']) && isset($_POST['categorie_transaction'])){
              if ($montant != null&& $montant != 0&& $date_tf != null&& $date_tf != null&& !empty($type_tf)){
                 try {
                     /* Il faut créer et initialiser le budget_id s'il n'existe pas encore, 
                     et lier la transaction au bon budget_id correspondant au mois et à l'année enregistrée */
                     $query = $bdd->prepare("INSERT INTO budgetsquirrel.transaction_financiere (montant, date_tf, niss_util, budget_id, cat_tf) 
                     VALUES (?,?,?,?,?)");
-                    $query->execute(array($montant, $date_tf, $niss, $budgetId, $cat_tf));
+                    $query->execute(array($montant, $date_tf, $niss, $budget_id, $cat_tf));
     
                     echo ("transaction enregistrée");
                 }

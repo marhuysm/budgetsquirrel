@@ -30,7 +30,7 @@ CREATE TABLE budget_mensuel(
     budget_id INT NOT NULL AUTO_INCREMENT,
      mois INT,
      annee INT,
-     statut VARCHAR(100),
+     statut VARCHAR(100) DEFAULT("en_cours"),
      bilan INT,
      reste INT NULL,
      niss_util VARCHAR(11),
