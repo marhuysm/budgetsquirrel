@@ -10,9 +10,15 @@ INSERT INTO utilisateur (nom, prenom, niss, date_naissance, photo) VALUES ('Must
 
 INSERT INTO utilisateur (nom, prenom, niss, date_naissance, photo) VALUES ('Tartempion', 'Jean-Jacques', '19831206323', '1983-12-06', 'raccoon.jpg');
 
-INSERT INTO utilisateur (nom, prenom, niss, date_naissance, photo) VALUES ('Skywalker', 'Anakin', '19960225111', '1996-02-25', 'froggy.jpg');
+INSERT INTO utilisateur (nom, prenom, niss, date_naissance, photo) VALUES ('Skywalker', 'Anakin', '19960225111', '1996-02-25', 'froggy.png');
 
-INSERT INTO utilisateur (nom, prenom, niss, date_naissance, photo) VALUES ('Baggins', 'Bilbo', '19650922666', '1965-09-22', 'froggy.jpg');
+INSERT INTO utilisateur (nom, prenom, niss, date_naissance, photo) VALUES ('Baggins', 'Bilbo', '19650922666', '1965-09-22', 'gollum.jpg');
+
+/* Ajout de cartes à chaque utilisateur */
+
+INSERT INTO carte (nom_carte, numero_carte, type_carte, niss_util) VALUES ("Visa Gandalf", "34566666666611111", "Visa", "19650922666");
+
+INSERT INTO carte (nom_carte, numero_carte, type_carte, niss_util) VALUES ("Mastercard Comté", "2342111111111111", "Mastercard", "19650922666");
 
 
 /*Ajout des catégories disponibles */

@@ -50,13 +50,10 @@
 
         //$getCartes = $bdd->prepare("SELECT * FROM budgetsquirrel.carte WHERE niss_util = $niss");
         //Si suppression logique (voir lignes 61-65)
-        $getCartes = $bdd->prepare("SELECT * FROM budgetsquirrel.carte WHERE niss_util = $niss AND is_deleted = 0");
-        $getCartes->execute();
-        $cartes = $getCartes->fetchAll();
 
         if (isset($_POST['suppr_carte'])) {
 
-            $nom_carte = htmlspecialchars($_POST['carte_suppr']); 
+            $numero_carte = htmlspecialchars($_POST['carte_suppr']); 
 
             //PB : foreign key empêche la suppression : comment gérer la supr de carte?
             //Solution proposée: supression logique en lieu d'une supression phisique, cad:
@@ -64,7 +61,7 @@
             //Inclure dans les queries qui font appel au table carte la condition WHERE is_deleted = 0  
             //Dans le cas present ici au lieu de "DELETE FROM budgetsquirrel.carte.... on peut mettre
             $is_deleted = 1;
-            $query = $bdd->prepare("UPDATE budgetsquirrel.carte SET is_deleted = :is_deleted WHERE niss_util = $niss AND nom_carte = $nom_carte"); 
+            $query = $bdd->prepare("UPDATE budgetsquirrel.carte SET is_deleted = :is_deleted WHERE niss_util = $niss AND numero_carte = $numero_carte"); 
             $query->bindParam(':is_deleted', $is_deleted, PDO::PARAM_INT);
       
             //$query = $bdd->prepare("DELETE FROM budgetsquirrel.carte WHERE niss_util = $niss AND nom_carte = $nom_carte"); 
@@ -85,6 +82,10 @@
         $getConnexion = $bdd->prepare("SELECT * FROM budgetsquirrel.utilisateur WHERE niss = $niss");
         $getConnexion-> execute();
         $connexion = $getConnexion->fetch();
+
+        $getCartes = $bdd->prepare("SELECT * FROM budgetsquirrel.carte WHERE niss_util = $niss AND is_deleted = 0");
+        $getCartes->execute();
+        $cartes = $getCartes->fetchAll();
         
   ?>
     <header>
@@ -120,12 +121,39 @@
             </div>
 
             <div class="four columns">
-                <p><?php echo $connexion['niss'] ?></p>
+                <p> <b>NISS : </b><?php echo $connexion['niss'] ?></p>
             </div>
 
             <div two="four columns">
-                <p><?php echo $connexion['date_naissance'] ?></p>
+                <p> <b>Date de naissance : </b> <?php echo $connexion['date_naissance'] ?></p>
             </div>
+
+        </div>
+
+        <h3>Mes cartes : </h3>
+
+        <table class="u-full-width">
+            <tr>
+                        <th>Nom de la carte</th>
+                        <th>Numéro de la carte</th>
+                        <th>Type de carte</th>
+            </tr>
+
+            <?php
+
+            foreach ($cartes as $carte) {
+                echo "<tr>";
+                echo "<td>" . $carte["nom_carte"] ."</td>";
+                echo "<td>" . $carte["numero_carte"] . "</td>";
+                echo "<td>" . $carte["type_carte"] . "</td>";
+                echo "</tr>";
+            }
+
+            ?>
+
+        </table>
+
+        <div> 
 
         </div>
 
@@ -196,7 +224,7 @@
                 <form method = "POST">
                 <select name="carte_suppr">
                         <?php foreach ($cartes as $carte): ?>
-                            <option value ="<?php echo $carte['nom_carte']?>"><?php echo $carte['nom_carte']?></option>
+                            <option value ="<?php echo $carte['numero_carte']?>"><?php echo $carte['nom_carte']?></option>
                     <?php endforeach; ?>
                         </select>
                         <br>
@@ -209,7 +237,12 @@
 
                 <?php
             if(isset($_POST['suppr_carte'])) {
-                echo("Votre carte ".$nom_carte." a bien été supprimée !");
+
+                $getNomCarte = $bdd->prepare("SELECT nom_carte FROM budgetsquirrel.carte WHERE niss_util = $niss AND numero_carte = $numero_carte AND is_deleted = 1");
+                $getNomCarte->execute();
+                $nom_carte = $getNomCarte->fetch();
+
+                echo("Votre carte a bien été supprimée !");
                 $_POST['suppr_carte'] = null; // Evite la réécriture des données à chaque refresh
 
             } 
