@@ -38,6 +38,8 @@ page de profil : suppression de carte (suppression logique) fonctionne parfaitem
 page d'enregistrement: WIP budget_id. à 11:18 : l'id de budget est soit créé, soit récupéré, en fonction de s'il existe ou non, cf "enregistrement.php"
 WIP à 12:00 : lorsque l'utilisateur entre toutes les données requises, on cherche si un budget_id correspond déjà au mois et à l'année sélectionnée. Si oui, on extrait le budget id, sinon, on crée le budget mensuel correspondant, et ensuite, on extrait le budget id. Le budget id récupéré, on peut créer la transaction de l'utilisateur, liée à son niss, et au budget id correspondant
 
+WIP 15:00 : total dans historique affiché et s'enregistre dans le bilan du mois concerné , l'affichage de l'historique par mois fonctionne aussi.
+
 
 ## Pour faire fonctionner le projet : 
 1. Démarrer xammp
