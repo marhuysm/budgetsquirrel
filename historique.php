@@ -28,9 +28,25 @@
         $getConnexion-> execute();
         $connexion = $getConnexion->fetch();
 
-        $getTransactions = $bdd->prepare("SELECT * FROM budgetsquirrel.transaction_financiere WHERE niss_util = $niss");
-        $getTransactions->execute();
-        $transactions = $getTransactions->fetchAll();
+        // l'objectif de la page : 
+        // Afficher un formulaire de sélection de mois, puis, une fois envoyé, montrer le tableau des transactions financières pour le mois
+        // et donner la possibilité à l'utilisateur de visualiser son total pour ce mois ainsi que de clore le mois sélectionné.
+        
+        if(isset($_GET['selection_mois'])){
+            $table_month = htmlspecialchars($_GET['table_month']);
+            $parsed_date = date_parse_from_format('Y-m', $table_month);
+            $mois_choisi = $parsed_date["month"]; // mois en int
+            $annee_choisie = $parsed_date["year"]; // année en int
+
+            echo($table_month . " <br>" . $mois_choisi . "<br>" . "$annee_choisie");
+
+
+            $getTransactions = $bdd->prepare("SELECT * FROM budgetsquirrel.transaction_financiere WHERE niss_util = $niss");
+            $getTransactions->execute();
+            $transactions = $getTransactions->fetchAll();
+        }
+
+
 
   ?>
 
@@ -66,15 +82,15 @@
 
         <div class="centered_message">
             <h3>Choisissez le mois que vous voulez consulter</h3>
-            <form>
+            <form method = "GET">
                 <p>
 
-                    <label for="table-month"></label>
-                    <input id="table-month" type="month" name="table-month">
+                    <label for="table_month"></label>
+                    <input id="table_month" type="month" name="table_month">
                 </p>
                 <p>
 
-                    <input type="submit" class="mybutton full_button" value="Go">
+                <button type="submit" class="mybutton full_button" name="selection_mois">Voir le budget du mois sélectionné</button>
                 </p>
 
             </form>
@@ -83,36 +99,6 @@
         <div class="centered_message">
             <h2>Mois Année</h2>
         </div>
-
-        <table class="u-full-width">
-            <thead>
-                <tr>
-                    <th>Montant</th>
-                    <th>Date</th>
-                    <th>Catégorie</th>
-                    <th>type de transaction</th>
-                    <th>Carte utilisée</th>
-                    <th>Destinataire/Bénéficiaire</th>
-                    <th>Communication</th>
-
-                </tr>
-            </thead>
-
-            <tbody>
-                <tr>
-                    <td>+56€</td>
-                    <td>23/11/2018</td>
-                    <td>testestest</td>
-                    <td>testtest</td>
-                    <td>testestestes</td>
-                    <td>testest</td>
-                    <td>testestestest</td>
-
-                </tr>
-            </tbody>
-
-
-        </table>
 
         <table class="u-full-width">
     <tr>
