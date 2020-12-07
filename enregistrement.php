@@ -213,6 +213,9 @@
     </header>
 
     <!-- Selection hide / parties grisées en fonction du bouton de type de transaction -->
+
+    <!-- ! Pour l'instant, le select de la carte renvoie d'office une donnée (vu que c'est un select) : comment faire un default value = blank? -->
+    
     <div class="container">
         <h1>Enregistrer une nouvelle transaction</h1>
         <h2>Complétez les informations suivantes :</h2>
