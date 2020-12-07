@@ -115,7 +115,7 @@
             <ul class="pages">
                 <li><a href="historique.php">Historique</a></li>
                 <li><a href="enregistrement.php">Enregistrement</a></li>
-                <li><a href="stat.html">Statistiques</a></li>
+                <li><a href="stat.php">Statistiques</a></li>
             </ul>
 
             <div class="profile-container">
