@@ -21,6 +21,7 @@ CREATE TABLE carte(
         numero_carte VARCHAR(17),
         type_carte VARCHAR(100),
     	niss_util VARCHAR(11),
+        is_deleted INT DEFAULT 0,
        	CONSTRAINT fk_niss_util_carte FOREIGN KEY (niss_util) REFERENCES utilisateur(niss),
     	CONSTRAINT pk_carte PRIMARY KEY(nom_carte)
         );
