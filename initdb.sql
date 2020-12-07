@@ -1,5 +1,7 @@
 /*SCRIPT DE CREATION DE LA DB BUDGETSQUIRREL */
 
+DROP DATABASE IF EXISTS budgetsquirrel;
+
 CREATE DATABASE budgetsquirrel CHARACTER SET 'utf8';
 
 USE budgetsquirrel;
@@ -76,6 +78,20 @@ CREATE TABLE tf_carte(
     nom_carte VARCHAR(255),
      CONSTRAINT fk_num_tf_carte FOREIGN KEY (num_tf) REFERENCES transaction_financiere(num_tf),
      CONSTRAINT fk_nom_carte FOREIGN KEY (nom_carte) REFERENCES carte(nom_carte)
-        )
-    
+    );
+
+CREATE OR REPLACE VIEW historique_v AS
+    SELECT tf.montant, tf.date_tf, tf.cat_tf, 
+        Case
+            when tf.num_tf = 1 then 'cash'
+            when tf.num_tf = 2 then 'carte'
+            when tf.num_tf = 3 then 'virement'
+        end as type_transaction, 
+        c.nom_carte, tfv.destbenef, tfv.communication
+    FROM transaction_financiere tf
+    LEFT JOIN tf_carte tfc ON tfc.num_tf = tf.num_tf 
+    LEFT JOIN tf_virement tfv ON tfv.num_tf = tf.num_tf 
+    INNER JOIN carte c ON c.nom_carte = tfc.nom_carte -- a remplacer par numero_carte lors du prochain update du code
+;
+
  ENGINE=InnoDB

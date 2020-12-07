@@ -86,6 +86,10 @@
         $getCartes = $bdd->prepare("SELECT * FROM budgetsquirrel.carte WHERE niss_util = $niss AND is_deleted = 0");
         $getCartes->execute();
         $cartes = $getCartes->fetchAll();
+
+        $getCartesInactives = $bdd->prepare("SELECT * FROM budgetsquirrel.carte WHERE niss_util = $niss AND is_deleted = 1");
+        $getCartesInactives->execute();
+        $cartesInactives = $getCartesInactives->fetchAll();
         
   ?>
     <header>
@@ -130,7 +134,7 @@
 
         </div>
 
-        <h3>Mes cartes : </h3>
+        <h3>Mes cartes actuelles : </h3>
 
         <table class="u-full-width">
             <tr>
@@ -142,6 +146,29 @@
             <?php
 
             foreach ($cartes as $carte) {
+                echo "<tr>";
+                echo "<td>" . $carte["nom_carte"] ."</td>";
+                echo "<td>" . $carte["numero_carte"] . "</td>";
+                echo "<td>" . $carte["type_carte"] . "</td>";
+                echo "</tr>";
+            }
+
+            ?>
+
+        </table>
+
+        <h3>Mes anciennes cartes : </h3>
+
+        <table class="u-full-width">
+            <tr>
+                        <th>Nom de la carte</th>
+                        <th>Numéro de la carte</th>
+                        <th>Type de carte</th>
+            </tr>
+
+            <?php
+
+            foreach ($cartesInactives as $carte) {
                 echo "<tr>";
                 echo "<td>" . $carte["nom_carte"] ."</td>";
                 echo "<td>" . $carte["numero_carte"] . "</td>";

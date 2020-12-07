@@ -267,19 +267,39 @@
             <h3>Sélectionnez le type de transaction effectuée :</h3>
 
             <div class="transaction-selection">
-                
-                <input type="radio" id="cash" name="type_tf" value="cash" checked="checked">
+                <!-- rajout d'une fonction javascript togglePayment() pour gérer l'affichage des sections correspondant au type de paiement. -->
+                <script type="text/javascript">
+                    function togglePayment() {
+                        var section_carte = document.getElementById('section_carte');
+                        var section_virement = document.getElementById('section_virement');
+
+                        if(document.getElementById('cash').checked) {
+                            section_carte.style.display = 'none';
+                            section_virement.style.display = 'none';
+                        }
+                        else if(document.getElementById('virement').checked) {
+                            section_carte.style.display = 'none';
+                            section_virement.style.display = 'block';
+                        }
+                        else if(document.getElementById('carte').checked) {
+                            section_carte.style.display = 'block';
+                            section_virement.style.display = 'none';
+                        }
+                    }
+                </script>
+
+                <input type="radio" id="cash" name="type_tf" value="cash" onClick="togglePayment()" checked="checked">
                 <label for="cash">Payement en liquide</label>
     
-                <input type="radio" id="virement" name="type_tf" value="virement">
+                <input type="radio" id="virement" name="type_tf" value="virement" onClick="togglePayment()">
                 <label for="virement">Virement banquaire</label>
     
-                <input type="radio" id="carte" name="type_tf" value="carte">
+                <input type="radio" id="carte" name="type_tf" value="carte" onClick="togglePayment()">
                 <label for="carte">Payement par carte</label> <br>
         
             </div>
             
-            <fieldset>
+            <fieldset id="section_carte" style="display: none;">
                 <legend>Payement par carte</legend>
                 <p>
                 <select name="carte_select">
@@ -292,7 +312,7 @@
                 </p>
             </fieldset>
 
-            <fieldset>
+            <fieldset id="section_virement" style="display: none;">
                 <legend>Virement banquaire</legend>
                 <p>
                     <label for="benefdest">
