@@ -28,7 +28,29 @@
         $getConnexion-> execute();
         $connexion = $getConnexion->fetch();
         
+        // pour récupérer le total des dépenses, il faut faire une requête qui récupère toutes les transactions appartenant 
+        // à l'utilisateur et étant < 0, et qui en fait la somme :
+
+        $getDepenses = $bdd->prepare("SELECT SUM(montant) as total_depenses FROM budgetsquirrel.transaction_financiere WHERE niss_util = $niss AND montant < 0");
+        $getDepenses->execute();
+        $fetchedDepenses = $getDepenses->fetch();
+        $total_depenses = $fetchedDepenses["total_depenses"];
+
+        //de même pour les revenus, sauf que > 0 : 
+
+        $getRevenus = $bdd->prepare("SELECT SUM(montant) as total_revenus FROM budgetsquirrel.transaction_financiere WHERE niss_util = $niss AND montant > 0");
+        $getRevenus->execute();
+        $fetchedRevenus = $getRevenus->fetch();
+        $total_revenus = $fetchedRevenus["total_revenus"];
+
+        // enfin , le bilan fait le mm calcul, mais sans condition : 
+
+        $getBilan = $bdd->prepare("SELECT SUM(montant) as bilan FROM budgetsquirrel.transaction_financiere WHERE niss_util = $niss");
+        $getBilan->execute();
+        $fetchedBilan = $getBilan->fetch();
+        $bilan = $fetchedBilan["bilan"];
   ?>
+
     <header>
 
     <nav class=menu>
@@ -60,15 +82,15 @@
 
         <div class="row">
             <div class="four columns">
-                <p>Total des dépenses :</p>
+                <p>Total des dépenses : <?php echo $total_depenses; echo " €"; ?></p>
             </div>
 
             <div class="four columns">
-                <p>Total des revenus :</p>
+                <p>Total des revenus : <?php echo $total_revenus; echo " €"; ?></p>
             </div>
 
             <div class="four columns">
-                <p>Bilan :</p>
+                <p>Bilan : <?php echo $bilan; echo " €"; ?></p>
             </div>
 
         </div>
