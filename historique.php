@@ -34,21 +34,56 @@
         
         // A essayer si on a le temps : get le dernier budget en cours et l'afficher "par défaut"
 
-        // une fois que l'utilisateur a sélectionné le mois qu'il veut consulté, on récupère les données du get
+        // une fois que l'utilisateur a sélectionné le mois qu'il veut consulter, on récupère les données du get
         // ainsi que le mois et l'année , afin de pouvoir afficher le bon budget mensuel par la suite.
 
+        
         if(isset($_GET['selection_mois'])){
-            $table_month = htmlspecialchars($_GET['table_month']);
-            $parsed_date = date_parse_from_format('Y-m', $table_month);
-            $mois_choisi = $parsed_date["month"]; // mois en int
-            $annee_choisie = $parsed_date["year"]; // année en int
+            try{
+                $table_month = htmlspecialchars($_GET['table_month']);
+                $parsed_date = date_parse_from_format('Y-m', $table_month);
+                $mois_choisi = $parsed_date["month"]; // mois en int
+                $annee_choisie = $parsed_date["year"]; // année en int
+                $budget_id = 0;
 
-            echo($table_month . " <br>" . $mois_choisi . "<br>" . "$annee_choisie");
+        
+                // là, on a juste le mois et l'année choisies. Maintenant, il faut lier cette info à la table budget.
+                // On selectionne donc le budget correspondant à la date : 
+                $getBudget = $bdd->prepare("SELECT budget_id as budget_id FROM budget_mensuel WHERE mois = $mois_choisi AND annee = $annee_choisie");
+                $getBudget->execute();
+                $fetchedBudget = $getBudget->fetch();
+                $budget_id = $fetchedBudget["budget_id"];
+        
+                // Maintenant qu'on a accès au budget_id correspondnant au mois choisi, on attribue une nouvelle valeur à budget_id : 
 
-            $getTransactions = $bdd->prepare("SELECT * FROM budgetsquirrel.transaction_financiere WHERE niss_util = $niss");
-            $getTransactions->execute();
-            $transactions = $getTransactions->fetchAll();
-        }
+                if(empty($budget_id)){
+                    
+                    echo "Vous n'avez pas encore créé de transaction pour ce mois";
+                    // dans le cas ou on a pas de budget, budget_id == 0 : 
+                    // PB ici : comment éviter le message d'erreur lié ? (lié au fait que $budget_id = $fetchedBudget["budget_id"] renvoie
+                    // Trying to access array offset on value of type bool in /opt/lampp/htdocs/budgetsquirrel/historique.php)
+
+                }
+                else{
+
+
+                    echo($budget_id);
+
+                    $getTransactions = $bdd->prepare("SELECT * FROM budgetsquirrel.transaction_financiere WHERE niss_util = $niss AND budget_id = $budget_id");
+                    $getTransactions->execute();
+                    $transactions = $getTransactions->fetchAll();
+                }
+
+                // enfin, on peut n'afficher que les transactions qui sont liées à ce budget_id
+        
+            }
+            // catch inutile?
+            catch(Exception $e){
+                echo "in catch";
+                echo 'Message: ' .$e->getMessage();
+            }
+    }
+        
 
 
 
@@ -122,7 +157,8 @@
 
     <?php
 
-    if (isset($_GET['selection_mois'])){
+    // si l'utilisateur a sélectionné un mois ET qu'un budget_id valide a été défini
+    if (isset($_GET['selection_mois']) && (isset($budget_id))){
         foreach ($transactions as $transaction) {
                 echo "<tr>";
                 echo "<td>" . $transaction["montant"] ."€" ."</td>";
