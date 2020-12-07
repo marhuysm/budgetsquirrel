@@ -125,18 +125,58 @@
 
                 }
 
-            // Maintenant qu'on a une valeur définie pour $budget_id : on peut créer la transaction avec le budget_id correspondant
+                // Maintenant qu'on a une valeur définie pour $budget_id : on peut créer la transaction avec le budget_id correspondant
                 try {
 
                     $query = $bdd->prepare("INSERT INTO budgetsquirrel.transaction_financiere (montant, date_tf, niss_util, budget_id, cat_tf) 
                     VALUES (?,?,?,?,?)");
                     $query->execute(array($montant, $date_tf, $niss, $budget_id, $cat_tf));
-    
-                    echo ("transaction enregistrée");
+
+                    // récup. l'id de la transaction qui vient d'être créée : 
+
+                    $query = $bdd->prepare("SELECT LAST_INSERT_ID() as num_tf");
+                    $query->execute();
+                    $num_tf =  $query->fetch();
+                    $num_tf = $num_tf["num_tf"];
+
+
+                    echo ("transaction enregistrée sous le numéro ". $num_tf . "<br>");
+
                 }
-                catch(Error $e){
+                catch(PDOExecption $e){
                    echo $e->getMessage();
                 }
+
+                // Gestion de types de payement : cash, virement ou carte?
+                // objectif : en plus de l'enregistrement dans la table transaction_financière, il faut enregistrer chaque num_tf
+                // à soit la table tf_cash , soit la table tf_carte, soit la table tf_virement
+                // l'info de la catégorie est donnée par type_tf, qui a déjà été récupérée au dessus dans la variable $type_tf.
+                // ici, on a bien vérifié que type_tf n'est pas vide (pour pouvoir enregistrer la requête), et de toute façon, 
+                // on a déjà défini une valeur par défaut (cash),
+                // il ne reste plus qu'à enregistrer l'id de la transaction qui vient d'être récupéré dans la bonne table 
+
+                if ($type_tf == "cash"){
+                    echo("Vous avez enregistré une transaction cash");
+
+                    $query = $bdd->prepare("INSERT INTO budgetsquirrel.tf_cash (num_tf)
+                    VALUES (?)");
+                    $query->execute(array($num_tf));
+                }
+                else if ($type_tf == "virement"){
+                    echo("Vous avez enregistré une transaction par virement banquaire");
+
+                    $query = $bdd->prepare("INSERT INTO budgetsquirrel.tf_virement (num_tf)
+                    VALUES (?)");
+                    $query->execute(array($num_tf));
+                }
+                else if($type_tf == "carte"){
+                    echo("Vous avez enregistré une transaction par carte");
+
+                    $query = $bdd->prepare("INSERT INTO budgetsquirrel.tf_carte (num_tf)
+                    VALUES (?)");
+                    $query->execute(array($num_tf));
+                }
+    
             }
             else{
                 echo("Vous n'avez pas entré toutes les valeurs pour la transaction.");
