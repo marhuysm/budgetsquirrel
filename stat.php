@@ -94,7 +94,8 @@
             </div>
 
         </div>
-
+<!-- Doc pour faire les graphes  :
+    https://canvasjs.com/php-charts/chart-data-from-database/  -->
         <div>
             <h2>Répartition des transactions par mois</h2>
         </div>
