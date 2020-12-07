@@ -96,7 +96,7 @@
             </div>
 
             <ul class="pages">
-                <li><a href="historique.html">Historique</a></li>
+                <li><a href="historique.php">Historique</a></li>
                 <li><a href="enregistrement.php">Enregistrement</a></li>
                 <li><a href="stat.html">Statistiques</a></li>
             </ul>

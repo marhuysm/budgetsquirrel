@@ -40,19 +40,22 @@
         <nav class=menu>
             <div class="logo-container">
                 <img src="img/logo.png">
-                <a href="homepage.html">Budget Squirrel</a>
+                <a href="homepage.php">Budget Squirrel</a>
             </div>
 
             <ul class="pages">
-                <li><a href="historique.html">Historique</a></li>
-                <li><a href="enregistrement.html">Enregistrement</a></li>
+                <li><a href="historique.php">Historique</a></li>
+                <li><a href="enregistrement.php">Enregistrement</a></li>
                 <li><a href="stat.html">Statistiques</a></li>
             </ul>
 
-            <ul>
-                <li><a href="profil.html">Profil</a></li>
-                <li><a href="">Déconnexion</a></li>
-            </ul>
+            <div class="profile-container">
+                <img  class = "photo-profil" src="img/<?php echo $connexion['photo']?>">
+                <ul>
+                    <li><a href="profil.php"><?php ?>Profil de <?php echo $connexion['prenom']; echo " "; echo $connexion['nom'] ?></a></li>
+                    <li><a href="logout.php">Déconnexion</a></li>
+              </ul>
+            </div>
         </nav>
 
     </header>
