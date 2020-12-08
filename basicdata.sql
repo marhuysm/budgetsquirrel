@@ -41,6 +41,8 @@ INSERT INTO categorie_tf (nom_tf, description_tf) VALUES ('voyage', "Billet d'av
 
 INSERT INTO categorie_tf (nom_tf, description_tf) VALUES ('salaire', "Salaire régulier");
 
+INSERT INTO categorie_tf (nom_tf, description_tf) VALUES ('facture', "Facture d'électricité, internet...");
+
 INSERT INTO categorie_tf (nom_tf, description_tf) VALUES ('revenu indépendant', "Revenu indépendant de quelque nature qu'il soit");
 
 INSERT INTO categorie_tf (nom_tf, description_tf) VALUES ('pension', "Pension");
@@ -54,11 +56,3 @@ INSERT INTO categorie_tf (nom_tf, description_tf) VALUES ('cadeau', "Argent reç
 INSERT INTO categorie_tf (nom_tf, description_tf) VALUES ('chèque-repas', "???");
 
 INSERT INTO categorie_tf (nom_tf, description_tf) VALUES ('autre', "Toute autre nature de transaction");
-
-
-
-
-
-
-
-

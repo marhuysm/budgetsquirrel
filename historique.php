@@ -189,12 +189,13 @@
         <hr>
 
         <div class="centered_message">
-            <?php 
+           
+           <?php 
                 if (isset($_GET['selection_mois']) && isset($budget_id)){
                     echo("<div class='centered_message'>");
                     echo("<p>Total: " . $total_mois ."€</p>");
 
-                    echo("<button class='mybutton full_button' onclick=''>Cloturer ce mois</button>");
+                    // echo("<button class='mybutton full_button' onclick=''>Cloturer ce mois</button>"); Plus nécessaire vu qu'on ne va pas faire de cloture ou de reste
 
                 }
                 else{
@@ -203,6 +204,9 @@
                 ?>
 
         </div>
+
+    </div>
+    </div>
 
         
 

@@ -5,19 +5,6 @@
 <!DOCTYPE html>
 <html>
 
-    <!-- Script à utiliser et adapter pour l'affichage du formulaire
-        <script src= 
-    "https://code.jquery.com/jquery-1.12.4.min.js"> 
-     $(document).ready(function() { 
-                $('input[type="radio"]').click(function() { 
-                    var inputValue = $(this).attr("value"); 
-                    var targetBox = $("." + inputValue); 
-                    $(".selectt").not(targetBox).hide(); 
-                    $(targetBox).show(); 
-                }); 
-            }); 
-        </script>  --> 
-
 <head>
     <meta charset="utf-8">
     <title>Enregistrement</title>
@@ -126,26 +113,7 @@
                 }
 
                 // Maintenant qu'on a une valeur définie pour $budget_id : on peut créer la transaction avec le budget_id correspondant
-                try {
-
-                    $query = $bdd->prepare("INSERT INTO budgetsquirrel.transaction_financiere (montant, date_tf, niss_util, budget_id, cat_tf) 
-                    VALUES (?,?,?,?,?)");
-                    $query->execute(array($montant, $date_tf, $niss, $budget_id, $cat_tf));
-
-                    // récup. l'id de la transaction qui vient d'être créée : 
-
-                    $query = $bdd->prepare("SELECT LAST_INSERT_ID() as num_tf");
-                    $query->execute();
-                    $num_tf =  $query->fetch();
-                    $num_tf = $num_tf["num_tf"];
-
-
-                    echo ("transaction enregistrée sous le numéro ". $num_tf . "<br>");
-
-                }
-                catch(PDOExecption $e){
-                   echo $e->getMessage();
-                }
+                // Mais avant, vérifier que toutes les infos sont remplies, en fonction du champs (cash, virement ou carte)
 
                 // Gestion de types de payement : cash, virement ou carte?
                 // objectif : en plus de l'enregistrement dans la table transaction_financière, il faut enregistrer chaque num_tf
@@ -155,27 +123,115 @@
                 // on a déjà défini une valeur par défaut (cash),
                 // il ne reste plus qu'à enregistrer l'id de la transaction qui vient d'être récupéré dans la bonne table 
 
+                // si cash : pas d'infos en plus. 
+
                 if ($type_tf == "cash"){
                     echo("Vous avez enregistré une transaction cash");
 
-                    $query = $bdd->prepare("INSERT INTO budgetsquirrel.tf_cash (num_tf)
-                    VALUES (?)");
-                    $query->execute(array($num_tf));
-                }
+                    try {
+
+                        $query = $bdd->prepare("INSERT INTO budgetsquirrel.transaction_financiere (montant, date_tf, niss_util, budget_id, cat_tf) 
+                        VALUES (?,?,?,?,?)");
+                        $query->execute(array($montant, $date_tf, $niss, $budget_id, $cat_tf));
+    
+                        // récup. l'id de la transaction qui vient d'être créée : 
+    
+                        $query = $bdd->prepare("SELECT LAST_INSERT_ID() as num_tf");
+                        $query->execute();
+                        $num_tf =  $query->fetch();
+                        $num_tf = $num_tf["num_tf"];
+    
+    
+                        echo ("transaction enregistrée sous le numéro ". $num_tf . "<br>");
+
+                        // enregistrement de la transaction dans la table cash
+
+                        $query = $bdd->prepare("INSERT INTO budgetsquirrel.tf_cash (num_tf)
+                        VALUES (?)");
+                        $query->execute(array($num_tf));
+                    }
+                    catch(PDOExecption $e){
+                       echo $e->getMessage();
+                    }
+                } // si virement : d'abord vérifier si l'utilisateur a entré un destinataire/béneficiaire
                 else if ($type_tf == "virement"){
-                    echo("Vous avez enregistré une transaction par virement banquaire");
 
-                    $query = $bdd->prepare("INSERT INTO budgetsquirrel.tf_virement (num_tf)
-                    VALUES (?)");
-                    $query->execute(array($num_tf));
-                }
+                    $destbenef = htmlspecialchars($_POST['destbenef']);
+                    $communication = htmlspecialchars($_POST['communication']);
+
+                    if ($destbenef != null){
+
+                        $destbenef = htmlspecialchars($_POST['destbenef']);
+                        $communication = htmlspecialchars($_POST['communication']);
+
+                        try {
+
+                            $query = $bdd->prepare("INSERT INTO budgetsquirrel.transaction_financiere (montant, date_tf, niss_util, budget_id, cat_tf) 
+                            VALUES (?,?,?,?,?)");
+                            $query->execute(array($montant, $date_tf, $niss, $budget_id, $cat_tf));
+        
+                            // récup. l'id de la transaction qui vient d'être créée : 
+        
+                            $query = $bdd->prepare("SELECT LAST_INSERT_ID() as num_tf");
+                            $query->execute();
+                            $num_tf =  $query->fetch();
+                            $num_tf = $num_tf["num_tf"];
+        
+        
+                            echo ("transaction enregistrée sous le numéro ". $num_tf . "<br>");
+
+                            $query = $bdd->prepare("INSERT INTO budgetsquirrel.tf_virement (num_tf, communication, destbenef)
+                            VALUES (?,?,?)");
+                            $query->execute(array($num_tf, $communication, $destbenef));
+
+                            echo ("merci d'avoir enregistré ce virement");
+        
+                        }
+                        catch(PDOExecption $e){
+                           echo $e->getMessage();
+                        }
+                    }
+                    else {
+                        echo "N'oubliez pas d'ajouter au moins un destinataire";
+                    }
+
+                } //pareil pour carte
                 else if($type_tf == "carte"){
-                    echo("Vous avez enregistré une transaction par carte");
+                    if (isset($_POST['carte_select'])){
 
-                    $query = $bdd->prepare("INSERT INTO budgetsquirrel.tf_carte (num_tf)
-                    VALUES (?)");
-                    $query->execute(array($num_tf));
-                }
+                        $numero_carte = htmlspecialchars($_POST['carte_select']);
+
+                        try {
+
+                            $query = $bdd->prepare("INSERT INTO budgetsquirrel.transaction_financiere (montant, date_tf, niss_util, budget_id, cat_tf) 
+                            VALUES (?,?,?,?,?)");
+                            $query->execute(array($montant, $date_tf, $niss, $budget_id, $cat_tf));
+        
+                            // récup. l'id de la transaction qui vient d'être créée : 
+        
+                            $query = $bdd->prepare("SELECT LAST_INSERT_ID() as num_tf");
+                            $query->execute();
+                            $num_tf =  $query->fetch();
+                            $num_tf = $num_tf["num_tf"];
+        
+        
+                            echo ("transaction enregistrée sous le numéro ". $num_tf . "<br>");
+
+                            echo("Vous avez enregistré une transaction par carte");
+
+                            $query = $bdd->prepare("INSERT INTO budgetsquirrel.tf_carte (num_tf, numero_carte )
+                            VALUES (?, ?)");
+                            $query->execute(array($num_tf, $numero_carte));
+        
+                        }
+                        catch(PDOExecption $e){
+                           echo $e->getMessage();
+                        }
+                    }
+                    else{
+                        echo "N'oubliez pas de sélectionner votre carte";
+                    }                        
+                }                
     
             }
             else{
@@ -304,8 +360,9 @@
                 <p>
                 <select name="carte_select">
                     <span>Carte utilisée</span>
+                        <option value="" disabled selected>Choisissez votre carte</option> <!-- permet d'éviter d'avoir une carte sélectionnée par défaut dans le form -->
                         <?php foreach ($cartes as $carte): ?>
-                            <option value ="<?php echo $carte['nom_carte']?>"><?php echo $carte['nom_carte']?></option>
+                            <option value ="<?php echo $carte['numero_carte']?>"><?php echo $carte['nom_carte']?></option>
                     <?php endforeach; ?>
                 
                 </select>
@@ -315,17 +372,17 @@
             <fieldset id="section_virement" style="display: none;">
                 <legend>Virement banquaire</legend>
                 <p>
-                    <label for="benefdest">
-                        <span>Bénéficiaire</span>
+                    <label for="destbenef">
+                        <span>Bénéficiaire / Destinataire</span>
                     </label> <br>
-                    <input type="text" id="benefdest" name="benefdest" placeholder="Nom du bénéficiaire">
+                    <input type="text" id="destbenef" name="destbenef" placeholder="Nom du bénéficiaire">
                     </input>
                 </p>
                 <p>
-                    <label for="benefdest">
+                    <label for="communication">
                         <span>Communication</span>
                     </label> <br>
-                    <textarea id="benefdest" name="benefdest" rows="4" cols="50"
+                    <textarea id="communication" name="communication" rows="4" cols="50"
                         placeholder="Rentrez éventuellement la communication utilisée"></textarea>
                 </p>
             </fieldset>

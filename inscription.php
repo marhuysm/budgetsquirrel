@@ -19,22 +19,31 @@
         
         if(isset($_POST['inscription'])) {
 
-                $nom = htmlspecialchars($_POST['nom']);
-                $prenom = htmlspecialchars($_POST['prenom']);
-                $date_naissance = htmlspecialchars($_POST['date_naissance']);
-                $niss = htmlspecialchars($_POST['niss']);
-                $photo = htmlspecialchars($_POST['photo']);
+            $nom = htmlspecialchars($_POST['nom']);
+            $prenom = htmlspecialchars($_POST['prenom']);
+            $date_naissance = htmlspecialchars($_POST['date_naissance']);
+            $niss = htmlspecialchars($_POST['niss']);
+            $photo = htmlspecialchars($_POST['photo']);
+
+            // If toutes les données obligatoires sont remplies : 
+            if ($nom != null&& $prenom != null&& $date_naissance != null&& $niss != null&& !empty($photo)){
 
                 $check = $bdd->prepare("SELECT count(1) as total FROM utilisateur WHERE niss = $niss");  //Verif si il n'existe pas déjà un utilisateur avec ce niss
                 $check->execute();
                 $donnees = $check-> fetch();
 
-            if ($donnees['total'] == 0){
-                $query = $bdd->prepare("INSERT INTO budgetsquirrel.utilisateur (nom, prenom, niss, date_naissance, photo) 
-                VALUES (?,?,?,?,?)");
-                $query->execute(array($nom, $prenom, $niss, $date_naissance, $photo));
+                if ($donnees['total'] == 0){
+                    $query = $bdd->prepare("INSERT INTO budgetsquirrel.utilisateur (nom, prenom, niss, date_naissance, photo) 
+                    VALUES (?,?,?,?,?)");
+                    $query->execute(array($nom, $prenom, $niss, $date_naissance, $photo));
+                }
+                else if ($donnees['total'] == 1){
+                    ;
+                }
             }
-            else if ($donnees['total'] == 1){
+            else{
+
+                echo "Veuillez remplir tous les champs et sélectionner une photo de profil.";
             }
             
 
@@ -131,16 +140,21 @@
             <?php
             if(isset($_POST['inscription'])){
 
-                if ($donnees['total'] == 0){
-                    echo("Votre inscription a bien été enregistrée !");
-                echo("<a href='connexion.php'>Connectez-vous</a>");
-                $_POST['inscription'] = null; // Evite la réécriture des données à chaque refresh
+                if ($nom != null&& $prenom != null&& $date_naissance != null&& $niss != null&& !empty($photo)){
+                    if ($donnees['total'] == 0){
+                        echo("Votre inscription a bien été enregistrée !");
+                    echo("<a href='connexion.php'>Connectez-vous</a>");
+                    $_POST['inscription'] = null; // Evite la réécriture des données à chaque refresh
+                    }
+                    else if($donnees['total'] == 1){
+                    echo("Votre inscription n'a pas été enregistrée, car un utilisateur utilise déjà ce NISS. Veuillez réésayer en entrant un autre NISS, ou ");
+                    echo("<a href='connexion.php'>connectez-vous</a>");
+                    $_POST['inscription'] = null; // Evite la réécriture des données à chaque refresh
+                  } 
+
                 }
-                else if($donnees['total'] == 1){
-                echo("Votre inscription n'a pas été enregistrée, car un utilisateur utilise déjà ce NISS. Veuillez réésayer en entrant un autre NISS, ou ");
-                echo("<a href='connexion.php'>connectez-vous</a>");
-                $_POST['inscription'] = null; // Evite la réécriture des données à chaque refresh
-              } 
+
+               
             }
             ?>
         

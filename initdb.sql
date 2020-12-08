@@ -12,12 +12,9 @@ CREATE TABLE utilisateur(
         niss VARCHAR(11),
         date_naissance DATE,
         photo VARCHAR(100),
-        nombre_transactions INT DEFAULT 0,
         CONSTRAINT pk_utilisateur PRIMARY KEY(niss)
         );
         
--- Foreign key creation avec constraint avant ou sans?
-
 CREATE TABLE carte(
         nom_carte VARCHAR(255),
         numero_carte VARCHAR(17),
@@ -25,28 +22,30 @@ CREATE TABLE carte(
     	niss_util VARCHAR(11),
         is_deleted INT DEFAULT 0,
        	CONSTRAINT fk_niss_util_carte FOREIGN KEY (niss_util) REFERENCES utilisateur(niss),
-    	CONSTRAINT pk_carte PRIMARY KEY(nom_carte)
+    	CONSTRAINT pk_carte PRIMARY KEY(numero_carte),
+        CONSTRAINT uc_carte UNIQUE (numero_carte, niss_util)
         );
 
 CREATE TABLE budget_mensuel(
      budget_id INT NOT NULL AUTO_INCREMENT,
      mois INT,
      annee INT,
-     statut VARCHAR(100) DEFAULT("en_cours"),
+     statut VARCHAR(100) DEFAULT("en_cours"), -- Supprimer statut?
      bilan INT,
-     reste INT NULL,
+     reste INT NULL, -- Supprimer reste?
      niss_util VARCHAR(11),
      CONSTRAINT fk_niss_util_budget FOREIGN KEY (niss_util) REFERENCES utilisateur(niss),
-     CONSTRAINT pk_budget_mensuel PRIMARY KEY(budget_id)
+     CONSTRAINT pk_budget_mensuel PRIMARY KEY(budget_id),
+     CONSTRAINT uc_budget_mensuel UNIQUE (mois, annee, niss_util) 
         );
-
-        -- Comment définir que pour budget_mensuel, budget_id est un alias définissant une combinaison unique niss-année-mois?
         
 CREATE TABLE categorie_tf(
-    nom_tf VARCHAR(100),
+     nom_tf VARCHAR(100),
      description_tf TEXT,
      CONSTRAINT pk_categorie_tf PRIMARY KEY(nom_tf)
     );
+
+        -- Faut-il des contraintes uniques pour la table transaction_financiere ?
 
 CREATE TABLE transaction_financiere(
      num_tf INT NOT NULL AUTO_INCREMENT,
@@ -59,7 +58,8 @@ CREATE TABLE transaction_financiere(
      CONSTRAINT fk_budget_id FOREIGN KEY (budget_id) REFERENCES budget_mensuel(budget_id),
      CONSTRAINT fk_cat_tf FOREIGN KEY (cat_tf) REFERENCES categorie_tf(nom_tf),
      CONSTRAINT pk_transaction_financiere PRIMARY KEY (num_tf)
-	    );
+        );
+
 
 CREATE TABLE tf_cash(
     num_tf INT,
@@ -69,15 +69,15 @@ CREATE TABLE tf_cash(
 CREATE TABLE tf_virement(
     num_tf INT,
     communication TEXT,
-     destbenef VARCHAR(255),
-     CONSTRAINT fk_num_tf_virement FOREIGN KEY (num_tf) REFERENCES transaction_financiere(num_tf)
+    destbenef VARCHAR(255),
+    CONSTRAINT fk_num_tf_virement FOREIGN KEY (num_tf) REFERENCES transaction_financiere(num_tf)
     );
 
 CREATE TABLE tf_carte(
     num_tf INT,
-    nom_carte VARCHAR(255),
-     CONSTRAINT fk_num_tf_carte FOREIGN KEY (num_tf) REFERENCES transaction_financiere(num_tf),
-     CONSTRAINT fk_nom_carte FOREIGN KEY (nom_carte) REFERENCES carte(nom_carte)
+    numero_carte VARCHAR(255),
+    CONSTRAINT fk_num_tf_carte FOREIGN KEY (num_tf) REFERENCES transaction_financiere(num_tf),
+    CONSTRAINT fk_numero_carte FOREIGN KEY (numero_carte) REFERENCES carte(numero_carte)
     );
 
 CREATE OR REPLACE VIEW historique_v AS
@@ -91,7 +91,36 @@ CREATE OR REPLACE VIEW historique_v AS
     FROM transaction_financiere tf
     LEFT JOIN tf_carte tfc ON tfc.num_tf = tf.num_tf 
     LEFT JOIN tf_virement tfv ON tfv.num_tf = tf.num_tf 
-    INNER JOIN carte c ON c.nom_carte = tfc.nom_carte -- a remplacer par numero_carte lors du prochain update du code
+    INNER JOIN carte c ON c.numero_carte = tfc.numero_carte -- a remplacer par numero_carte lors du prochain update du code
 ;
 
  ENGINE=InnoDB
+
+
+ --------------------------------------------------
+
+ CREATE VIEW historique_v 
+AS
+SELECT
+	tf.num_tf,
+    tf.date_tf,
+    tf.montant,
+    tf.niss_util,
+    tf.budget_id,
+    tf.cat_tf
+FROM
+	transaction_financiere AS tf
+LEFT JOIN
+    tf_carte AS tfct
+    ON tf.num_tf = tfct.num_tf
+LEFT JOIN
+    tf_virement AS tfv
+    ON tf.num_tf = tfv.num_tf
+LEFT JOIN
+    tf_cash AS tfcs
+    ON tf.num_tf = tfcs.num_tf
+INNER JOIN
+	carte as c
+    ON tfct.numero_carte = c.numero_carte
+
+    
