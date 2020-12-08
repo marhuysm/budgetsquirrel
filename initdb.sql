@@ -63,20 +63,20 @@ CREATE TABLE transaction_financiere(
 
 CREATE TABLE tf_cash(
     num_tf INT,
-    CONSTRAINT fk_num_tf_cash FOREIGN KEY (num_tf) REFERENCES transaction_financiere(num_tf)
- 	   );
+    CONSTRAINT fk_num_tf_cash FOREIGN KEY (num_tf) REFERENCES transaction_financiere(num_tf) ON DELETE CASCADE
+    );
 
 CREATE TABLE tf_virement(
     num_tf INT,
     communication TEXT,
     destbenef VARCHAR(255),
-    CONSTRAINT fk_num_tf_virement FOREIGN KEY (num_tf) REFERENCES transaction_financiere(num_tf)
+    CONSTRAINT fk_num_tf_virement FOREIGN KEY (num_tf) REFERENCES transaction_financiere(num_tf) ON DELETE CASCADE
     );
 
 CREATE TABLE tf_carte(
     num_tf INT,
     numero_carte VARCHAR(255),
-    CONSTRAINT fk_num_tf_carte FOREIGN KEY (num_tf) REFERENCES transaction_financiere(num_tf),
+    CONSTRAINT fk_num_tf_carte FOREIGN KEY (num_tf) REFERENCES transaction_financiere(num_tf) ON DELETE CASCADE,
     CONSTRAINT fk_numero_carte FOREIGN KEY (numero_carte) REFERENCES carte(numero_carte)
     );
 
@@ -93,10 +93,6 @@ CREATE TABLE tf_carte(
 --     LEFT JOIN tf_virement tfv ON tfv.num_tf = tf.num_tf 
 --     INNER JOIN carte c ON c.numero_carte = tfc.numero_carte -- a remplacer par numero_carte lors du prochain update du code
 -- ;
-
-
-
- --------------------------------------------------
 
  CREATE VIEW historique_v 
 AS
@@ -116,5 +112,6 @@ LEFT JOIN budgetsquirrel.tf_cash tfcs
 ON tf.num_tf = tfcs.num_tf
 LEFT JOIN budgetsquirrel.carte c
 ON tfct.numero_carte = c.numero_carte
+
 
  ENGINE=InnoDB

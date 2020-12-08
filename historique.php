@@ -54,6 +54,20 @@
                 $fetchedBudget = $getBudget->fetch();
                 $budget_id = $fetchedBudget["budget_id"];
         
+                
+                // si l'utilisateur demande à supprimer une transaction :
+
+                if (isset($_POST['suppr_tf'])){
+
+                    $num_tf_suppr = $_POST['suppr_tf'];
+
+                    echo ("il faut supprimer la transaction n° " . $num_tf_suppr);
+
+                    $query=$bdd->prepare("DELETE FROM budgetsquirrel.transaction_financiere WHERE num_tf = $num_tf_suppr AND niss_util = $niss");
+                    $query->execute();
+
+                }
+
                 // Maintenant qu'on a accès au budget_id correspondnant au mois choisi, on attribue une nouvelle valeur à budget_id : 
 
                 if(empty($budget_id)){
@@ -96,6 +110,7 @@
                     $historique = $getHistorique->fetchAll();
 
                 }
+            
         
             }
             // catch inutile?
@@ -163,45 +178,46 @@
             ?>
         </div>
 
+        <form method = "POST">
+            <table class="table-hist u-full-width">
+                <thead>
+                    <tr>
+                        <th>Montant</th>
+                        <th>Date</th>
+                        <th>Catégorie</th>
+                        <th>type de transaction</th>
+                        <th>Carte utilisée</th>
+                        <th>Destinataire/Bénéficiaire</th>
+                        <th>Communication</th>
+                        <th></th>
+                    </tr>
+                    </thead>
 
-        <table class="table-hist u-full-width">
-            <thead>
-                <tr>
-                    <th>Montant</th>
-                    <th>Date</th>
-                    <th>Catégorie</th>
-                    <th>type de transaction</th>
-                    <th>Carte utilisée</th>
-                    <th>Destinataire/Bénéficiaire</th>
-                    <th>Communication</th>
-                    <th></th>
-                </tr>
-                </thead>
+                <tbody>
+                    <?php
 
-            <tbody>
-                <?php
+                    // si l'utilisateur a sélectionné un mois ET qu'un budget_id valide a été défini
+                    if (isset($_GET['selection_mois']) && (isset($budget_id))){
+                        foreach ($historique as $hist_tf) {
+                            echo "<tr>";
+                            echo "<td>" . $hist_tf["montant"] ."€" ."</td>";
+                            echo "<td>" . $hist_tf["date_tf"] . "</td>";
+                            echo "<td>" . $hist_tf["cat_tf"] . "</td>";
+                            echo "<td>" . $hist_tf["typetf"] . "</td>";
+                            echo "<td>" . $hist_tf["nom_carte"] . "</td>";
+                            echo "<td>" . $hist_tf["destbenef"] . "</td>";
+                            echo "<td>" . $hist_tf["communication"] . "</td>";
+                            echo  "<td><button type='submit' class='suppr_button' name='suppr_tf' value=". $hist_tf["num_tf"]."></button></td>";
+                            echo "</tr>";
 
-                // si l'utilisateur a sélectionné un mois ET qu'un budget_id valide a été défini
-                if (isset($_GET['selection_mois']) && (isset($budget_id))){
-                    foreach ($historique as $hist_tf) {
-                        echo "<tr>";
-                        echo "<td>" . $hist_tf["montant"] ."€" ."</td>";
-                        echo "<td>" . $hist_tf["date_tf"] . "</td>";
-                        echo "<td>" . $hist_tf["cat_tf"] . "</td>";
-                        echo "<td>" . $hist_tf["typetf"] . "</td>";
-                        echo "<td>" . $hist_tf["nom_carte"] . "</td>";
-                        echo "<td>" . $hist_tf["destbenef"] . "</td>";
-                        echo "<td>" . $hist_tf["communication"] . "</td>";
-                        echo  "<td><button type='submit' class='suppr_button' name='suppr_tf' value=". $hist_tf["num_tf"].">Suppr</button></td>";
-                        echo "</tr>";
-
+                        }
                     }
-                }
 
-                ?>
-            </tbody>
+                    ?>
+                </tbody>
 
-        </table>
+            </table>
+        </form>    
 
         <div class="centered_message">
            

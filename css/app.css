@@ -327,4 +327,9 @@ td:first-child, th:first-child{
 
 .suppr_button{
     background-image: url(../img/trash-bin.png);
+    background-size:contain;
+    background-repeat:no-repeat;
+    display:inline-block;
+    height: 35px;
+    border: none;
 }
