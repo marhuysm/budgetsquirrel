@@ -40,6 +40,30 @@ WIP à 12:00 : lorsque l'utilisateur entre toutes les données requises, on cher
 
 WIP 15:00 / 16:00 : total dans historique affiché et s'enregistre dans le bilan du mois concerné , l'affichage de l'historique par mois fonctionne aussi. Ajout dans la page d'enregistrement de l'écriture du numero de transaction dans la bonne table en fonction de si transaction cash, virement ou carte.
 
+#### ma 7/12 : 
+
+La suppression des cartes fonctionne vraiment correctement normalement maintenant
+
+La suppression de transaction a été ajoutée
+
+La vue pour l'historique me semble complète comme ça
+
+J'ai aussi ajouté certaines unique key, à voir s'il en faut d'autres
+
+Encore à faire : 
+- Voir s'il n'y a pas de moyen plus efficace de créer un budget : par ex, une condition du côté de la DB lorsque une nouvelle transaction est créée ?
+- Supprimer infos DB inutile : reste, bilan
+
+- Tableaux statistiques 
+
+- Voir comment limiter les FLOAT a 2 décimales
+
+- Ajouter un count du nb de transactions effectuées dans la page de stat
+
+- !! Ajouter plus de contraintes / Check, pour correspondre réellement à notre schéma avec toutes les contraintes qui vont avec au niveau de la db
+
+- voir comment retourner une erreur lorsque l'écriture ne se fait pas dans la db lorsque ces contraintes ne sont pas respectées
+
 
 ## Pour faire fonctionner le projet : 
 1. Démarrer xammp
