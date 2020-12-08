@@ -101,70 +101,13 @@ CREATE OR REPLACE VIEW historique_v AS
 
  CREATE VIEW historique_v 
 AS
-SELECT
-	tf.num_tf,
-    tf.date_tf,
-    tf.montant,
-    tf.niss_util,
-    tf.budget_id,
-    tf.cat_tf
-
+SELECT tf.num_tf, tf.date_tf, tf.montant, tf.niss_util, tf.budget_id, tf.cat_tf, tfct.numero_carte, tfv.destbenef, tfv.communication,
     CASE 
-        WHEN tf.num_tf = tfct.num_tf THEN 
-FROM
-	transaction_financiere AS tf
-LEFT JOIN
-    tf_carte AS tfct
-    ON tf.num_tf = tfct.num_tf
-LEFT JOIN
-    tf_virement AS tfv
-    ON tf.num_tf = tfv.num_tf
-LEFT JOIN
-    tf_cash AS tfcs
-    ON tf.num_tf = tfcs.num_tf
-INNER JOIN
-	carte as c
-    ON tfct.numero_carte = c.numero_carte
-
--- Sélectionner uniquement les num_tf qui se trouvent dans la table transaction_financière et tf_virement
-
-SELECT 
-	tf.num_tf,
-    tf.date_tf,
-    tf.montant,
-    tf.niss_util,
-    tf.budget_id,
-    tf.cat_tf,
-    tfv.communication,
-    tfv.destbenef
-FROM
-	budgetsquirrel.transaction_financiere tf, budgetsquirrel.tf_virement tfv
-    WHERE 
-    tf.num_tf = tfv.num_tf
-
--- OU : 
-
-SELECT * 
-CASE type_tf
-    WHEN tf.tf_num IS NOT NULL AND tfv.tfnum IS NOT NULL THEN "virement"
-FROM budgetsquirrel.transaction_financiere tf
-LEFT JOIN budgetsquirrel.tf_virement tfv
-ON tf.num_tf = tfv.num_tf
-LEFT JOIN budgetsquirrel.tf_carte tfct
-ON tf.num_tf = tfct.num_tf
-LEFT JOIN budgetsquirrel.tf_cash tfcs
-ON tf.num_tf = tfcs.num_tf
-LEFT JOIN budgetsquirrel.carte c
-ON tfct.numero_carte = c.numero_carte
-
---OU
-
-SELECT * 
-    CASE type_tf
-        WHEN tf.tf_num = tfv.tfnum THEN "virement"
-        WHEN tf.tf_num = tfct.tfnum THEN "carte"
-        WHEN tf.tf_num = tfcs.tfnum THEN "cash"
-        END
+        WHEN tf.num_tf = tfv.num_tf THEN "virement"
+        WHEN tf.num_tf = tfct.num_tf THEN "carte"
+        WHEN tf.num_tf = tfcs.num_tf THEN "cash"
+        ELSE " "
+    END as typetf
 FROM budgetsquirrel.transaction_financiere tf
 LEFT JOIN budgetsquirrel.tf_virement tfv
 ON tf.num_tf = tfv.num_tf

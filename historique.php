@@ -90,6 +90,11 @@
 
                     // Est-ce mieux de directement utiliser $total_mois dans le total, ou d'appeler la valeur de la colonne bilan du 
                     //budget mensuel pour afficher le total de chaque mois? Pour l'instant, j'utilise total_mois
+                 
+                    $getHistorique = $bdd->prepare("SELECT * FROM budgetsquirrel.historique_v WHERE niss_util = $niss AND budget_id = $budget_id");
+                    $getHistorique->execute();
+                    $historique = $getHistorique->fetchAll();
+
                 }
         
             }
@@ -158,7 +163,9 @@
             ?>
         </div>
 
+
         <table class="u-full-width">
+
             <tr>
                 <th>Montant</th>
                 <th>Date</th>
@@ -173,11 +180,15 @@
 
             // si l'utilisateur a sélectionné un mois ET qu'un budget_id valide a été défini
             if (isset($_GET['selection_mois']) && (isset($budget_id))){
-                foreach ($transactions as $transaction) {
+                foreach ($historique as $hist_tf) {
                     echo "<tr>";
-                    echo "<td>" . $transaction["montant"] ."€" ."</td>";
-                    echo "<td>" . $transaction["date_tf"] . "</td>";
-                    echo "<td>" . $transaction["cat_tf"] . "</td>";
+                    echo "<td>" . $hist_tf["montant"] ."€" ."</td>";
+                    echo "<td>" . $hist_tf["date_tf"] . "</td>";
+                    echo "<td>" . $hist_tf["cat_tf"] . "</td>";
+                    echo "<td>" . $hist_tf["typetf"] . "</td>";
+                    echo "<td>" . $hist_tf["numero_carte"] . "</td>";
+                    echo "<td>" . $hist_tf["destbenef"] . "</td>";
+                    echo "<td>" . $hist_tf["communication"] . "</td>";
                     echo "</tr>";
                 }
             }
