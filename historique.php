@@ -164,47 +164,48 @@
         </div>
 
 
-        <table class="u-full-width">
+        <table class="table-hist u-full-width">
+            <thead>
+                <tr>
+                    <th>Montant</th>
+                    <th>Date</th>
+                    <th>Catégorie</th>
+                    <th>type de transaction</th>
+                    <th>Carte utilisée</th>
+                    <th>Destinataire/Bénéficiaire</th>
+                    <th>Communication</th>
+                </tr>
+                </thead>
 
-            <tr>
-                <th>Montant</th>
-                <th>Date</th>
-                <th>Catégorie</th>
-                <th>type de transaction</th>
-                <th>Carte utilisée</th>
-                <th>Destinataire/Bénéficiaire</th>
-                <th>Communication</th>
-            </tr>
+            <tbody>
+                <?php
 
-            <?php
-
-            // si l'utilisateur a sélectionné un mois ET qu'un budget_id valide a été défini
-            if (isset($_GET['selection_mois']) && (isset($budget_id))){
-                foreach ($historique as $hist_tf) {
-                    echo "<tr>";
-                    echo "<td>" . $hist_tf["montant"] ."€" ."</td>";
-                    echo "<td>" . $hist_tf["date_tf"] . "</td>";
-                    echo "<td>" . $hist_tf["cat_tf"] . "</td>";
-                    echo "<td>" . $hist_tf["typetf"] . "</td>";
-                    echo "<td>" . $hist_tf["numero_carte"] . "</td>";
-                    echo "<td>" . $hist_tf["destbenef"] . "</td>";
-                    echo "<td>" . $hist_tf["communication"] . "</td>";
-                    echo "</tr>";
+                // si l'utilisateur a sélectionné un mois ET qu'un budget_id valide a été défini
+                if (isset($_GET['selection_mois']) && (isset($budget_id))){
+                    foreach ($historique as $hist_tf) {
+                        echo "<tr>";
+                        echo "<td>" . $hist_tf["montant"] ."€" ."</td>";
+                        echo "<td>" . $hist_tf["date_tf"] . "</td>";
+                        echo "<td>" . $hist_tf["cat_tf"] . "</td>";
+                        echo "<td>" . $hist_tf["typetf"] . "</td>";
+                        echo "<td>" . $hist_tf["nom_carte"] . "</td>";
+                        echo "<td>" . $hist_tf["destbenef"] . "</td>";
+                        echo "<td>" . $hist_tf["communication"] . "</td>";
+                        echo "</tr>";
+                    }
                 }
-            }
 
-            ?>
+                ?>
+            </tbody>
 
         </table>
-
-        <hr>
 
         <div class="centered_message">
            
            <?php 
                 if (isset($_GET['selection_mois']) && isset($budget_id)){
                     echo("<div class='centered_message'>");
-                    echo("<p>Total: " . $total_mois ."€</p>");
+                    echo("<p><b>Total: " . $total_mois ."€</b></p>");
 
                     // echo("<button class='mybutton full_button' onclick=''>Cloturer ce mois</button>"); Plus nécessaire vu qu'on ne va pas faire de cloture ou de reste
 

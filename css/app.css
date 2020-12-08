@@ -307,3 +307,20 @@ input[type="submit"]{
     border-radius: 90px;
 
 }
+
+td{
+    padding : 6px 0px;
+}
+
+tr:nth-child(2n) {
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+.table-hist tbody tr:hover{
+    background-color: rgba(181, 221, 129, 0.5);
+}
+
+
+td:first-child, th:first-child{
+    padding-left: 6px;
+}

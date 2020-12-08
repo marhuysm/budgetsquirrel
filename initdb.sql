@@ -101,7 +101,7 @@ CREATE OR REPLACE VIEW historique_v AS
 
  CREATE VIEW historique_v 
 AS
-SELECT tf.num_tf, tf.date_tf, tf.montant, tf.niss_util, tf.budget_id, tf.cat_tf, tfct.numero_carte, tfv.destbenef, tfv.communication,
+SELECT tf.num_tf, tf.date_tf, tf.montant, tf.niss_util, tf.budget_id, tf.cat_tf, tfct.numero_carte, tfv.destbenef, tfv.communication, c.nom_carte,
     CASE 
         WHEN tf.num_tf = tfv.num_tf THEN "virement"
         WHEN tf.num_tf = tfct.num_tf THEN "carte"
@@ -117,3 +117,4 @@ LEFT JOIN budgetsquirrel.tf_cash tfcs
 ON tf.num_tf = tfcs.num_tf
 LEFT JOIN budgetsquirrel.carte c
 ON tfct.numero_carte = c.numero_carte
+
