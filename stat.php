@@ -49,6 +49,23 @@
         $getBilan->execute();
         $fetchedBilan = $getBilan->fetch();
         $bilan = $fetchedBilan["bilan"];
+
+        
+        // les requêtes suivantes doivent ss doute devenir des vues
+        // et il faut trouver un meilleur moyen de calculer le bilan par mois
+
+        $getStatMois = $bdd->prepare("SELECT * FROM
+        (SELECT budget_id, MONTH(date_tf) as 'mois', YEAR(date_tf) as 'annee', SUM(montant) 
+                as 'bilan_depenses_mois',COUNT(num_tf) as 'nb_depenses' 
+            FROM `historique_v`  
+            WHERE montant < 0 GROUP BY budget_id) depenses
+            NATURAL JOIN
+        (SELECT budget_id, MONTH(date_tf), YEAR(date_tf), SUM(montant) 
+                as 'bilan_revenus_mois' , COUNT(num_tf) as 'nb_revenus' 
+            FROM `historique_v` 
+            WHERE montant > 0 GROUP BY budget_id) revenus");
+        $getStatMois->execute();
+        $fetchedStatMois = $getStatMois->fetchAll();
   ?>
 
     <header>
@@ -98,6 +115,41 @@
     https://canvasjs.com/php-charts/chart-data-from-database/  -->
         <div>
             <h2>Répartition des transactions par mois</h2>
+
+            <table class="u-full-width">
+                <thead>
+                    <tr>
+                        <th>Mois</th>
+                        <th>Année</th>
+                        <th>Nombre de dépenses</th>
+                        <th>Total des dépenses</th>
+                        <th>Nombre de revenus</th>
+                        <th>Total des revenus</th>
+                        <th>Bilan</th>  
+                        <th></th>
+                    </tr>
+                    </thead>
+
+                <tbody>
+                    <?php
+
+                     foreach ($fetchedStatMois as $stat_mois) {
+                        echo "<tr>";
+                        echo "<td>" . $stat_mois["mois"] ."</td>";
+                        echo "<td>" . $stat_mois["annee"] . "</td>";
+                        echo "<td>" . $stat_mois["nb_depenses"] . "</td>";
+                        echo "<td>" . $stat_mois["bilan_depenses_mois"] . "</td>";
+                        echo "<td>" . $stat_mois["nb_revenus"] . "</td>";
+                        echo "<td>" . $stat_mois["bilan_revenus_mois"] . "</td>";
+                        echo "</tr>";
+
+                        }
+
+                    ?>
+                </tbody>
+
+            </table>
+
         </div>
 
         <div>
@@ -117,3 +169,5 @@
 </body>
 
 </html>
+
+

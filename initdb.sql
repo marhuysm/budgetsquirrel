@@ -115,3 +115,41 @@ ON tfct.numero_carte = c.numero_carte
 
 
  ENGINE=InnoDB
+
+ CREATE VIEW stat_depenses_revenus_mois 
+AS
+ -- Pour l'écran de statistiques : 
+
+ SELECT * FROM
+    (SELECT budget_id, MONTH(date_tf), YEAR(date_tf), SUM(montant) 
+          as 'bilan_depenses_mois',COUNT(num_tf) as 'nb_depenses' 
+        FROM `historique_v`  
+        WHERE montant < 0 GROUP BY budget_id) depenses
+        INNER JOIN
+    (SELECT budget_id, MONTH(date_tf), YEAR(date_tf), SUM(montant) 
+            as 'bilan_revenus_mois' , COUNT(num_tf) as 'nb_revenus' 
+        FROM `historique_v` 
+        WHERE montant > 0 GROUP BY budget_id) revenus
+ON depenses.budget_id = revenus.budget_id
+
+-- OU
+
+SELECT * FROM
+    (SELECT budget_id, MONTH(date_tf), YEAR(date_tf), SUM(montant) 
+            as 'bilan_depenses_mois',COUNT(num_tf) as 'nb_depenses' 
+        FROM `historique_v`  
+        WHERE montant < 0 GROUP BY budget_id) depenses
+        NATURAL JOIN
+    (SELECT budget_id, MONTH(date_tf), YEAR(date_tf), SUM(montant) 
+            as 'bilan_revenus_mois' , COUNT(num_tf) as 'nb_revenus' 
+        FROM `historique_v` 
+        WHERE montant > 0 GROUP BY budget_id) revenus
+
+-- Pour la répartition par catégorie : WIP PAS FONCTIONNEL
+
+-- Pour demain : faire un left join categorie to selection count historique?
+
+SELECT CAT.description_tf, HIST.cat_tf, COUNT(HIST.cat_tf) as 'nb_utilisations'
+FROM historique_v HIST, categorie_tf CAT
+WHERE CAT.nom_tf = HIST.cat_tf
+GROUP BY HIST.cat_tf

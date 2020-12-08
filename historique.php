@@ -61,8 +61,6 @@
 
                     $num_tf_suppr = $_POST['suppr_tf'];
 
-                    echo ("il faut supprimer la transaction n° " . $num_tf_suppr);
-
                     $query=$bdd->prepare("DELETE FROM budgetsquirrel.transaction_financiere WHERE num_tf = $num_tf_suppr AND niss_util = $niss");
                     $query->execute();
 
