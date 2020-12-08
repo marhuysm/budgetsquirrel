@@ -31,7 +31,7 @@ CREATE TABLE budget_mensuel(
      mois INT,
      annee INT,
      statut VARCHAR(100) DEFAULT("en_cours"), -- Supprimer statut?
-     bilan INT,
+     bilan FLOAT,
      reste INT NULL, -- Supprimer reste?
      niss_util VARCHAR(11),
      CONSTRAINT fk_niss_util_budget FOREIGN KEY (niss_util) REFERENCES utilisateur(niss),
@@ -50,7 +50,7 @@ CREATE TABLE categorie_tf(
 CREATE TABLE transaction_financiere(
      num_tf INT NOT NULL AUTO_INCREMENT,
      date_tf DATE,
-     montant INT,
+     montant FLOAT,
    	 niss_util VARCHAR(11),
      budget_id INT,
      cat_tf VARCHAR(100),
@@ -80,21 +80,20 @@ CREATE TABLE tf_carte(
     CONSTRAINT fk_numero_carte FOREIGN KEY (numero_carte) REFERENCES carte(numero_carte)
     );
 
-CREATE OR REPLACE VIEW historique_v AS
-    SELECT tf.montant, tf.date_tf, tf.cat_tf, 
-        Case
-            when tf.num_tf = 1 then 'cash'
-            when tf.num_tf = 2 then 'carte'
-            when tf.num_tf = 3 then 'virement'
-        end as type_transaction, 
-        c.nom_carte, tfv.destbenef, tfv.communication
-    FROM transaction_financiere tf
-    LEFT JOIN tf_carte tfc ON tfc.num_tf = tf.num_tf 
-    LEFT JOIN tf_virement tfv ON tfv.num_tf = tf.num_tf 
-    INNER JOIN carte c ON c.numero_carte = tfc.numero_carte -- a remplacer par numero_carte lors du prochain update du code
-;
+-- CREATE OR REPLACE VIEW historique_v AS
+--     SELECT tf.montant, tf.date_tf, tf.cat_tf, 
+--         Case
+--             when tf.num_tf = 1 then 'cash'
+--             when tf.num_tf = 2 then 'carte'
+--             when tf.num_tf = 3 then 'virement'
+--         end as type_transaction, 
+--         c.nom_carte, tfv.destbenef, tfv.communication
+--     FROM transaction_financiere tf
+--     LEFT JOIN tf_carte tfc ON tfc.num_tf = tf.num_tf 
+--     LEFT JOIN tf_virement tfv ON tfv.num_tf = tf.num_tf 
+--     INNER JOIN carte c ON c.numero_carte = tfc.numero_carte -- a remplacer par numero_carte lors du prochain update du code
+-- ;
 
- ENGINE=InnoDB
 
 
  --------------------------------------------------
@@ -118,3 +117,4 @@ ON tf.num_tf = tfcs.num_tf
 LEFT JOIN budgetsquirrel.carte c
 ON tfct.numero_carte = c.numero_carte
 
+ ENGINE=InnoDB

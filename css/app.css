@@ -324,3 +324,7 @@ tr:nth-child(2n) {
 td:first-child, th:first-child{
     padding-left: 6px;
 }
+
+.suppr_button{
+    background-image: url(../img/trash-bin.png);
+}

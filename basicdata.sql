@@ -20,10 +20,15 @@ INSERT INTO carte (nom_carte, numero_carte, type_carte, niss_util) VALUES ("Visa
 
 INSERT INTO carte (nom_carte, numero_carte, type_carte, niss_util) VALUES ("Mastercard Comté", "2342111111111111", "Mastercard", "19650922666");
 
+INSERT INTO carte (nom_carte, numero_carte, type_carte, niss_util) VALUES ("Maestro Moria", "189145555555555", "Mastercard", "19650922666");
+
+
+/*Ajout de transactions. il faudrait peut-être trouver comment faire un check / automatiser côté serveur la création de budget? */
+
 
 /*Ajout des catégories disponibles */
 
-INSERT INTO categorie_tf (nom_tf, description_tf) VALUES ('accessoires', 'Objets physiques inutiles');
+INSERT INTO categorie_tf (nom_tf, description_tf) VALUES ('accessoires', 'Objets variés : sacs, bijoux,...');
 
 INSERT INTO categorie_tf (nom_tf, description_tf) VALUES ('vêtements', 'Tout ce qui est porté : veste, pull, chaussures...');
 
@@ -47,12 +52,12 @@ INSERT INTO categorie_tf (nom_tf, description_tf) VALUES ('revenu indépendant',
 
 INSERT INTO categorie_tf (nom_tf, description_tf) VALUES ('pension', "Pension");
 
-INSERT INTO categorie_tf (nom_tf, description_tf) VALUES ('argent de poche', "Argent de poche reçu par la famille, les connaissances...");
+INSERT INTO categorie_tf (nom_tf, description_tf) VALUES ('argent de poche', "Argent de poche reçu ou donné");
 
 INSERT INTO categorie_tf (nom_tf, description_tf) VALUES ('remboursement', "Argent reçu ou donné dans le contexte d'un remboursement");
 
 INSERT INTO categorie_tf (nom_tf, description_tf) VALUES ('cadeau', "Argent reçu ou donné dans le contexte d'un cadeau");
 
-INSERT INTO categorie_tf (nom_tf, description_tf) VALUES ('chèque-repas', "???");
+INSERT INTO categorie_tf (nom_tf, description_tf) VALUES ('chèque-repas', "Chèques-repas reçus ou dépensés");
 
 INSERT INTO categorie_tf (nom_tf, description_tf) VALUES ('autre', "Toute autre nature de transaction");

@@ -36,13 +36,14 @@
             $check = $bdd->prepare("SELECT count(1) as total FROM carte WHERE numero_carte = $numero_carte AND niss_util = $niss");  
             $check->execute();
             $donnees = $check-> fetch();
+            $fetchedDonnees = $donnees['total'];
             
-            if ($donnees['total'] == 0){
+            if ($fetchedDonnees == 0){
                 $query = $bdd->prepare("INSERT INTO budgetsquirrel.carte (nom_carte, numero_carte, type_carte, niss_util) 
                 VALUES (?,?,?,?)");
                 $query->execute(array($nom_carte, $numero_carte, $type_carte, $niss_util));
             }
-            else if ($donnees['total'] == 1){
+            else if ($fetchedDonnees == 1){
                 ;
             }
            
@@ -54,19 +55,22 @@
         if (isset($_POST['suppr_carte'])) {
 
             $numero_carte = htmlspecialchars($_POST['carte_suppr']); 
-
+            
             //PB : foreign key empêche la suppression : comment gérer la supr de carte?
             //Solution proposée: supression logique en lieu d'une supression phisique, cad:
             //Ajouter dans la table "carte" une colonne is_deleted avec des valeurs possibles 0 ou 1
             //Inclure dans les queries qui font appel au table carte la condition WHERE is_deleted = 0  
             //Dans le cas present ici au lieu de "DELETE FROM budgetsquirrel.carte.... on peut mettre
-            $is_deleted = 1;
-            $query = $bdd->prepare("UPDATE budgetsquirrel.carte SET is_deleted = :is_deleted WHERE niss_util = $niss AND numero_carte = $numero_carte"); 
-            $query->bindParam(':is_deleted', $is_deleted, PDO::PARAM_INT);
-      
-            //$query = $bdd->prepare("DELETE FROM budgetsquirrel.carte WHERE niss_util = $niss AND nom_carte = $nom_carte"); 
+            
+            $is_deleted = true;
+
+            $query = $bdd->prepare("UPDATE budgetsquirrel.carte SET is_deleted = :is_deleted WHERE niss_util = $niss AND numero_carte = :numero_carte"); 
+            $query->bindParam(':numero_carte' , $numero_carte, PDO::PARAM_STR);
+            $query->bindParam(':is_deleted' , $is_deleted, PDO::PARAM_INT);
             $query->execute();
 
+            // PB : SUPPRESSION NE FONCTIONNE TOUJOURS PAS ?! (je sais pas du tout pourquoi, ça passe jusqu'à la boucle ici et le query fonctionne en sql direct)
+            // solution : bind le numero de carte
         }
 
         if (isset($_POST['changer_photo'])) {
@@ -203,7 +207,9 @@
                                 <label for="numero_carte">
                                     <span>N° de carte</span>
                                 </label>
-                                <input type="text" id="numero_carte" name="numero_carte">
+                                <input type="text"  minlength="16" maxlength="17" pattern="[0-9.]+" id="numero_carte" name="numero_carte">
+                                <br>
+                                <span class="footsize_text">Votre numéro de carte doit être composé de 16 ou 17 chiffres</span>
                             </p>
                         </div>
 
@@ -230,10 +236,10 @@
             <?php
             if(isset($_POST['ajout_carte'])) {
 
-                if ($donnees['total'] == 0){
+                if ($fetchedDonnees == 0){
                     echo("Votre carte ".$nom_carte." a bien été enregistrée !");
                 }
-                else if ($donnees['total'] == 1){
+                else if ($fetchedDonnees == 1){
                     echo("Vous avez déjà enregistré une carte avec ce numéro.");
                 }
 
@@ -264,10 +270,6 @@
 
                 <?php
             if(isset($_POST['suppr_carte'])) {
-
-                $getNomCarte = $bdd->prepare("SELECT nom_carte FROM budgetsquirrel.carte WHERE niss_util = $niss AND numero_carte = $numero_carte AND is_deleted = 1");
-                $getNomCarte->execute();
-                $nom_carte = $getNomCarte->fetch();
 
                 echo("Votre carte a bien été supprimée !");
                 $_POST['suppr_carte'] = null; // Evite la réécriture des données à chaque refresh

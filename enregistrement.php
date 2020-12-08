@@ -282,8 +282,9 @@
                         <label for="montant_transaction">
                             <span>Montant</span>
                         </label>
-                        <input type="number" id="montant_transaction" name="montant_transaction"> <br> 
+                        <input type="number" step="0.01" id="montant_transaction" name="montant_transaction"> <br> 
                         <span class="footsize_text">Vous pouvez entrer un montant négatif (précédé de "-"), qui sera donc considéré comme une dépense, ou positif, et ce sera alors un revenu .</span>
+                        <span class="footsize_text">Vous n'avez pas besoin d'entrer de monnaie (€).</span>
 
                     </p>
 

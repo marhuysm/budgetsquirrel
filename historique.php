@@ -174,6 +174,7 @@
                     <th>Carte utilisée</th>
                     <th>Destinataire/Bénéficiaire</th>
                     <th>Communication</th>
+                    <th></th>
                 </tr>
                 </thead>
 
@@ -191,7 +192,9 @@
                         echo "<td>" . $hist_tf["nom_carte"] . "</td>";
                         echo "<td>" . $hist_tf["destbenef"] . "</td>";
                         echo "<td>" . $hist_tf["communication"] . "</td>";
+                        echo  "<td><button type='submit' class='suppr_button' name='suppr_tf' value=". $hist_tf["num_tf"].">Suppr</button></td>";
                         echo "</tr>";
+
                     }
                 }
 
