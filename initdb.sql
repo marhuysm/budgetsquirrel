@@ -30,9 +30,7 @@ CREATE TABLE budget_mensuel(
      budget_id INT NOT NULL AUTO_INCREMENT,
      mois INT,
      annee INT,
-     statut VARCHAR(100) DEFAULT("en_cours"), -- Supprimer statut?
-     bilan FLOAT,
-     reste INT NULL, -- Supprimer reste?
+     bilan FLOAT, -- comment faire pour que le bilan soit calculé automatiquement du côté de la DB?
      niss_util VARCHAR(11),
      CONSTRAINT fk_niss_util_budget FOREIGN KEY (niss_util) REFERENCES utilisateur(niss),
      CONSTRAINT pk_budget_mensuel PRIMARY KEY(budget_id),
@@ -78,9 +76,10 @@ CREATE TABLE tf_carte(
     numero_carte VARCHAR(255),
     CONSTRAINT fk_num_tf_carte FOREIGN KEY (num_tf) REFERENCES transaction_financiere(num_tf) ON DELETE CASCADE,
     CONSTRAINT fk_numero_carte FOREIGN KEY (numero_carte) REFERENCES carte(numero_carte)
-    );
-
-
+    )
+    
+    ENGINE=InnoDB;
+    
     CREATE VIEW historique_v
 AS
 SELECT tf.num_tf, tf.date_tf, tf.montant, tf.niss_util, tf.budget_id, tf.cat_tf, tfct.numero_carte, tfv.destbenef, tfv.communication, c.nom_carte,
@@ -119,20 +118,10 @@ SELECT * FROM
 
         ;
 
--- Pour la répartition par catégorie 
+-- Pour la répartition par catégorie et la somme des dépenses et revenus par catégorie : 
 
-
-    CREATE VIEW stat_categories
-SELECT * FROM
-(SELECT CAT.description_tf, CAT.nom_tf 
-	FROM categorie_tf CAT) c
-LEFT JOIN
-   (SELECT HIST.cat_tf, COUNT(HIST.cat_tf) as 'nb_utilisations'
-        FROM historique_v HIST GROUP BY HIST.cat_tf) h
-ON c.nom_tf = h.cat_tf
-
--- Pour ajouter la somme des dépenses et revenus par catégorie : 
-
+	CREATE VIEW stat_cat
+    AS
 SELECT * FROM
 (SELECT CAT.description_tf, CAT.nom_tf 
 	FROM categorie_tf CAT) c
@@ -143,14 +132,15 @@ LEFT JOIN
     SUM(CASE WHEN HIST.montant > 0 THEN montant ELSE 0 END) as 'bilan_revenus_cat'
         FROM historique_v HIST GROUP BY HIST.cat_tf) h
 ON c.nom_tf = h.cat_tf
-
+;
 
 -- Enfin, répartition des dépenses et entrées par type de payement : 
 
+
+	CREATE VIEW stat_types
+    AS
 SELECT HIST.typetf, COUNT(HIST.typetf) as 'nb_utilisations', 
 SUM(CASE WHEN HIST.montant < 0 THEN montant ELSE 0 END) as 'total_depenses_type', 
 SUM(CASE WHEN HIST.montant > 0 THEN montant ELSE 0 END) as 'total_revenus_type'
 FROM historique_v HIST
 GROUP BY HIST.typetf
-
- ENGINE=InnoDB

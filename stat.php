@@ -55,37 +55,15 @@
         // les requêtes suivantes doivent ss doute devenir des vues
         // et il faut trouver un meilleur moyen de calculer le bilan par mois
 
-        $getStatMois = $bdd->prepare("SELECT * FROM
-        (SELECT budget_id, MONTH(date_tf) as 'mois', YEAR(date_tf) as 'annee', SUM(montant) 
-                as 'bilan_depenses_mois',COUNT(num_tf) as 'nb_depenses' 
-            FROM `historique_v`  
-            WHERE montant < 0 GROUP BY budget_id) depenses
-            NATURAL JOIN
-        (SELECT budget_id, MONTH(date_tf), YEAR(date_tf), SUM(montant) 
-                as 'bilan_revenus_mois' , COUNT(num_tf) as 'nb_revenus' 
-            FROM `historique_v` 
-            WHERE montant > 0 GROUP BY budget_id) revenus");
+        $getStatMois = $bdd->prepare("SELECT * FROM 'stat_depenses_revenus_mois'");
         $getStatMois->execute();
         $fetchedStatMois = $getStatMois->fetchAll();
 
-        $getStatCategories = $bdd->prepare("SELECT * FROM
-        (SELECT CAT.description_tf, CAT.nom_tf 
-            FROM categorie_tf CAT) c
-        LEFT JOIN
-           (SELECT HIST.cat_tf, 
-            COUNT(HIST.cat_tf) as 'nb_utilisations', 
-            SUM(CASE WHEN HIST.montant < 0 THEN montant ELSE 0 END) as 'bilan_depenses_cat', 
-            SUM(CASE WHEN HIST.montant > 0 THEN montant ELSE 0 END) as 'bilan_revenus_cat'
-                FROM historique_v HIST GROUP BY HIST.cat_tf) h
-        ON c.nom_tf = h.cat_tf");
+        $getStatCategories = $bdd->prepare("SELECT * FROM 'stat_cat'");
         $getStatCategories->execute();
         $fetchedStatCat = $getStatCategories->fetchAll();
 
-        $getStatTypes = $bdd->prepare("SELECT HIST.typetf, COUNT(HIST.typetf) as 'nb_utilisations', 
-        SUM(CASE WHEN HIST.montant < 0 THEN montant ELSE 0 END) as 'total_depenses_type', 
-        SUM(CASE WHEN HIST.montant > 0 THEN montant ELSE 0 END) as 'total_revenus_type'
-        FROM historique_v HIST
-        GROUP BY HIST.typetf");
+        $getStatTypes = $bdd->prepare("SELECT * FROM stat_types' ");
         $getStatTypes->execute();
         $fetchedStatTypes = $getStatTypes->fetchAll();
   ?>
