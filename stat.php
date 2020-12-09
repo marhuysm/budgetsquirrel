@@ -6,14 +6,15 @@
 <html>
 
 <head>
-    <meta charset="utf-8">
+    <meta charset="utf-8"/>
     <title>Statistiques</title>
-    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com"/>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100;200;300;400;500&display=swap"
-        rel="stylesheet">
-    <link rel="stylesheet" href="css/skeleton.css">
-    <link rel="stylesheet" href="css/normalize.css">
-    <link rel="stylesheet" href="css/app.css">
+        rel="stylesheet"/>
+    <link rel="stylesheet" href="css/skeleton.css"/>
+    <link rel="stylesheet" href="css/normalize.css"/>
+    <link rel="stylesheet" href="css/app.css"/>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.js"></script>
 </head>
 
 <body>
@@ -111,8 +112,7 @@
             </div>
 
         </div>
-<!-- Doc pour faire les graphes  :
-    https://canvasjs.com/php-charts/chart-data-from-database/  -->
+
         <div>
             <h2>Répartition des transactions par mois</h2>
 
@@ -150,6 +150,10 @@
 
             </table>
 
+             <!-- ajout des graphes en javascript -->
+            <canvas id="graph1"> 
+        
+            </canvas>
         </div>
 
         <div>
@@ -170,4 +174,57 @@
 
 </html>
 
+<!-- ajout des graphes en javascript -->
+<script type="text/javascript">
+    var ctx = document.getElementById('graph1').getContext('2d');
 
+    var bilan = <?php echo json_encode($bilan); ?>;
+    
+    var mois = <?php
+                    foreach ($fetchedStatMois as $stat_mois) {
+                        echo json_encode(array_values($stat_mois["mois"]), JSON_FORCE_OBJECT);
+                    }
+                    ?>
+
+    var dep = <?php
+                    foreach ($fetchedStatMois as $stat_mois) {
+                        echo json_encode(array_values($stat_mois["bilan_depenses_mois"]), JSON_FORCE_OBJECT);
+                    }
+                    ?>
+
+    var rev = <?php
+                    foreach ($fetchedStatMois as $stat_mois) {
+                        echo json_encode(array_values($stat_mois["bilan_revenus_mois"]), JSON_FORCE_OBJECT);
+                    }
+                    ?>
+    
+    var data = {
+        labels: [mois],
+        datasets: [
+            {
+                label: 'depenses',
+                backgroundColor: 'rgb(255,99,132)',
+                borderColor: 'rgb(255,99,132)',
+                data: [dep]
+            },
+            {
+                label: 'revenus',
+                backgroundColor: 'rgb(155,99,132)',
+                borderColor: 'rgb(155,99,132)',
+                data: [rev]
+            }
+        ]
+    } 
+
+    var options = {
+        responsive: true
+    }
+    
+    var config = {
+        type: 'bar',
+        data: data,
+        options: options
+    }
+
+    var graph1 = new Chart(ctx, config);
+</script>
