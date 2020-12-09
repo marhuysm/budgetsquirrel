@@ -12,7 +12,7 @@ CREATE TABLE utilisateur(
         niss VARCHAR(11) NOT NULL,
         date_naissance DATE NOT NULL,
         photo VARCHAR(100) NOT NULL DEFAULT 'froggy.png',
-        CONSTRAINT pk_utilisateur PRIMARY KEY(niss),
+        CONSTRAINT pk_utilisateur PRIMARY KEY(niss) ,
         CONSTRAINT chk_niss CHECK (DATALENGTH(niss) = 11),
         CONSTRAINT chk_photo CHECK (photo IN ('froggy.png','gollum.jpg','politecat.jpg', 'raccoon.jpg'))
         );
@@ -25,7 +25,7 @@ CREATE TABLE carte(
         is_deleted INT DEFAULT 0,
        	CONSTRAINT fk_niss_util_carte FOREIGN KEY (niss_util) REFERENCES utilisateur(niss),
     	CONSTRAINT pk_carte PRIMARY KEY(numero_carte),
-        CONSTRAINT chk_numero_carte CHECK (DATALENGTH(numero_carte) >= 16),
+        CONSTRAINT chk_numero_carte CHECK (DATALENGTH(numero_carte) >= 16 OR DATALENGTH(numero_carte) = 17),
         CONSTRAINT uc_carte UNIQUE (numero_carte, niss_util),
         CONSTRAINT chk_type_carte CHECK (type_carte IN('Visa', 'Visa Prepaid', 'Maestro', 'Mastercard'))
         );
@@ -67,6 +67,7 @@ CREATE TABLE transaction_financiere(
 
 CREATE TABLE tf_cash(
     num_tf INT,
+    CONSTRAINT pk_tf_cash PRIMARY KEY (num_tf),
     CONSTRAINT fk_num_tf_cash FOREIGN KEY (num_tf) REFERENCES transaction_financiere(num_tf) ON DELETE CASCADE
     );
 
@@ -74,17 +75,25 @@ CREATE TABLE tf_virement(
     num_tf INT,
     communication TEXT,
     destbenef VARCHAR(255) NOT NULL,
+    CONSTRAINT pk_tf_virement PRIMARY KEY (num_tf),
     CONSTRAINT fk_num_tf_virement FOREIGN KEY (num_tf) REFERENCES transaction_financiere(num_tf) ON DELETE CASCADE
     );
 
 CREATE TABLE tf_carte(
     num_tf INT,
     numero_carte VARCHAR(255),
+    CONSTRAINT pk_tf_carte PRIMARY KEY (num_tf),
     CONSTRAINT fk_num_tf_carte FOREIGN KEY (num_tf) REFERENCES transaction_financiere(num_tf) ON DELETE CASCADE,
     CONSTRAINT fk_numero_carte FOREIGN KEY (numero_carte) REFERENCES carte(numero_carte)
     )
     
     ENGINE=InnoDB;
+
+-- Trigger de création de budget s'il n'existe pas déjà pour le mois, année, utilisateur donné
+
+CREATE TRIGGER 
+
+-- Potentiellement, si possible : trigger d'écriture de transaction_financière dans la bonne table? Comment gérer ça du côté de la db?
     
     CREATE VIEW historique_v
 AS
@@ -153,3 +162,6 @@ SUM(CASE WHEN HIST.montant < 0 THEN montant ELSE 0 END) as 'total_depenses_type'
 SUM(CASE WHEN HIST.montant > 0 THEN montant ELSE 0 END) as 'total_revenus_type'
 FROM historique_v HIST
 GROUP BY HIST.typetf
+
+-- NOTE : faudrait-il modifier l'app pour utiliser des privilèges? je sais pas du tout comment ça fonctionne à ce niveau
+-- Pour l'instant, pas de privilège côté DB > pb
