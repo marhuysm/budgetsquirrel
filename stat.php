@@ -14,6 +14,7 @@
     <link rel="stylesheet" href="css/skeleton.css"/>
     <link rel="stylesheet" href="css/normalize.css"/>
     <link rel="stylesheet" href="css/app.css"/>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.js"></script>
 </head>
 
@@ -152,9 +153,8 @@
             </table>
 
              <!-- ajout des graphes en javascript -->
-            <canvas id="graph1"> 
-        
-            </canvas>
+            <!-- <canvas id="graph_stat_mois"></canvas> -->
+            <!-- PB comment convertir le result set obtenu pour les requetes SQL en javascript - le retour maintenant n'est pas un array mais un string concaténé? --> 
         </div>
 
         <div>
@@ -190,6 +190,9 @@
                 </tbody>
 
             </table>
+
+             <!-- ajout des graphes en javascript -->
+             <!-- <canvas id="graph_stat_cat"></canvas> -->
         </div>
 
         <div>
@@ -235,30 +238,36 @@
 </html>
 
 <!-- ajout des graphes en javascript -->
+<!-- graph statistiques mois -->
 <script type="text/javascript">
-    var ctx = document.getElementById('graph1').getContext('2d');
+   
+    var ctx_stat_mois = document.getElementById('graph_stat_mois').getContext('2d');
 
     var bilan = <?php echo json_encode($bilan); ?>;
-    
-    var mois = <?php
+   
+    var mois =  "<?php
                     foreach ($fetchedStatMois as $stat_mois) {
-                        echo json_encode(array_values($stat_mois["mois"]), JSON_FORCE_OBJECT);
+                        // print_r($stat_mois["mois"]);
+                        $month = json_decode($stat_mois["mois"], true);
+                        echo "$month";
                     }
-                    ?>
+                    ?>"
 
     var dep = <?php
                     foreach ($fetchedStatMois as $stat_mois) {
-                        echo json_encode(array_values($stat_mois["bilan_depenses_mois"]), JSON_FORCE_OBJECT);
+                        $dep_month = json_decode($stat_mois["bilan_depenses_mois"], true);
+                        echo "$dep_month";
                     }
                     ?>
 
     var rev = <?php
                     foreach ($fetchedStatMois as $stat_mois) {
-                        echo json_encode(array_values($stat_mois["bilan_revenus_mois"]), JSON_FORCE_OBJECT);
+                        $rev_month = json_decode($stat_mois["bilan_revenus_mois"], true);
+                        echo "$rev_month";
                     }
                     ?>
     
-    var data = {
+    var data_stat_mois = {
         labels: [mois],
         datasets: [
             {
@@ -280,11 +289,65 @@
         responsive: true
     }
     
-    var config = {
+    var config_stat_mois = {
         type: 'bar',
-        data: data,
+        data: data_stat_mois,
         options: options
     }
 
-    var graph1 = new Chart(ctx, config);
+var graph_stat_mois = new Chart(ctx_stat_mois, config_stat_mois);
+
+
+// ajout des graphes en javascript
+// graph statistiques mois
+var ctx_stat_cat = document.getElementById('graph_stat_cat').getContext('2d');
+
+var categorie =  "<?php
+                foreach ($fetchedStatCat as $stat_cat) {
+                    echo json_encode($stat_cat["nom_tf"]);
+                }
+                ?>"
+
+var dep_cat = <?php
+                foreach ($fetchedStatCat as $stat_cat) {
+                    echo json_encode($stat_cat["bilan_depenses_cat"]);
+                }
+                ?>
+
+var rev_cat = <?php
+                foreach ($fetchedStatCat as $stat_cat) {
+                    echo json_encode($stat_cat["bilan_revenus_cat"]);
+                }
+                ?>
+
+var data_stat_cat = {
+    labels: [categorie],
+    datasets: [
+        {
+            label: 'depenses',
+            backgroundColor: 'rgb(255,99,132)',
+            borderColor: 'rgb(255,99,132)',
+            data: [dep_cat]
+        },
+        {
+            label: 'revenus',
+            backgroundColor: 'rgb(155,99,132)',
+            borderColor: 'rgb(155,99,132)',
+            data: [rev_cat]
+        }
+    ]
+} 
+
+var options = {
+    responsive: true
+}
+
+var config_stat_cat = {
+    type: 'bar',
+    data: data_stat_cat,
+    options: options
+}
+
+var graph_stat_cat = new Chart(ctx_stat_cat, config_stat_cat);
+
 </script>

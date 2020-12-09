@@ -81,6 +81,17 @@ automatiser le processus d'ajout de bilan (qui est pour l'instant manuel côté 
 + !! très important : voir si l'on respecte toutes les contraintes au niveau de la bdd
 
 
+### Note Milena
+
+### je 10/12 :
+
+- écran statistiques: "Répartition des transactions par mois" et "Répartition totale par catégorie" montrent maintenant "0" pour les valeurs NULL correspondantes dans la db. 
+- wip graphes avec ChartJS: souci avec la conversion des données entre php et javascript.
+
+À faire: 
+- graphes avec ChartJS: debugging;
+- homepage.php - ajout tutoriels.
+
 ## Pour faire fonctionner le projet : 
 1. Démarrer xammp
 2. Tout mettre dans un dossier budgetsquirrel dans xammp/htdocs
