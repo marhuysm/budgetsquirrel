@@ -128,7 +128,7 @@ Dans le cadre de ce projet, nous avons choisi de développer une application per
 Après une brève présentation du domaine d'application, nous présenterons le schéma conceptuel, ainsi que sa traduction en schéma relationnel.
 Ensuite, nous décrirons les différents aspects des scripts SQL que nous avons mis en place [...] .
 Enfin, nous exposerons brièvement l'application Web que nous avons développée. 
-Vous trouverez, en annexe à ce rapport, deux scripts sql : \verb+\ initdb.sql, qui contient tous les scripts permettant la création de  la base de donnée en elle-même, et \begin{verbatim} data.sql \end{verbatim}, qui peuple la base de données de quelques informations, permettant ainsi de parcourir les différentes pages de l'application.
+Vous trouverez, en annexe à ce rapport, deux scripts sql : \verb\initdb.sql\, qui contient tous les scripts permettant la création de  la base de donnée en elle-même, et \verb\data.sql\, qui peuple la base de données de quelques informations, permettant ainsi de parcourir les différentes pages de l'application.
 
 \subsection{Domaine d'application}
 

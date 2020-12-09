@@ -7,34 +7,38 @@ CREATE DATABASE budgetsquirrel CHARACTER SET 'utf8';
 USE budgetsquirrel;
 
 CREATE TABLE utilisateur(
-        nom VARCHAR(100),
-        prenom VARCHAR(100),
-        niss VARCHAR(11),
-        date_naissance DATE,
-        photo VARCHAR(100),
-        CONSTRAINT pk_utilisateur PRIMARY KEY(niss)
+        nom VARCHAR(100) NOT NULL,
+        prenom VARCHAR(100) NOT NULL,
+        niss VARCHAR(11) NOT NULL,
+        date_naissance DATE NOT NULL,
+        photo VARCHAR(100) NOT NULL DEFAULT 'froggy.png',
+        CONSTRAINT pk_utilisateur PRIMARY KEY(niss),
+        CONSTRAINT chk_niss CHECK (DATALENGTH(niss) = 11),
+        CONSTRAINT chk_photo CHECK (photo IN ('froggy.png','gollum.jpg','politecat.jpg', 'raccoon.jpg'))
         );
         
 CREATE TABLE carte(
-        nom_carte VARCHAR(255),
-        numero_carte VARCHAR(17),
-        type_carte VARCHAR(100),
-    	niss_util VARCHAR(11),
+        nom_carte VARCHAR(255) NOT NULL,
+        numero_carte VARCHAR(17) NOT NULL,
+        type_carte VARCHAR(100) NOT NULL,
+    	niss_util VARCHAR(11), 
         is_deleted INT DEFAULT 0,
        	CONSTRAINT fk_niss_util_carte FOREIGN KEY (niss_util) REFERENCES utilisateur(niss),
     	CONSTRAINT pk_carte PRIMARY KEY(numero_carte),
-        CONSTRAINT uc_carte UNIQUE (numero_carte, niss_util)
+        CONSTRAINT chk_numero_carte CHECK (DATALENGTH(numero_carte) >= 16),
+        CONSTRAINT uc_carte UNIQUE (numero_carte, niss_util),
+        CONSTRAINT chk_type_carte CHECK (type_carte IN('Visa', 'Visa Prepaid', 'Maestro', 'Mastercard'))
         );
 
 CREATE TABLE budget_mensuel(
      budget_id INT NOT NULL AUTO_INCREMENT,
-     mois INT,
-     annee INT,
+     mois INT NOT NULL,
+     annee INT NOT NULL,
      bilan FLOAT, -- comment faire pour que le bilan soit calculé automatiquement du côté de la DB?
      niss_util VARCHAR(11),
      CONSTRAINT fk_niss_util_budget FOREIGN KEY (niss_util) REFERENCES utilisateur(niss),
      CONSTRAINT pk_budget_mensuel PRIMARY KEY(budget_id),
-     CONSTRAINT uc_budget_mensuel UNIQUE (mois, annee, niss_util) 
+     CONSTRAINT uc_budget_mensuel UNIQUE (mois, annee, niss_util)
         );
         
 CREATE TABLE categorie_tf(
@@ -55,7 +59,9 @@ CREATE TABLE transaction_financiere(
      CONSTRAINT fk_niss_util_tf FOREIGN KEY (niss_util) REFERENCES utilisateur(niss),
      CONSTRAINT fk_budget_id FOREIGN KEY (budget_id) REFERENCES budget_mensuel(budget_id),
      CONSTRAINT fk_cat_tf FOREIGN KEY (cat_tf) REFERENCES categorie_tf(nom_tf),
-     CONSTRAINT pk_transaction_financiere PRIMARY KEY (num_tf)
+     CONSTRAINT pk_transaction_financiere PRIMARY KEY (num_tf),
+     CONSTRAINT chk_date_tf CHECK(date_tf > utilisateur.date_naissance) -- ok?
+          -- ajouter contrainte check date = mois et annee du budget_id
         );
 
 
@@ -67,7 +73,7 @@ CREATE TABLE tf_cash(
 CREATE TABLE tf_virement(
     num_tf INT,
     communication TEXT,
-    destbenef VARCHAR(255),
+    destbenef VARCHAR(255) NOT NULL,
     CONSTRAINT fk_num_tf_virement FOREIGN KEY (num_tf) REFERENCES transaction_financiere(num_tf) ON DELETE CASCADE
     );
 
