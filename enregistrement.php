@@ -350,7 +350,7 @@
                 <label for="cash">Payement en liquide</label>
     
                 <input type="radio" id="virement" name="type_tf" value="virement" onClick="togglePayment()">
-                <label for="virement">Virement banquaire</label>
+                <label for="virement">Virement bancaire</label>
     
                 <input type="radio" id="carte" name="type_tf" value="carte" onClick="togglePayment()">
                 <label for="carte">Payement par carte</label> <br>
@@ -372,7 +372,7 @@
             </fieldset>
 
             <fieldset id="section_virement" style="display: none;">
-                <legend>Virement banquaire</legend>
+                <legend>Virement bancaire</legend>
                 <p>
                     <label for="destbenef">
                         <span>Bénéficiaire / Destinataire</span>
