@@ -120,12 +120,12 @@
                     <tr>
                         <th>Mois</th>
                         <th>Année</th>
-                        <th>Nombre de dépenses</th>
-                        <th>Total des dépenses</th>
-                        <th>Nombre de revenus</th>
-                        <th>Total des revenus</th>
-                        <th>Bilan</th>  
-                        <th></th>
+                        <th>No. dépenses</th>
+                        <th>Total dépenses</th>
+                        <th>No. revenus</th>
+                        <th>Total revenus</th>
+                        <th>No. transactions</th>  
+                        <th>Total transactions</th>
                     </tr>
                     </thead>
 
@@ -140,6 +140,8 @@
                         echo "<td>" . $stat_mois["bilan_depenses_mois"]  ." €". "</td>";
                         echo "<td>" . $stat_mois["nb_revenus"] . "</td>";
                         echo "<td>" . $stat_mois["bilan_revenus_mois"] ." €"."</td>";
+                        echo "<td>" . $stat_mois["nb_total"] . "</td>";
+                        echo "<td>" . $stat_mois["bilan_total_mois"] ." €"."</td>";
                         echo "</tr>";
 
                         }

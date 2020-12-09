@@ -94,8 +94,8 @@ CREATE TABLE tf_carte(
 CREATE TRIGGER 
 
 -- Potentiellement, si possible : trigger d'écriture de transaction_financière dans la bonne table? Comment gérer ça du côté de la db?
-    
-    CREATE VIEW historique_v
+
+CREATE OR REPLACE VIEW historique_v
 AS
 SELECT tf.num_tf, tf.date_tf, tf.montant, tf.niss_util, tf.budget_id, tf.cat_tf, tfct.numero_carte, tfv.destbenef, tfv.communication, c.nom_carte,
     CASE 
@@ -120,52 +120,71 @@ ON tfct.numero_carte = c.numero_carte
 
  -- PB de transactions par mois : il faut au moins avoir une dépense et un revenu / mois, sinon le mois ne s'affiche pas
  -- ? solution?
+ -- Solution proposée: ajout d'un query pour le bilan total par mois, 
+ -- (ça nous permet d'avoir tous les resultats, peut importe si c'est positif ou negatif)
+ -- ensuite jointure a gauche avec les depenses pour pouvoir afficher Null si jamais il n'y a pas de depense
+ -- (ça nous permet de filtrer que les depenses, et donc le total des depenses)
+ -- ensuite jointure a gauche avec les revenus pour pouvoir afficher Null si jamais il n'y a pas de revenu
+ -- (ça nous permet de filtrer que les revenus, et donc le total des revenus) 
+ -- COALESCE utilisé pour remplacer le NULL avec 0
+ -- alias as (i.e. as nb_depenses) utilisé pour faciliter la syntaxe php dans stat.php
 
-    CREATE VIEW stat_depenses_revenus_mois
+CREATE OR REPLACE VIEW stat_depenses_revenus_mois
 AS
-SELECT * FROM
-    (SELECT budget_id, MONTH(date_tf) as mois, YEAR(date_tf) as annee, SUM(montant) 
-            as 'bilan_depenses_mois',COUNT(num_tf) as 'nb_depenses' 
-        FROM `historique_v`  
-        WHERE montant < 0 GROUP BY budget_id) depenses
-        NATURAL JOIN
-    (SELECT budget_id, MONTH(date_tf), YEAR(date_tf), SUM(montant) 
-            as 'bilan_revenus_mois' , COUNT(num_tf) as 'nb_revenus' 
-        FROM `historique_v` 
-        WHERE montant > 0 GROUP BY budget_id) revenus
+SELECT  budget_id, mois, annee, bilan_total_mois, nb_total, 
+        COALESCE(bilan_depenses_mois, 0) as bilan_depenses_mois, COALESCE(nb_depenses, 0) as nb_depenses, 
+        COALESCE(bilan_revenus_mois, 0) as bilan_revenus_mois, COALESCE(nb_revenus, 0) as nb_revenus
+FROM
+    (SELECT budget_id, MONTH(date_tf) as mois, YEAR(date_tf) as annee, SUM(montant) as bilan_total_mois, COUNT(num_tf) as nb_total 
+     FROM historique_v
+     GROUP BY budget_id) total
+NATURAL LEFT JOIN
+    (SELECT budget_id, MONTH(date_tf) as mois, YEAR(date_tf) as annee, SUM(montant) as bilan_depenses_mois , COUNT(num_tf) as nb_depenses
+     FROM historique_v
+     WHERE montant < 0 
+     GROUP BY budget_id) depenses
+NATURAL LEFT JOIN
+    (SELECT budget_id, MONTH(date_tf) as mois, YEAR(date_tf) as annee, SUM(montant) as bilan_revenus_mois, COUNT(num_tf) as nb_revenus
+     FROM historique_v
+     WHERE montant > 0 
+     GROUP BY budget_id) revenus
+;
 
-        ;
 
 -- Pour la répartition par catégorie et la somme des dépenses et revenus par catégorie : 
 
-	CREATE VIEW stat_cat
-    AS
-SELECT * FROM
-(SELECT CAT.description_tf, CAT.nom_tf 
-	FROM categorie_tf CAT) c
-LEFT JOIN
-   (SELECT HIST.cat_tf, 
-    COUNT(HIST.cat_tf) as 'nb_utilisations', 
-    SUM(CASE WHEN HIST.montant < 0 THEN montant ELSE 0 END) as 'bilan_depenses_cat', 
-    SUM(CASE WHEN HIST.montant > 0 THEN montant ELSE 0 END) as 'bilan_revenus_cat'
-        FROM historique_v HIST GROUP BY HIST.cat_tf) h
-ON c.nom_tf = h.cat_tf
+CREATE OR REPLACE VIEW stat_cat
+AS
+SELECT  description_tf, nom_tf, 
+        COALESCE(nb_utilisations, 0) as nb_utilisations, 
+        COALESCE(bilan_depenses_cat, 0) as bilan_depenses_cat, 
+        COALESCE(bilan_revenus_cat, 0) as bilan_revenus_cat
+FROM
+    (SELECT CAT.description_tf, CAT.nom_tf
+	 FROM categorie_tf CAT) c
+     LEFT JOIN
+        (SELECT HIST.cat_tf, 
+                COUNT(HIST.cat_tf) as nb_utilisations, 
+                SUM(CASE WHEN HIST.montant < 0 THEN montant ELSE 0 END) as bilan_depenses_cat, 
+                SUM(CASE WHEN HIST.montant > 0 THEN montant ELSE 0 END) as bilan_revenus_cat
+        FROM historique_v HIST 
+        GROUP BY HIST.cat_tf) h
+     ON c.nom_tf = h.cat_tf
 ;
 
 -- Enfin, répartition des dépenses et entrées par type de payement : 
 
-
-	CREATE VIEW stat_types
-    AS
-SELECT HIST.typetf, COUNT(HIST.typetf) as 'nb_utilisations', 
-SUM(CASE WHEN HIST.montant < 0 THEN montant ELSE 0 END) as 'total_depenses_type', 
-SUM(CASE WHEN HIST.montant > 0 THEN montant ELSE 0 END) as 'total_revenus_type'
+CREATE OR REPLACE VIEW stat_types
+AS
+SELECT  HIST.typetf, COUNT(HIST.typetf) as nb_utilisations, 
+        SUM(CASE WHEN HIST.montant < 0 THEN montant ELSE 0 END) as total_depenses_type, 
+        SUM(CASE WHEN HIST.montant > 0 THEN montant ELSE 0 END) as total_revenus_type
 FROM historique_v HIST
 GROUP BY HIST.typetf
+;
 
 -- NOTE : faudrait-il modifier l'app pour utiliser des privilèges? je sais pas du tout comment ça fonctionne à ce niveau
 -- Pour l'instant, pas de privilège côté DB > pb
-
 -- Il faudrait, idéalement, avoir des restrictions du côté de la db : 
 -- Une restriction "admin", avec un accès à tout, seulement pour la personne qui gère la db, et qui peut donc par ex suppr des utilisateurs
 -- et une restriction utilisateur, à laquelle on fait appel pour l'application
