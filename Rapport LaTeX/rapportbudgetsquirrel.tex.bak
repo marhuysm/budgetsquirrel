@@ -140,18 +140,56 @@ Utilisateurs cibles, cas d'utilisation du système
 
 Schéma conceptuel documenté, accompagné d'une description et justification des choix
 
-\begin{figure}[!h]
-\centering
-\includegraphics[scale=0.53]{schema_ea.png}
-\caption{Schéma conceptuel entité-association de la base de données exploitée par Budget Squirrel}
+\textbf{! vérifier si tout correspond avec la DB}
+
+\begin{figure}[!ht]
+\makebox[]{
+\includegraphics[scale=0.53]{schema_ea.png}}
+\caption{\footnotesize{Schéma conceptuel entité-association de la base de données exploitée par Budget Squirrel}}
 \end{figure}
+
+
 
 
 \newpage 
 
 \section{Schéma logique relationnel}
 
-Schéma logique relationnel traduisant le schéma conceptuel, avec une explication du choix des clés de traductions (héritage, associations, contraintes...
+Schéma logique relationnel traduisant le schéma conceptuel, avec une explication du choix des clés de traductions (héritage, associations, contraintes...)
+
+\textbf{! vérifier si tout correspond avec la DB}
+
+\textbf{! ajouter contraintes}
+
+\textbf{!  explication matérialisation}
+
+
+\begin{verbatim}
+utilisateur(nom, prenom, niss, date_naissance, photo, nombre_transactions)
+
+carte(nom_carte, numero_carte, type_carte, niss_util, is_deleted)
+	carte.niss_util référence utilisateur.niss
+carte.type_Carte = {Visa, Mastercard,Visa Prepaid, Maestro}
+
+budget_mensuel(budget_ID, mois, annee, statut, bilan, reste, niss_util) 
+	budget_mensuel.niss_util référence utilisateur.niss
+
+transaction_financiere(num_tf, date_tf, montant, budget_ID, categorie)
+	transaction_financiere.budget_ID référence budget_mensuel.budget_ID
+	transaction_financiere.categorie référence categorie.nom_cat
+
+tf_cash(num_tf)
+	tfcash.num_tf référence transaction_financiere.num_tf
+
+tf_virement(num_tf, communication, destbenef)
+	tfvirement.num_tf référence transaction_financiere.num_tf
+
+tf_carte(num_tf, nom_carte)
+	tfcarte.num_tf référence transaction_financiere.num_tf	
+	nom_carte référence carte.nom_carte
+
+categorie_tf(nom_cat, description)
+\end{verbatim}
 
 \newpage
 
