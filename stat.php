@@ -67,6 +67,27 @@
             WHERE montant > 0 GROUP BY budget_id) revenus");
         $getStatMois->execute();
         $fetchedStatMois = $getStatMois->fetchAll();
+
+        $getStatCategories = $bdd->prepare("SELECT * FROM
+        (SELECT CAT.description_tf, CAT.nom_tf 
+            FROM categorie_tf CAT) c
+        LEFT JOIN
+           (SELECT HIST.cat_tf, 
+            COUNT(HIST.cat_tf) as 'nb_utilisations', 
+            SUM(CASE WHEN HIST.montant < 0 THEN montant ELSE 0 END) as 'bilan_depenses_cat', 
+            SUM(CASE WHEN HIST.montant > 0 THEN montant ELSE 0 END) as 'bilan_revenus_cat'
+                FROM historique_v HIST GROUP BY HIST.cat_tf) h
+        ON c.nom_tf = h.cat_tf");
+        $getStatCategories->execute();
+        $fetchedStatCat = $getStatCategories->fetchAll();
+
+        $getStatTypes = $bdd->prepare("SELECT HIST.typetf, COUNT(HIST.typetf) as 'nb_utilisations', 
+        SUM(CASE WHEN HIST.montant < 0 THEN montant ELSE 0 END) as 'total_depenses_type', 
+        SUM(CASE WHEN HIST.montant > 0 THEN montant ELSE 0 END) as 'total_revenus_type'
+        FROM historique_v HIST
+        GROUP BY HIST.typetf");
+        $getStatTypes->execute();
+        $fetchedStatTypes = $getStatTypes->fetchAll();
   ?>
 
     <header>
@@ -138,9 +159,9 @@
                         echo "<td>" . $stat_mois["mois"] ."</td>";
                         echo "<td>" . $stat_mois["annee"] . "</td>";
                         echo "<td>" . $stat_mois["nb_depenses"] . "</td>";
-                        echo "<td>" . $stat_mois["bilan_depenses_mois"] . "</td>";
+                        echo "<td>" . $stat_mois["bilan_depenses_mois"]  ." €". "</td>";
                         echo "<td>" . $stat_mois["nb_revenus"] . "</td>";
-                        echo "<td>" . $stat_mois["bilan_revenus_mois"] . "</td>";
+                        echo "<td>" . $stat_mois["bilan_revenus_mois"] ." €"."</td>";
                         echo "</tr>";
 
                         }
@@ -158,10 +179,69 @@
 
         <div>
             <h2>Répartition totale par catégorie</h2>
+
+            <table class="u-full-width">
+                <thead>
+                    <tr>
+                        <th>Catégorie</th>
+                        <th>Description</th>
+                        <th>Nombre d'utilisations</th>
+                        <th>Bilan de dépenses</th>
+                        <th>Bilan de revenus</th>
+                        <th></th>
+                    </tr>
+                    </thead>
+
+                <tbody>
+                    <?php
+
+                     foreach ($fetchedStatCat as $stat_cat) {
+                        echo "<tr>";
+                        echo "<td>" . $stat_cat["nom_tf"] ."</td>";
+                        echo "<td>" . $stat_cat["description_tf"] . "</td>";
+                        echo "<td>" . $stat_cat["nb_utilisations"] . "</td>";
+                        echo "<td>" . $stat_cat["bilan_depenses_cat"] . " €"."</td>";
+                        echo "<td>" . $stat_cat["bilan_revenus_cat"] ." €"."</td>";
+                        echo "</tr>";
+
+                        }
+
+                    ?>
+                </tbody>
+
+            </table>
         </div>
 
         <div>
             <h2>Répartition totale par type de transaction</h2>
+
+            <table class="u-full-width">
+                <thead>
+                    <tr>
+                        <th>Type de transaction</th>
+                        <th>Nombre d'utilisations</th>
+                        <th>Bilan de dépenses</th>
+                        <th>Bilan de revenus</th>
+                        <th></th>
+                    </tr>
+                    </thead>
+
+                <tbody>
+                    <?php
+
+                     foreach ($fetchedStatTypes as $stat_type) {
+                        echo "<tr>";
+                        echo "<td>" . $stat_type["typetf"] ."</td>";
+                        echo "<td>" . $stat_type["nb_utilisations"] . "</td>";
+                        echo "<td>" . $stat_type["total_depenses_type"] . " €"."</td>";
+                        echo "<td>" . $stat_type["total_revenus_type"] ." €"."</td>";
+                        echo "</tr>";
+
+                        }
+                        ?>
+                        </tbody>
+        
+                    </table>
         </div>
 
     </div>

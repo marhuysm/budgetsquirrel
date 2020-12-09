@@ -80,21 +80,8 @@ CREATE TABLE tf_carte(
     CONSTRAINT fk_numero_carte FOREIGN KEY (numero_carte) REFERENCES carte(numero_carte)
     );
 
--- CREATE OR REPLACE VIEW historique_v AS
---     SELECT tf.montant, tf.date_tf, tf.cat_tf, 
---         Case
---             when tf.num_tf = 1 then 'cash'
---             when tf.num_tf = 2 then 'carte'
---             when tf.num_tf = 3 then 'virement'
---         end as type_transaction, 
---         c.nom_carte, tfv.destbenef, tfv.communication
---     FROM transaction_financiere tf
---     LEFT JOIN tf_carte tfc ON tfc.num_tf = tf.num_tf 
---     LEFT JOIN tf_virement tfv ON tfv.num_tf = tf.num_tf 
---     INNER JOIN carte c ON c.numero_carte = tfc.numero_carte -- a remplacer par numero_carte lors du prochain update du code
--- ;
 
- CREATE VIEW historique_v 
+    CREATE VIEW historique_v
 AS
 SELECT tf.num_tf, tf.date_tf, tf.montant, tf.niss_util, tf.budget_id, tf.cat_tf, tfct.numero_carte, tfv.destbenef, tfv.communication, c.nom_carte,
     CASE 
@@ -113,27 +100,12 @@ ON tf.num_tf = tfcs.num_tf
 LEFT JOIN budgetsquirrel.carte c
 ON tfct.numero_carte = c.numero_carte
 
+;
 
- ENGINE=InnoDB
-
- CREATE VIEW stat_depenses_revenus_mois 
-AS
  -- Pour l'écran de statistiques : 
 
- SELECT * FROM
-    (SELECT budget_id, MONTH(date_tf), YEAR(date_tf), SUM(montant) 
-          as 'bilan_depenses_mois',COUNT(num_tf) as 'nb_depenses' 
-        FROM `historique_v`  
-        WHERE montant < 0 GROUP BY budget_id) depenses
-        INNER JOIN
-    (SELECT budget_id, MONTH(date_tf), YEAR(date_tf), SUM(montant) 
-            as 'bilan_revenus_mois' , COUNT(num_tf) as 'nb_revenus' 
-        FROM `historique_v` 
-        WHERE montant > 0 GROUP BY budget_id) revenus
-ON depenses.budget_id = revenus.budget_id
-
--- OU
-
+    CREATE VIEW stat_depenses_revenus_mois
+AS
 SELECT * FROM
     (SELECT budget_id, MONTH(date_tf), YEAR(date_tf), SUM(montant) 
             as 'bilan_depenses_mois',COUNT(num_tf) as 'nb_depenses' 
@@ -145,11 +117,40 @@ SELECT * FROM
         FROM `historique_v` 
         WHERE montant > 0 GROUP BY budget_id) revenus
 
--- Pour la répartition par catégorie : WIP PAS FONCTIONNEL
+        ;
 
--- Pour demain : faire un left join categorie to selection count historique?
+-- Pour la répartition par catégorie 
 
-SELECT CAT.description_tf, HIST.cat_tf, COUNT(HIST.cat_tf) as 'nb_utilisations'
-FROM historique_v HIST, categorie_tf CAT
-WHERE CAT.nom_tf = HIST.cat_tf
-GROUP BY HIST.cat_tf
+
+    CREATE VIEW stat_categories
+SELECT * FROM
+(SELECT CAT.description_tf, CAT.nom_tf 
+	FROM categorie_tf CAT) c
+LEFT JOIN
+   (SELECT HIST.cat_tf, COUNT(HIST.cat_tf) as 'nb_utilisations'
+        FROM historique_v HIST GROUP BY HIST.cat_tf) h
+ON c.nom_tf = h.cat_tf
+
+-- Pour ajouter la somme des dépenses et revenus par catégorie : 
+
+SELECT * FROM
+(SELECT CAT.description_tf, CAT.nom_tf 
+	FROM categorie_tf CAT) c
+LEFT JOIN
+   (SELECT HIST.cat_tf, 
+    COUNT(HIST.cat_tf) as 'nb_utilisations', 
+    SUM(CASE WHEN HIST.montant < 0 THEN montant ELSE 0 END) as 'bilan_depenses_cat', 
+    SUM(CASE WHEN HIST.montant > 0 THEN montant ELSE 0 END) as 'bilan_revenus_cat'
+        FROM historique_v HIST GROUP BY HIST.cat_tf) h
+ON c.nom_tf = h.cat_tf
+
+
+-- Enfin, répartition des dépenses et entrées par type de payement : 
+
+SELECT HIST.typetf, COUNT(HIST.typetf) as 'nb_utilisations', 
+SUM(CASE WHEN HIST.montant < 0 THEN montant ELSE 0 END) as 'total_depenses_type', 
+SUM(CASE WHEN HIST.montant > 0 THEN montant ELSE 0 END) as 'total_revenus_type'
+FROM historique_v HIST
+GROUP BY HIST.typetf
+
+ ENGINE=InnoDB
