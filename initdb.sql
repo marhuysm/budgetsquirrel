@@ -165,3 +165,7 @@ GROUP BY HIST.typetf
 
 -- NOTE : faudrait-il modifier l'app pour utiliser des privilèges? je sais pas du tout comment ça fonctionne à ce niveau
 -- Pour l'instant, pas de privilège côté DB > pb
+
+-- Il faudrait, idéalement, avoir des restrictions du côté de la db : 
+-- Une restriction "admin", avec un accès à tout, seulement pour la personne qui gère la db, et qui peut donc par ex suppr des utilisateurs
+-- et une restriction utilisateur, à laquelle on fait appel pour l'application
