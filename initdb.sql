@@ -103,10 +103,13 @@ ON tfct.numero_carte = c.numero_carte
 
  -- Pour l'écran de statistiques : 
 
+ -- PB de transactions par mois : il faut au moins avoir une dépense et un revenu / mois, sinon le mois ne s'affiche pas
+ -- ? solution?
+
     CREATE VIEW stat_depenses_revenus_mois
 AS
 SELECT * FROM
-    (SELECT budget_id, MONTH(date_tf), YEAR(date_tf), SUM(montant) 
+    (SELECT budget_id, MONTH(date_tf) as mois, YEAR(date_tf) as annee, SUM(montant) 
             as 'bilan_depenses_mois',COUNT(num_tf) as 'nb_depenses' 
         FROM `historique_v`  
         WHERE montant < 0 GROUP BY budget_id) depenses

@@ -32,7 +32,8 @@ INSERT INTO carte (nom_carte, numero_carte, type_carte, niss_util) VALUES ("Maes
 
 
 
-/*Ajout de transactions. il faudrait peut-être trouver comment faire un check / automatiser côté serveur la création de budget? */
+/*Ajout de transactions. il faudrait peut-être trouver comment faire un check / automatiser côté serveur la création de budget? 
+Pareil pour l'automatisation pour les types de transaction, voir si c'est possible*/
 
 
 /*Ajout des catégories disponibles */

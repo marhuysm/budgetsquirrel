@@ -32,7 +32,7 @@
         // Afficher un formulaire de sélection de mois, puis, une fois envoyé, montrer le tableau des transactions financières pour le mois
         // et donner la possibilité à l'utilisateur de visualiser son total pour ce mois ainsi que de clore le mois sélectionné.
         
-        // A essayer si on a le temps : get le dernier budget en cours et l'afficher "par défaut"
+        // A essayer si on a le temps : get le dernier budget et l'afficher "par défaut"
 
         // une fois que l'utilisateur a sélectionné le mois qu'il veut consulter, on récupère les données du get
         // ainsi que le mois et l'année , afin de pouvoir afficher le bon budget mensuel par la suite.

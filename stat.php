@@ -55,15 +55,15 @@
         // les requêtes suivantes doivent ss doute devenir des vues
         // et il faut trouver un meilleur moyen de calculer le bilan par mois
 
-        $getStatMois = $bdd->prepare("SELECT * FROM 'stat_depenses_revenus_mois'");
+        $getStatMois = $bdd->prepare("SELECT * FROM stat_depenses_revenus_mois");
         $getStatMois->execute();
         $fetchedStatMois = $getStatMois->fetchAll();
 
-        $getStatCategories = $bdd->prepare("SELECT * FROM 'stat_cat'");
+        $getStatCategories = $bdd->prepare("SELECT * FROM stat_cat");
         $getStatCategories->execute();
         $fetchedStatCat = $getStatCategories->fetchAll();
 
-        $getStatTypes = $bdd->prepare("SELECT * FROM stat_types' ");
+        $getStatTypes = $bdd->prepare("SELECT * FROM stat_types ");
         $getStatTypes->execute();
         $fetchedStatTypes = $getStatTypes->fetchAll();
   ?>

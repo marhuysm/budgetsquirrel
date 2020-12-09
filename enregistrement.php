@@ -84,8 +84,9 @@
              if ($montant != null&& $montant != 0&& $date_tf != null&& $date_tf != null&& !empty($type_tf)){
 
                 // Tout d'abord, voir si le resultat de fetched_budget == 0 ou >=1, autrement dit: s'il existe déjà un budget_id en cours correspondant ou non.
-
-                $getBudgets = $bdd->prepare("SELECT budget_id as budget_id FROM budget_mensuel WHERE mois = $mois_tf AND annee = $annee_tf AND statut = 'en_cours'");
+                // NOTE : vraiment pas idéal, à remplacer par une automatisation au niveau de la bdd
+                
+                $getBudgets = $bdd->prepare("SELECT budget_id as budget_id FROM budget_mensuel WHERE mois = $mois_tf AND annee = $annee_tf ");
                 $getBudgets->execute();
                 $fetchedBudget = $getBudgets->fetch();
 
