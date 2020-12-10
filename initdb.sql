@@ -13,7 +13,7 @@ CREATE TABLE utilisateur(
         date_naissance DATE NOT NULL,
         photo VARCHAR(100) NOT NULL DEFAULT 'froggy.png',
         CONSTRAINT pk_utilisateur PRIMARY KEY(niss) ,
-        CONSTRAINT chk_niss CHECK (DATALENGTH(niss) = 11),
+        -- CONSTRAINT chk_niss CHECK (LEN(niss) = 11), !! pb : unction or expression '`LEN`()' cannot be used in the CHECK clause
         CONSTRAINT chk_photo CHECK (photo IN ('froggy.png','gollum.jpg','politecat.jpg', 'raccoon.jpg'))
         );
         
@@ -25,7 +25,7 @@ CREATE TABLE carte(
         is_deleted INT DEFAULT 0,
        	CONSTRAINT fk_niss_util_carte FOREIGN KEY (niss_util) REFERENCES utilisateur(niss),
     	CONSTRAINT pk_carte PRIMARY KEY(numero_carte),
-        CONSTRAINT chk_numero_carte CHECK (DATALENGTH(numero_carte) >= 16 OR DATALENGTH(numero_carte) = 17),
+        -- CONSTRAINT chk_numero_carte CHECK (LEN(numero_carte) BETWEEN 16 AND 17), !! pb : unction or expression '`LEN`()' cannot be used in the CHECK clause
         CONSTRAINT uc_carte UNIQUE (numero_carte, niss_util),
         CONSTRAINT chk_type_carte CHECK (type_carte IN('Visa', 'Visa Prepaid', 'Maestro', 'Mastercard'))
         );
@@ -59,8 +59,8 @@ CREATE TABLE transaction_financiere(
      CONSTRAINT fk_niss_util_tf FOREIGN KEY (niss_util) REFERENCES utilisateur(niss),
      CONSTRAINT fk_budget_id FOREIGN KEY (budget_id) REFERENCES budget_mensuel(budget_id),
      CONSTRAINT fk_cat_tf FOREIGN KEY (cat_tf) REFERENCES categorie_tf(nom_tf),
-     CONSTRAINT pk_transaction_financiere PRIMARY KEY (num_tf),
-     CONSTRAINT chk_date_tf CHECK(date_tf > utilisateur.date_naissance) -- ok?
+     CONSTRAINT pk_transaction_financiere PRIMARY KEY (num_tf)
+     -- CONSTRAINT chk_date_tf CHECK(date_tf > utilisateur.date_naissance) -- PB : champ date_naissance inconnu dans CHECK
           -- ajouter contrainte check date = mois et annee du budget_id
         );
 
@@ -91,7 +91,7 @@ CREATE TABLE tf_carte(
 
 -- Trigger de création de budget s'il n'existe pas déjà pour le mois, année, utilisateur donné
 
-CREATE TRIGGER 
+-- CREATE TRIGGER 
 
 -- Potentiellement, si possible : trigger d'écriture de transaction_financière dans la bonne table? Comment gérer ça du côté de la db?
 
@@ -188,3 +188,94 @@ GROUP BY HIST.typetf
 -- Il faudrait, idéalement, avoir des restrictions du côté de la db : 
 -- Une restriction "admin", avec un accès à tout, seulement pour la personne qui gère la db, et qui peut donc par ex suppr des utilisateurs
 -- et une restriction utilisateur, à laquelle on fait appel pour l'application
+
+
+DROP USER 'utilisateur_app'@'localhost';
+
+DROP USER 'utilisateur_admin_db'@'localhost';
+
+-- création de l'utilisateur côté app
+CREATE USER 'utilisateur_app'@'localhost' IDENTIFIED BY 'user';
+
+-- création de l'utilisateur côté serveur
+CREATE USER 'utilisateur_admin_db'@'localhost' IDENTIFIED BY 'admin';
+
+-- l'utilisateur admin côté serveur peut tout faire (à modifier?)
+GRANT ALL PRIVILEGES ON budgetsquirrel. * TO 'utilisateur_admin_db'@'localhost';
+
+-- l'utilisateur app peut s'inscrire : il peut donc créer une nouvelle ligne dans la table utilisateur
+-- il peut également modifier certaines de ses infos > update
+
+GRANT INSERT ON budgetsquirrel.utilisateur TO 'utilisateur_app'@'localhost';
+GRANT UPDATE ON budgetsquirrel.utilisateur TO 'utilisateur_app'@'localhost';
+
+-- L'utilisateur peut aussi visualiser la liste des utilisateurs sur son écran de connexion, et a besoin du select 
+-- sur cette table aussi pour récupérer les informations qui le concernent :
+
+GRANT SELECT ON budgetsquirrel.utilisateur TO 'utilisateur_app'@'localhost';
+
+-- l'utilisateur app peut aussi ajouter ses cartes : il peut donc créer des lignes dans la table carte
+
+GRANT INSERT ON budgetsquirrel.utilisateur TO 'utilisateur_app'@'localhost';
+
+-- L'utilisateur peut consulter la table des transactions financières créées
+
+GRANT SELECT ON budgetsquirrel.transaction_financiere TO 'utilisateur_app'@'localhost';
+
+-- L'utilisateur peut consulter la vue qui rassemble différentes informations sur ses transactions par mois
+
+GRANT SELECT ON budgetsquirrel.stat_depenses_revenus_mois TO 'utilisateur_app'@'localhost';
+
+-- L'utilisateur peut consulter la vue qui rassemble différentes informations sur ses transactions par catégorie
+
+GRANT SELECT ON budgetsquirrel.stat_cat TO 'utilisateur_app'@'localhost';
+
+-- L'utilisateur peut consulter la vue qui rassemble différentes informations sur ses transactions par type
+
+GRANT SELECT ON budgetsquirrel.stat_types TO 'utilisateur_app'@'localhost';
+
+-- L'utilisateur peut consulter la table des cartes
+
+GRANT SELECT ON budgetsquirrel.carte TO 'utilisateur_app'@'localhost';
+
+-- L'utilisateur peut insérer de nouvelles cartes dans la table des cartes
+
+GRANT INSERT ON budgetsquirrel.carte TO 'utilisateur_app'@'localhost';
+
+-- L'utilisateur peut modifier ("supprimer") ses cartes dans la table des cartes
+
+GRANT UPDATE ON budgetsquirrel.carte TO 'utilisateur_app'@'localhost';
+
+-- L'utilisateur peut consulter la table des catégories de transaction
+
+GRANT SELECT ON budgetsquirrel.categorie_tf TO 'utilisateur_app'@'localhost';
+
+-- L'utilisateur peut consulter la table des budgets mensuels
+
+GRANT SELECT ON budgetsquirrel.budget_mensuel TO 'utilisateur_app'@'localhost';
+
+-- Normalement, l'utilisateur ne devra pas INSERT dans la table budget_mensuel, vu que ça va ê automatisé par un trigger
+-- Mais en attendant : 
+GRANT INSERT ON budgetsquirrel.budget_mensuel TO 'utilisateur_app'@'localhost';
+
+-- L'utilisateur peut créer de nouvelles transactions financières : 
+
+GRANT INSERT ON budgetsquirrel.transaction_financiere TO 'utilisateur_app'@'localhost';
+
+-- .. Et les visualiser
+
+GRANT SELECT ON budgetsquirrel.transaction_financiere TO 'utilisateur_app'@'localhost';
+
+-- L'utilisateur peut spécifier la nature de sa TF, et pour cela, il doit pouvoir INSERT dans les 3 tableaux concernés : 
+
+-- L'utilisateur peut créer de nouvelles transactions financières : 
+
+GRANT INSERT ON budgetsquirrel.tf_cash TO 'utilisateur_app'@'localhost';
+GRANT INSERT ON budgetsquirrel.tf_carte TO 'utilisateur_app'@'localhost';
+GRANT INSERT ON budgetsquirrel.tf_virement TO 'utilisateur_app'@'localhost';
+
+-- L'utilisateur peut consulter la vue d'historique : 
+
+GRANT SELECT ON budgetsquirrel.historique_v TO 'utilisateur_app'@'localhost';
+
+-- Autres privilèges ?

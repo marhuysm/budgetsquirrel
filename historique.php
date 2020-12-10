@@ -20,7 +20,7 @@
 
 <?php 
 
-        $bdd = new PDO('mysql:host=localhost;dbname=budgetsquirrel', 'root');
+        $bdd = new PDO('mysql:host=localhost;dbname=budgetsquirrel', 'utilisateur_app', 'user');
 
         $niss = $_SESSION['niss'];
 
@@ -86,22 +86,12 @@
                     $getTransactions->execute();
                     $transactions = $getTransactions->fetchAll();
 
-                    // total à afficher : besoin d'écrire la somme des transactions pour le mois dans la colonne bilan de budget mensuel
-                    
-                    //calcul de la somme : 
+                    //Requête du bilan mensuel: 
 
-                    $GetTotalMois = $bdd->prepare("SELECT SUM(montant) as total FROM budgetsquirrel.transaction_financiere WHERE niss_util = $niss AND budget_id = $budget_id");
+                    $GetTotalMois = $bdd->prepare("SELECT bilan_total_mois as total FROM budgetsquirrel.stat_depenses_revenus_mois WHERE budget_id = $budget_id");
                     $GetTotalMois->execute();
                     $fetchedTotal = $GetTotalMois->fetch();
                     $total_mois = $fetchedTotal["total"];
-
-                    //réécriture de bilan dans la table budget_mensuel : 
-
-                    $WriteTotal = $bdd->prepare("UPDATE budgetsquirrel.budget_mensuel SET bilan = $total_mois WHERE budget_id = $budget_id");
-                    $WriteTotal->execute();
-
-                    // Est-ce mieux de directement utiliser $total_mois dans le total, ou d'appeler la valeur de la colonne bilan du 
-                    //budget mensuel pour afficher le total de chaque mois? Pour l'instant, j'utilise total_mois
                  
                     $getHistorique = $bdd->prepare("SELECT * FROM budgetsquirrel.historique_v WHERE niss_util = $niss AND budget_id = $budget_id");
                     $getHistorique->execute();

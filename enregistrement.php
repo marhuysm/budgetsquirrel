@@ -21,7 +21,7 @@
 
 <?php 
 
-        $bdd = new PDO('mysql:host=localhost;dbname=budgetsquirrel', 'root');
+        $bdd = new PDO('mysql:host=localhost;dbname=budgetsquirrel', 'utilisateur_app', 'user');
 
         $niss = $_SESSION['niss'];
 
@@ -313,10 +313,7 @@
                                 <option value ="<?php echo $categorie['nom_tf']?>"><?php echo $categorie['nom_tf']?></option>
                              <?php endforeach; ?>
                         </select> <br> 
-                        <span class="footsize_text"><?php echo $categorie['description_tf']?></span> 
                         
-                        <!-- Voir comment adapter la description à chaque sélection : javascript?-->
-
                     </p>
                 </div>
 

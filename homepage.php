@@ -23,7 +23,7 @@
             $_SESSION['niss'] = htmlspecialchars($_POST['niss']);
         }
 
-        $bdd = new PDO('mysql:host=localhost;dbname=budgetsquirrel', 'root');
+        $bdd = new PDO('mysql:host=localhost;dbname=budgetsquirrel', 'utilisateur_app', 'user');
         $niss = $_SESSION['niss'];
 
         $getConnexion = $bdd->prepare("SELECT * FROM budgetsquirrel.utilisateur WHERE niss = $niss");

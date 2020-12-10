@@ -20,7 +20,7 @@
 
 <?php 
 
-        $bdd = new PDO('mysql:host=localhost;dbname=budgetsquirrel', 'root');
+        $bdd = new PDO('mysql:host=localhost;dbname=budgetsquirrel', 'utilisateur_app', 'user');
 
         $niss = $_SESSION['niss'];
 
