@@ -34,7 +34,7 @@ CREATE TABLE budget_mensuel(
      budget_id INT NOT NULL AUTO_INCREMENT,
      mois INT NOT NULL,
      annee INT NOT NULL,
-     bilan FLOAT, -- comment faire pour que le bilan soit calculé automatiquement du côté de la DB?
+     bilan FLOAT, 
      niss_util VARCHAR(11),
      CONSTRAINT fk_niss_util_budget FOREIGN KEY (niss_util) REFERENCES utilisateur(niss),
      CONSTRAINT pk_budget_mensuel PRIMARY KEY(budget_id),
@@ -91,9 +91,37 @@ CREATE TABLE tf_carte(
 
 -- Trigger de création de budget s'il n'existe pas déjà pour le mois, année, utilisateur donné
 
--- CREATE TRIGGER 
+    -- CREATE TRIGGER trg_before_ajout_tf BEFORE INSERT 
+    -- ON transaction_financiere FOR EACH ROW
+    --     BEGIN
+    --      IF (SELECT COUNT(*) FROM budget_mensuel 
+    --             WHERE mois = MONTH(NEW.date_tf)  
+    --             AND annee = YEAR(NEW.date_tf)
+    --             AND niss_utils = (NEW.niss_util)) = 0 
+    --             THEN
+    --         INSERT INTO budget_mensuel(mois, annee, niss) 
+    --         values(MONTH(NEW.date_tf), YEAR(NEW.date_tf), NEW.niss_util);
+    --     END IF;
 
--- Potentiellement, si possible : trigger d'écriture de transaction_financière dans la bonne table? Comment gérer ça du côté de la db?
+    --     UPDATE transaction_financiere
+    --     SET budget_id = NEW.budget_id
+    -- END
+    -- ;
+
+    CREATE TRIGGER trg_before_ajouttf BEFORE INSERT ON transaction_financiere FOR EACH ROW
+    BEGIN
+    SET @COUNT=(SELECT COUNT(*) FROM budget_mensuel 
+                   WHERE (mois = MONTH(NEW.date_tf)  
+                   AND annee = YEAR(NEW.date_tf)
+                   AND niss_util = (NEW.niss_util)) );
+    IF @COUNT = 0 THEN
+        INSERT INTO budget_mensuel(mois, annee, niss) 
+               VALUES (MONTH(NEW.date_tf), YEAR(NEW.date_tf), NEW.niss_util)
+    END IF;
+    END;
+
+-- Potentiellement, si possible : trigger d'écriture de transaction_financiere dans la bonne table? Comment gérer ça du côté de la db?
+-- ça me semble pas possible, seul le trigger d'ajout automatique à un budget_mensule est possible
 
 CREATE OR REPLACE VIEW historique_v
 AS
@@ -183,11 +211,9 @@ FROM historique_v HIST
 GROUP BY HIST.typetf
 ;
 
--- NOTE : faudrait-il modifier l'app pour utiliser des privilèges? je sais pas du tout comment ça fonctionne à ce niveau
--- Pour l'instant, pas de privilège côté DB > pb
--- Il faudrait, idéalement, avoir des restrictions du côté de la db : 
--- Une restriction "admin", avec un accès à tout, seulement pour la personne qui gère la db, et qui peut donc par ex suppr des utilisateurs
--- et une restriction utilisateur, à laquelle on fait appel pour l'application
+-- Restrictions du côté de la db : 
+-- Nous définissons deux utilisateurs principaux : 
+-- un utilisateur "app", qui est utilisé à travers l'app, et un utilisateur administrateur, qui a accès à tout au niveau de la DB
 
 
 DROP USER 'utilisateur_app'@'localhost';
