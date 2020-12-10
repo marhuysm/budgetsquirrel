@@ -262,13 +262,15 @@ GRANT INSERT ON budgetsquirrel.budget_mensuel TO 'utilisateur_app'@'localhost';
 
 GRANT INSERT ON budgetsquirrel.transaction_financiere TO 'utilisateur_app'@'localhost';
 
--- .. Et les visualiser
+-- ... Et les visualiser
 
 GRANT SELECT ON budgetsquirrel.transaction_financiere TO 'utilisateur_app'@'localhost';
 
--- L'utilisateur peut spécifier la nature de sa TF, et pour cela, il doit pouvoir INSERT dans les 3 tableaux concernés : 
+-- ... Et les supprimer
 
--- L'utilisateur peut créer de nouvelles transactions financières : 
+GRANT DELETE ON budgetsquirrel.transaction_financiere TO 'utilisateur_app'@'localhost';
+
+-- L'utilisateur peut spécifier la nature de sa TF, et pour cela, il doit pouvoir INSERT dans les 3 tableaux concernés : 
 
 GRANT INSERT ON budgetsquirrel.tf_cash TO 'utilisateur_app'@'localhost';
 GRANT INSERT ON budgetsquirrel.tf_carte TO 'utilisateur_app'@'localhost';
