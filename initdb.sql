@@ -62,6 +62,7 @@ CREATE TABLE transaction_financiere(
      CONSTRAINT pk_transaction_financiere PRIMARY KEY (num_tf)
      -- CONSTRAINT chk_date_tf CHECK(date_tf > utilisateur.date_naissance) -- PB : champ date_naissance inconnu dans CHECK
           -- ajouter contrainte check date = mois et annee du budget_id
+          -- le niss_util de transaction_financiere correspond au niss_util du budget_mensuel > check ou trigger?
         );
 
 
@@ -85,11 +86,21 @@ CREATE TABLE tf_carte(
     CONSTRAINT pk_tf_carte PRIMARY KEY (num_tf),
     CONSTRAINT fk_num_tf_carte FOREIGN KEY (num_tf) REFERENCES transaction_financiere(num_tf) ON DELETE CASCADE,
     CONSTRAINT fk_numero_carte FOREIGN KEY (numero_carte) REFERENCES carte(numero_carte)
+
+    -- le niss_util.numero carte utilisé appartient toujours à l'utilisateur qui crée la transaction > Trigger ou check?
     )
     
     ENGINE=InnoDB;
 
 -- Trigger de création de budget s'il n'existe pas déjà pour le mois, année, utilisateur donné
+
+-- Idée à mettre en place : lors de la création d'une nouvelle transaction financière coté db, on entre le montant, la date, le niss et la catégorie
+-- Ensuite, le trigger vérifie si un budget_mensuel existe déjà pour cette combinaison de NISS, mois et année
+-- Si oui, l'id du budget mensuel correspondant est extrait et ajouté à la tf créée
+-- Si non, d'abord, le budget mensuel correspondant au triplet niss-mois-année est créée
+-- Puis, son id est extrait, et enfin, ajouté à la transaction créée
+-- Comment mettre en place tout ça ?
+-- Pour l'instant, ça fonctionne côté appli : les vérifications sont faites manuellement en php
 
     -- CREATE TRIGGER trg_before_ajout_tf BEFORE INSERT 
     -- ON transaction_financiere FOR EACH ROW
