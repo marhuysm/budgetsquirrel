@@ -16,6 +16,7 @@ CREATE TABLE utilisateur(
         CONSTRAINT chk_niss CHECK (LENGTHB(niss) = 11),
         CONSTRAINT chk_photo CHECK (photo IN ('froggy.png','gollum.jpg','politecat.jpg', 'raccoon.jpg'))
         );
+-- Vérification de l'écriture côté bdd : OK!
         
 CREATE TABLE carte(
         nom_carte VARCHAR(255) NOT NULL,
@@ -30,6 +31,8 @@ CREATE TABLE carte(
         CONSTRAINT uc_carte UNIQUE (numero_carte, niss_util),
         CONSTRAINT chk_type_carte CHECK (type_carte IN('Visa', 'Visa Prepaid', 'Maestro', 'Mastercard'))
         );
+        
+-- Vérif de l'écriture côté bdd : OK!
 
 CREATE TABLE budget_mensuel(
      budget_id INT NOT NULL AUTO_INCREMENT,
