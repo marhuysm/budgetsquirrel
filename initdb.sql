@@ -72,6 +72,22 @@ CREATE TABLE transaction_financiere(
      -- CONSTRAINT chk_date_tf CHECK(date_tf > utilisateur.date_naissance) -- PB : champ date_naissance inconnu dans CHECK
           -- ajouter contrainte check date = mois et annee du budget_id
           -- le niss_util de transaction_financiere correspond au niss_util du budget_mensuel > check ou trigger?
+        -- SOLUTION Proposée: https://stackoverflow.com/questions/3880698/can-a-check-constraint-relate-to-another-table
+        --   Make a compound key of the utilisateur table's key combined with the date.naissance columns, 
+        --   then use this compound key for your foreign key reference in your transaction_financiere table. 
+        --   This will give you the ability to write the necessary row-level CHECK constraints in the transaction_financiere table e.g.
+        -- in table utilisateur under
+        -- date_naissance DATE NOT NULL,
+        -- add
+        -- UNIQUE (niss, date_naissance)
+        -- then in table transaction_financiere add
+        -- after niss_util a new column
+        -- date_naissance_util DATE,
+        -- FOREIGN KEY (niss_util, date_naissance_util) REFERENCES utilisateur (niss, date_naissance)
+        -- ON DELETE CASCADE
+        -- ON UPDATE CASCADE,
+        -- date_naissance_util NOT NULL,
+        -- CHECK (date_tf > tf_date_naissance)
         );
 
 
