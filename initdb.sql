@@ -23,7 +23,7 @@ CREATE TABLE carte(
         type_carte VARCHAR(100) NOT NULL,
     	niss_util VARCHAR(11), 
         is_deleted INT DEFAULT 0,
-       	CONSTRAINT fk_niss_util_carte FOREIGN KEY (niss_util) REFERENCES utilisateur(niss),
+       	CONSTRAINT fk_niss_util_carte FOREIGN KEY (niss_util) REFERENCES utilisateur(niss), --ajouter un DROP CASCADE à chaque FK niss pour gérer le cas où l'utilisateur admin veut supprimer un utilisateur de la DB?
     	CONSTRAINT pk_carte PRIMARY KEY(numero_carte),
         CONSTRAINT chk_numero_carte_low CHECK (LENGTHB(numero_carte) >= 16),
         CONSTRAINT chk_numero_carte_high CHECK (LENGTHB(numero_carte) <= 17), -- CONTRAINTE <= 17 potentiellement inutile. quand on test avec un numéro de carte de 18 chiffres, MySQL retourne "Data too long" grace au VARCHAR(17)
@@ -41,6 +41,11 @@ CREATE TABLE budget_mensuel(
      CONSTRAINT pk_budget_mensuel PRIMARY KEY(budget_id),
      CONSTRAINT uc_budget_mensuel UNIQUE (mois, annee, niss_util)
         );
+        
+        -- ! Pour l'instant, bilan de budget_mensuel = null
+        -- ? ajouter un trigger ou une fk après avoir créé la vue qui donne le bilan?
+        -- ALTER TABLE budgetsquirrel.budget_mensuel
+	-- ADD CONSTRAINT fk_bilan_from_view FOREIGN KEY (bilan) REFERENCES stat_depenses_revenus_mois(bilan_total_mois)
         
 CREATE TABLE categorie_tf(
      nom_tf VARCHAR(100),
@@ -133,7 +138,7 @@ CREATE TABLE tf_carte(
     -- END;
 
 -- Potentiellement, si possible : trigger d'écriture de transaction_financiere dans la bonne table? Comment gérer ça du côté de la db?
--- ça me semble pas possible, seul le trigger d'ajout automatique à un budget_mensule est possible
+-- ça me semble pas possible, seul le trigger d'ajout automatique à un budget_mensuel est possible
 
 CREATE OR REPLACE VIEW historique_v
 AS
