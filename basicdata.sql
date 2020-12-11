@@ -18,7 +18,7 @@ INSERT INTO carte (nom_carte, numero_carte, type_carte, niss_util) VALUES ("Visa
 
 INSERT INTO carte (nom_carte, numero_carte, type_carte, niss_util) VALUES ("Mastercard Comté", "2342111111111111", "Mastercard", "19650922666");
 
-INSERT INTO carte (nom_carte, numero_carte, type_carte, niss_util) VALUES ("Maestro Moria", "189145555555555", "Mastercard", "19650922666");
+INSERT INTO carte (nom_carte, numero_carte, type_carte, niss_util) VALUES ("Maestro Moria", "1891455555555555", "Mastercard", "19650922666");
 
 INSERT INTO carte (nom_carte, numero_carte, type_carte, niss_util) VALUES ("Prepaid Bpost", "1895678930000576", "Visa Prepaid", "19940307121");
 
