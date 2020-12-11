@@ -14,7 +14,8 @@ CREATE TABLE utilisateur(
         photo VARCHAR(100) NOT NULL DEFAULT 'froggy.png',
         CONSTRAINT pk_utilisateur PRIMARY KEY(niss) ,
         CONSTRAINT chk_niss CHECK (LENGTHB(niss) = 11),
-        CONSTRAINT chk_photo CHECK (photo IN ('froggy.png','gollum.jpg','politecat.jpg', 'raccoon.jpg'))
+        CONSTRAINT chk_photo CHECK (photo IN ('froggy.png','gollum.jpg','politecat.jpg', 'raccoon.jpg')),
+        CONSTRAINT UNIQUE (niss, date_naissance) -- clé composée à utiliser dans la table transaction financiere
         );
 -- Vérification de l'écriture côté bdd : OK!
         
@@ -57,18 +58,24 @@ CREATE TABLE categorie_tf(
     );
 
         -- Faut-il des contraintes uniques pour la table transaction_financiere ?
+        -- à voir lundi mais a priori je ne crois pas
 
 CREATE TABLE transaction_financiere(
      num_tf INT NOT NULL AUTO_INCREMENT,
      date_tf DATE,
      montant FLOAT,
    	 niss_util VARCHAR(11),
+     date_naissance_util DATE NOT NULL,
      budget_id INT,
      cat_tf VARCHAR(100),
      CONSTRAINT fk_niss_util_tf FOREIGN KEY (niss_util) REFERENCES utilisateur(niss),
      CONSTRAINT fk_budget_id FOREIGN KEY (budget_id) REFERENCES budget_mensuel(budget_id),
      CONSTRAINT fk_cat_tf FOREIGN KEY (cat_tf) REFERENCES categorie_tf(nom_tf),
-     CONSTRAINT pk_transaction_financiere PRIMARY KEY (num_tf)
+     CONSTRAINT pk_transaction_financiere PRIMARY KEY (num_tf),
+     CONSTRAINT fk_date_util_tf FOREIGN KEY (niss_util,date_naissance_util) REFERENCES utilisateur (niss, date_naissance)
+                ON DELETE CASCADE
+                ON UPDATE CASCADE,
+     CONSTRAINT CHECK (date_tf > date_naissance_util)
      -- CONSTRAINT chk_date_tf CHECK(date_tf > utilisateur.date_naissance) -- PB : champ date_naissance inconnu dans CHECK
           -- ajouter contrainte check date = mois et annee du budget_id
           -- le niss_util de transaction_financiere correspond au niss_util du budget_mensuel > check ou trigger?
@@ -88,6 +95,11 @@ CREATE TABLE transaction_financiere(
         -- ON UPDATE CASCADE,
         -- date_naissance_util NOT NULL,
         -- CHECK (date_tf > tf_date_naissance)
+        -- PB CONSEQUENTE côté client: une fois la contrainte date_tf ajouté: l'utilisateur peut toujours enregistré une transaction avec une date 
+        -- anterieure à sa date de naissance MAIS
+        -- la transaction n'est pas enregistré dans la db (constraint failure, c'est correct)
+        -- le budget pour l'année inferieur à sa naissance est crée
+        -- l'utilisateur ne sait pas que sa transaction n'a pas pu être enregistré et a un message de confirmation de création dans l'app
         );
 
 
@@ -158,6 +170,7 @@ CREATE TABLE tf_carte(
 
 -- Potentiellement, si possible : trigger d'écriture de transaction_financiere dans la bonne table? Comment gérer ça du côté de la db?
 -- ça me semble pas possible, seul le trigger d'ajout automatique à un budget_mensuel est possible
+-- à confirmer lundi 
 
 CREATE OR REPLACE VIEW historique_v
 AS
