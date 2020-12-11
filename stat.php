@@ -29,7 +29,7 @@
         $getConnexion = $bdd->prepare("SELECT * FROM budgetsquirrel.utilisateur WHERE niss = $niss");
         $getConnexion-> execute();
         $connexion = $getConnexion->fetch();
-        
+
         // pour récupérer le total des dépenses, il faut faire une requête qui récupère toutes les transactions appartenant 
         // à l'utilisateur et étant < 0, et qui en fait la somme :
 
@@ -56,15 +56,15 @@
         // les requêtes suivantes doivent ss doute devenir des vues
         // et il faut trouver un meilleur moyen de calculer le bilan par mois
 
-        $getStatMois = $bdd->prepare("SELECT * FROM stat_depenses_revenus_mois");
+        $getStatMois = $bdd->prepare("SELECT * FROM stat_depenses_revenus_mois WHERE niss_util = $niss");
         $getStatMois->execute();
         $fetchedStatMois = $getStatMois->fetchAll();
 
-        $getStatCategories = $bdd->prepare("SELECT * FROM stat_cat");
+        $getStatCategories = $bdd->prepare("SELECT * FROM stat_cat WHERE niss_util = $niss");
         $getStatCategories->execute();
         $fetchedStatCat = $getStatCategories->fetchAll();
 
-        $getStatTypes = $bdd->prepare("SELECT * FROM stat_types ");
+        $getStatTypes = $bdd->prepare("SELECT * FROM stat_types WHERE niss_util = $niss");
         $getStatTypes->execute();
         $fetchedStatTypes = $getStatTypes->fetchAll();
   ?>

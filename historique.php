@@ -49,7 +49,7 @@
         
                 // là, on a juste le mois et l'année choisies. Maintenant, il faut lier cette info à la table budget.
                 // On selectionne donc le budget correspondant à la date : 
-                $getBudget = $bdd->prepare("SELECT budget_id as budget_id FROM budget_mensuel WHERE mois = $mois_choisi AND annee = $annee_choisie");
+                $getBudget = $bdd->prepare("SELECT budget_id as budget_id FROM budget_mensuel WHERE mois = $mois_choisi AND annee = $annee_choisie AND niss_util = $niss");
                 $getBudget->execute();
                 $fetchedBudget = $getBudget->fetch();
                 $budget_id = $fetchedBudget["budget_id"] ?? ''; //utilisation de '??' (null coalescing operator) pour remplacer un budget qui est Null par un budget vide -> ''
