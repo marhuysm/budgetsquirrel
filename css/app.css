@@ -308,7 +308,32 @@ input[type="submit"]{
 
 }
 
-td{
+.section {
+    display: flex;
+    justify-content: space-between;
+    padding-top: 25px;
+}
+
+.homepage_content {
+    width: 50%;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.homepage_image {
+    width: 50%;
+    text-align: center;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+img.homepage {
+    width: 100%;
+    height: auto;
+    margin-top: 55px;
+}
+
+td {
     padding : 6px 0px;
 }
 

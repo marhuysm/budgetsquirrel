@@ -13,7 +13,7 @@ CREATE TABLE utilisateur(
         date_naissance DATE NOT NULL,
         photo VARCHAR(100) NOT NULL DEFAULT 'froggy.png',
         CONSTRAINT pk_utilisateur PRIMARY KEY(niss) ,
-        -- CONSTRAINT chk_niss CHECK (LEN(niss) = 11), !! pb : unction or expression '`LEN`()' cannot be used in the CHECK clause
+        CONSTRAINT chk_niss CHECK (LENGTHB(niss) = 11),
         CONSTRAINT chk_photo CHECK (photo IN ('froggy.png','gollum.jpg','politecat.jpg', 'raccoon.jpg'))
         );
         
@@ -25,7 +25,8 @@ CREATE TABLE carte(
         is_deleted INT DEFAULT 0,
        	CONSTRAINT fk_niss_util_carte FOREIGN KEY (niss_util) REFERENCES utilisateur(niss),
     	CONSTRAINT pk_carte PRIMARY KEY(numero_carte),
-        -- CONSTRAINT chk_numero_carte CHECK (LEN(numero_carte) BETWEEN 16 AND 17), !! pb : unction or expression '`LEN`()' cannot be used in the CHECK clause
+        CONSTRAINT chk_numero_carte_low CHECK (LENGTHB(numero_carte) >= 16),
+        CONSTRAINT chk_numero_carte_high CHECK (LENGTHB(numero_carte) <= 17), -- CONTRAINTE <= 17 potentiellement inutile. quand on test avec un numéro de carte de 18 chiffres, MySQL retourne "Data too long" grace au VARCHAR(17)
         CONSTRAINT uc_carte UNIQUE (numero_carte, niss_util),
         CONSTRAINT chk_type_carte CHECK (type_carte IN('Visa', 'Visa Prepaid', 'Maestro', 'Mastercard'))
         );
@@ -119,17 +120,17 @@ CREATE TABLE tf_carte(
     -- END
     -- ;
 
-    CREATE TRIGGER trg_before_ajouttf BEFORE INSERT ON transaction_financiere FOR EACH ROW
-    BEGIN
-    SET @COUNT=(SELECT COUNT(*) FROM budget_mensuel 
-                   WHERE (mois = MONTH(NEW.date_tf)  
-                   AND annee = YEAR(NEW.date_tf)
-                   AND niss_util = (NEW.niss_util)) );
-    IF @COUNT = 0 THEN
-        INSERT INTO budget_mensuel(mois, annee, niss) 
-               VALUES (MONTH(NEW.date_tf), YEAR(NEW.date_tf), NEW.niss_util)
-    END IF;
-    END;
+    -- CREATE TRIGGER trg_before_ajouttf BEFORE INSERT ON transaction_financiere FOR EACH ROW
+    -- BEGIN
+    -- SET @COUNT=(SELECT COUNT(*) FROM budget_mensuel 
+    --                WHERE (mois = MONTH(NEW.date_tf)  
+    --                AND annee = YEAR(NEW.date_tf)
+    --                AND niss_util = (NEW.niss_util)) );
+    -- IF @COUNT = 0 THEN
+    --     INSERT INTO budget_mensuel(mois, annee, niss) 
+    --            VALUES (MONTH(NEW.date_tf), YEAR(NEW.date_tf), NEW.niss_util)
+    -- END IF;
+    -- END;
 
 -- Potentiellement, si possible : trigger d'écriture de transaction_financiere dans la bonne table? Comment gérer ça du côté de la db?
 -- ça me semble pas possible, seul le trigger d'ajout automatique à un budget_mensule est possible
@@ -227,9 +228,9 @@ GROUP BY HIST.typetf
 -- un utilisateur "app", qui est utilisé à travers l'app, et un utilisateur administrateur, qui a accès à tout au niveau de la DB
 
 
-DROP USER 'utilisateur_app'@'localhost';
+DROP USER IF EXISTS 'utilisateur_app'@'localhost';
 
-DROP USER 'utilisateur_admin_db'@'localhost';
+DROP USER IF EXISTS 'utilisateur_admin_db'@'localhost';
 
 -- création de l'utilisateur côté app
 CREATE USER 'utilisateur_app'@'localhost' IDENTIFIED BY 'user';

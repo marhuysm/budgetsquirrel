@@ -52,8 +52,7 @@
                 $getBudget = $bdd->prepare("SELECT budget_id as budget_id FROM budget_mensuel WHERE mois = $mois_choisi AND annee = $annee_choisie");
                 $getBudget->execute();
                 $fetchedBudget = $getBudget->fetch();
-                $budget_id = $fetchedBudget["budget_id"];
-        
+                $budget_id = $fetchedBudget["budget_id"] ?? ''; //utilisation de '??' (null coalescing operator) pour remplacer un budget qui est Null par un budget vide -> ''
                 
                 // si l'utilisateur demande à supprimer une transaction :
 
@@ -68,17 +67,18 @@
 
                 // Maintenant qu'on a accès au budget_id correspondnant au mois choisi, on attribue une nouvelle valeur à budget_id : 
 
-                if(empty($budget_id)){
-                    
-                    echo "Vous n'avez pas encore créé de transaction pour ce mois";
-                    // dans le cas ou on a pas de budget, budget_id == 0 : 
-                    // PB ici : comment éviter le message d'erreur lié ? (lié au fait que $budget_id = $fetchedBudget["budget_id"] renvoie
-                    // Trying to access array offset on value of type bool in /opt/lampp/htdocs/budgetsquirrel/historique.php)
+                if(!empty($budget_id)){
+                //   pour la ligne 70 le message d'erreur s'il n'y a pas de transaction à été deplacé dans le tableau, plutôt que dans le header du coup le if(empty) n'est plus necessaire et à été remplacé par un if(!empty)     
+                //     echo "Vous n'avez pas encore créé de transaction pour ce mois";
+                //     // dans le cas ou on a pas de budget, budget_id == 0 : 
+                //     // PB ici : comment éviter le message d'erreur lié ? (lié au fait que $budget_id = $fetchedBudget["budget_id"] renvoie
+                //     // Trying to access array offset on value of type bool in /opt/lampp/htdocs/budgetsquirrel/historique.php)
+                //     // SOLUTION proposée : ?? null coalescing operator (voir: https://www.php.net/manual/en/language.operators.comparison.php#language.operators.comparison.coalesce)
 
-                }
-                else{
+                // }
+                // else{
 
-                    echo($budget_id);
+                    // echo($budget_id);
 
                     // sélection de toutes les transactions pour le mois, pour ensuite les afficher dans un tableau
 
@@ -91,7 +91,7 @@
                     $GetTotalMois = $bdd->prepare("SELECT bilan_total_mois as total FROM budgetsquirrel.stat_depenses_revenus_mois WHERE budget_id = $budget_id");
                     $GetTotalMois->execute();
                     $fetchedTotal = $GetTotalMois->fetch();
-                    $total_mois = $fetchedTotal["total"];
+                    $total_mois = $fetchedTotal["total"] ?? 0; //pour traiter le cas d'utilisation ou l'utilisateur supprime l'unique transaction (revenu ou depense) d'un budget. ça evite l'erreur générée par un bilan qui est NULL
                  
                     $getHistorique = $bdd->prepare("SELECT * FROM budgetsquirrel.historique_v WHERE niss_util = $niss AND budget_id = $budget_id");
                     $getHistorique->execute();
@@ -102,9 +102,11 @@
         
             }
             // catch inutile?
+            // potentiellement utile pour d'autres erreurs
             catch(Exception $e){
-                echo "in catch";
-                echo 'Message: ' .$e->getMessage();
+                echo 'Caught exception: ',  $e->getMessage(), "\n";
+                // echo "in catch";
+                // echo 'Message: ' .$e->getMessage();
             }
     }
         
@@ -185,19 +187,28 @@
                     <?php
 
                     // si l'utilisateur a sélectionné un mois ET qu'un budget_id valide a été défini
-                    if (isset($_GET['selection_mois']) && (isset($budget_id))){
-                        foreach ($historique as $hist_tf) {
-                            echo "<tr>";
-                            echo "<td>" . $hist_tf["montant"] ."€" ."</td>";
-                            echo "<td>" . $hist_tf["date_tf"] . "</td>";
-                            echo "<td>" . $hist_tf["cat_tf"] . "</td>";
-                            echo "<td>" . $hist_tf["typetf"] . "</td>";
-                            echo "<td>" . $hist_tf["nom_carte"] . "</td>";
-                            echo "<td>" . $hist_tf["destbenef"] . "</td>";
-                            echo "<td>" . $hist_tf["communication"] . "</td>";
-                            echo  "<td><button type='submit' class='suppr_button' name='suppr_tf' value=". $hist_tf["num_tf"]."></button></td>";
-                            echo "</tr>";
+                    //split de "if" pour garder la selection de mois, mais ajouter un check sur le budget vide
+                    //ajout d'une ligne sur les huit colonnes de la table pour afficher le message d'erreur'
+                    if (isset($_GET['selection_mois'])) {
+                        if (!empty($budget_id)) {
+                            foreach ($historique as $hist_tf) {
+                                echo "<tr>";
+                                echo "<td>" . $hist_tf["montant"] ."€" ."</td>";
+                                echo "<td>" . $hist_tf["date_tf"] . "</td>";
+                                echo "<td>" . $hist_tf["cat_tf"] . "</td>";
+                                echo "<td>" . $hist_tf["typetf"] . "</td>";
+                                echo "<td>" . $hist_tf["nom_carte"] . "</td>";
+                                echo "<td>" . $hist_tf["destbenef"] . "</td>";
+                                echo "<td>" . $hist_tf["communication"] . "</td>";
+                                echo "<td><button type='submit' class='suppr_button' name='suppr_tf' value=". $hist_tf["num_tf"]."></button></td>";
+                                echo "</tr>";
 
+                            }
+                        }
+                        else {
+                            echo "<tr>";
+                            echo "<td colspan=8>" . "Vous n'avez pas encore créé de transaction pour ce mois" ."</td>";
+                            echo "</tr>";
                         }
                     }
 
@@ -208,9 +219,10 @@
         </form>    
 
         <div class="centered_message">
-           
+        
            <?php 
-                if (isset($_GET['selection_mois']) && isset($budget_id)){
+                // remplacement d' isset budget_id par !empty
+                if (isset($_GET['selection_mois']) && !empty($budget_id)){
                     echo("<div class='centered_message'>");
                     echo("<p><b>Total: " . $total_mois ."€</b></p>");
 
