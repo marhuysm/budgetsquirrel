@@ -38,23 +38,23 @@ Pareil pour l'automatisation pour les types de transaction, voir si c'est possib
 
 /*Ajout des catégories disponibles */
 
-INSERT INTO categorie_tf (nom_tf, description_tf) VALUES ('accessoires', 'Objets variés : sacs, bijoux,...');
+INSERT INTO categorie_tf (nom_tf, description_tf) VALUES ('accessoires', 'Objets variés : décoration, sacs, bijoux,...');
 
 INSERT INTO categorie_tf (nom_tf, description_tf) VALUES ('vêtements', 'Tout ce qui est porté : veste, pull, chaussures...');
 
-INSERT INTO categorie_tf (nom_tf, description_tf) VALUES ('courses alimentaires', 'nourriture : ingrédients, fruits, épices, pâtes...');
+INSERT INTO categorie_tf (nom_tf, description_tf) VALUES ('courses alimentaires', 'Nourriture : ingrédients, fruits, épices, pâtes...');
 
-INSERT INTO categorie_tf (nom_tf, description_tf) VALUES ('frais médicaux', 'opérations médicales, visites chez le généraliste, chez le dentiste, frais de pharmacie...');
+INSERT INTO categorie_tf (nom_tf, description_tf) VALUES ('frais médicaux', 'Opérations médicales, visites chez le généraliste, chez le dentiste, frais de pharmacie...');
 
-INSERT INTO categorie_tf (nom_tf, description_tf) VALUES ('transports', "transports en commun, essence...");
+INSERT INTO categorie_tf (nom_tf, description_tf) VALUES ('transports', "Transports en commun, essence, abonnement de train...");
 
-INSERT INTO categorie_tf (nom_tf, description_tf) VALUES ('culture', "ticket de cinéma, entrée de musée...");
+INSERT INTO categorie_tf (nom_tf, description_tf) VALUES ('culture', "Livres, ticket de cinéma, entrée de musée...");
 
 INSERT INTO categorie_tf (nom_tf, description_tf) VALUES ('restauration', "Tout ce qui est mangé à l'exterieur : sandwich, café, restaurant,... ");
 
 INSERT INTO categorie_tf (nom_tf, description_tf) VALUES ('voyage', "Billet d'avion, agence de voyage...");
 
-INSERT INTO categorie_tf (nom_tf, description_tf) VALUES ('salaire', "Salaire régulier reçu ou versé.");
+INSERT INTO categorie_tf (nom_tf, description_tf) VALUES ('salaire', "Salaire régulier reçu ou versé");
 
 INSERT INTO categorie_tf (nom_tf, description_tf) VALUES ('facture', "Facture d'électricité, internet...");
 

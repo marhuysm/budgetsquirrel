@@ -72,14 +72,16 @@ CREATE TABLE transaction_financiere(
         date_tf DATE,
         montant FLOAT,
    	    niss_util VARCHAR(11) NOT NULL,
-        date_naissance_util DATE NOT NULL,
+        date_naissance_util DATE NOT NULL, -- pb au niveau de la db: obligé d'entrer la date de naissance pour enregistrer une transaction
+        -- Errreur au niveau de la db : Requête : INSERT INTO `transaction_financiere`(`date_tf`, `montant`, `niss_util`, `date_naissance_util`, `cat_tf`) VALUES ('2020-12-12' ,'-30', '19650922666', '1965-09-22', 'accessoires')
+        -- renvoie: #1364 - Field 'date_naissance_util' doesn't have a default value
         budget_id INT,
         cat_tf VARCHAR(100),
         CONSTRAINT fk_niss_util_tf FOREIGN KEY (niss_util) REFERENCES utilisateur(niss),
         CONSTRAINT fk_budget_id FOREIGN KEY (budget_id) REFERENCES budget_mensuel(budget_id),
         CONSTRAINT fk_cat_tf FOREIGN KEY (cat_tf) REFERENCES categorie_tf(nom_tf),
         CONSTRAINT pk_transaction_financiere PRIMARY KEY (num_tf),
-        CONSTRAINT fk_date_util_tf FOREIGN KEY (niss_util, date_naissance_util) REFERENCES utilisateur (niss, date_naissance)
+        CONSTRAINT fk_date_util_tf FOREIGN KEY (niss_util, date_naissance_util) REFERENCES utilisateur (niss, date_naissance) 
                 ON DELETE CASCADE
                 ON UPDATE CASCADE,
         CONSTRAINT CHECK (date_tf > date_naissance_util)
@@ -284,7 +286,7 @@ SELECT  HIST.typetf, COUNT(HIST.typetf) as nb_utilisations, HIST.niss_util,
         SUM(CASE WHEN HIST.montant < 0 THEN montant ELSE 0 END) as total_depenses_type, 
         SUM(CASE WHEN HIST.montant > 0 THEN montant ELSE 0 END) as total_revenus_type
 FROM historique_v HIST
-GROUP BY HIST.typetf
+GROUP BY HIST.typetf, HIST.niss_util -- HIST.niss_util ajouté pour que ça fonctionne pour tous les utilisateurs
 ;
 
 -- Restrictions du côté de la db : 
