@@ -15,7 +15,8 @@ CREATE TABLE utilisateur(
         CONSTRAINT pk_utilisateur PRIMARY KEY(niss) ,
         CONSTRAINT chk_niss CHECK (LENGTHB(niss) = 11),
         CONSTRAINT chk_photo CHECK (photo IN ('froggy.png','gollum.jpg','politecat.jpg', 'raccoon.jpg')),
-        CONSTRAINT UNIQUE (niss, date_naissance) -- clé composée à utiliser dans la table transaction financiere
+        CONSTRAINT uk_utilisateur UNIQUE (niss, date_naissance) -- clé composée à utiliser dans la table transaction financiere
+        -- pour moi, date_naissance ne devrait pas être considéré comme faisant partie de la contrainte unique
         );
 -- Vérification de l'écriture côté bdd : OK!
         
