@@ -31,11 +31,6 @@ INSERT INTO carte (nom_carte, numero_carte, type_carte, niss_util) VALUES ("Visa
 INSERT INTO carte (nom_carte, numero_carte, type_carte, niss_util) VALUES ("Maestro CBC", "19000054678888325", "Maestro", "19831206323");
 
 
-
-/*Ajout de transactions. il faudrait peut-être trouver comment faire un check / automatiser côté serveur la création de budget? 
-Pareil pour l'automatisation pour les types de transaction, voir si c'est possible*/
-
-
 /*Ajout des catégories disponibles */
 
 INSERT INTO categorie_tf (nom_tf, description_tf) VALUES ('accessoires', 'Objets variés : décoration, sacs, bijoux,...');
@@ -71,3 +66,15 @@ INSERT INTO categorie_tf (nom_tf, description_tf) VALUES ('cadeau', "Argent reç
 INSERT INTO categorie_tf (nom_tf, description_tf) VALUES ('chèque-repas', "Chèques-repas reçus ou dépensés");
 
 INSERT INTO categorie_tf (nom_tf, description_tf) VALUES ('autre', "Toute autre nature de transaction");
+
+/*Ajout de transactions, et des infos de type de transaction*/
+
+INSERT INTO transaction_financiere(date_tf, montant, niss_util, cat_tf) VALUES ('2020-12-02','300','19650922666','salaire');
+
+INSERT INTO tf_virement(num_tf, communication, destbenef) VALUES ('1', 'salaire décembre', 'Le Gondor');
+
+INSERT INTO transaction_financiere(date_tf, montant, niss_util, cat_tf) VALUES ('2020-11-02','600','19650922666','salaire');
+
+INSERT INTO tf_virement(num_tf, communication, destbenef) VALUES ('2', 'salaire novembre', 'Le Gondor');
+
+
