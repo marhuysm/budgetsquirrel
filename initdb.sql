@@ -74,7 +74,7 @@ CREATE TABLE transaction_financiere(
    	    niss_util VARCHAR(11) NOT NULL,
         date_naissance_util DATE NOT NULL, -- pb au niveau de la db: obligé d'entrer la date de naissance pour enregistrer une transaction
         -- Errreur au niveau de la db : Requête : INSERT INTO `transaction_financiere`(`date_tf`, `montant`, `niss_util`, `date_naissance_util`, `cat_tf`) VALUES ('2020-12-12' ,'-30', '19650922666', '1965-09-22', 'accessoires')
-        -- renvoie: #1364 - Field 'date_naissance_util' doesn't have a default value lorsque l'utilisateur n'a pas encore de transaction ajoutée
+        -- renvoie: #1364 - Field 'date_naissance_util' doesn't have a default value lorsque l'utilisateur n'a pas encore de transaction ajoutée ou si le budget mensuel n'existe pas encore
         budget_id INT,
         cat_tf VARCHAR(100),
         CONSTRAINT fk_niss_util_tf FOREIGN KEY (niss_util) REFERENCES utilisateur(niss),
