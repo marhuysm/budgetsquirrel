@@ -100,6 +100,14 @@ automatiser le processus d'ajout de bilan (qui est pour l'instant manuel côté 
 - initialisation budget mensuel ok;
 - PB: update bilan budget mensuel ecran enregistrement lignes 119-122 - l'appli fait le calcul de nouveau bilan mais la syntaxe d'update n'est pas correcte.
 
+### ma 15/12:
+
+- triggers ok;
+- bilan ok;
+- test intégrité ok;
+- corrections mineures narrative homepage;
+- wip rapport
+
 ## Pour faire fonctionner le projet : 
 1. Démarrer xammp
 2. Tout mettre dans un dossier budgetsquirrel dans xammp/htdocs

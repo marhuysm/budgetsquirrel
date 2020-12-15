@@ -59,13 +59,13 @@
 
 
 <div class="container">
-    <h1>Bienvenue sur ton écran d'accueil, <?php echo $connexion['prenom']; echo " "; echo $connexion['nom'] ?> !</h1>
+    <h1>Bienvenue sur votre écran d'accueil, <?php echo $connexion['prenom']; echo " "; echo $connexion['nom'] ?> !</h1>
 
     <div class = "section">
         <span class="homepage_content">
             <p><b> Enregistrement des transactions </b></p>
             <p style="text-align:justify"> Budget Squirrel est une application souple qui permet l'enregistrement des transactions financières. Pour ce faire, un utilisateur doit être reconnu par le système.
-        Dans l'onglet Enregistrement, vous pouvez ajouter les détails d'une transactions (son montant, sa date, sa catégorie, ainsi que le type de paiement utilisé). Pour enregistrer vos dépenses, ajoutez un montant négatif (précédé de "-"). Pour enregistrer vos revenus, ajoutez un montant positif. Vous n'avez pas besoin d'entrer de monnaie, notez que l'application utilise l'euro par défaut (€). </p>
+        Dans l'onglet Enregistrement, vous pouvez ajouter les détails d'une transaction (son montant, sa date, sa catégorie, ainsi que le type de paiement utilisé). Pour enregistrer vos dépenses, ajoutez un montant négatif (précédé de "-"). Pour enregistrer vos revenus, ajoutez un montant positif. Vous n'avez pas besoin d'entrer de monnaie, notez que l'application utilise l'euro par défaut (€). </p>
         </span>
         <span class="homepage_image">
             <img class="homepage" src="img/tuto_enregistrement.png" alt="écran enregistrement"> 
