@@ -139,6 +139,44 @@ END;//
 DELIMITER ;
 
 
+-- Mettre à jour le bilan de budget_mensuel à chaque nouvel insert de transaction
+
+DELIMITER //
+DROP TRIGGER IF EXISTS trg_after_ajout_tf//
+
+CREATE TRIGGER trg_after_ajout_tf AFTER INSERT 
+ON transaction_financiere 
+FOR EACH ROW
+
+BEGIN
+
+DECLARE bilan_calcul FLOAT;
+
+SELECT bilan_total_mois INTO bilan_calcul FROM stat_depenses_revenus_mois WHERE budget_id = NEW.budget_id AND niss_util = NEW.niss_util;
+UPDATE budget_mensuel SET bilan = bilan_calcul WHERE budget_id = NEW.budget_id AND niss_util = NEW.niss_util;
+END;//
+
+DELIMITER ;
+
+-- Pareil après suppression 
+
+DELIMITER //
+DROP TRIGGER IF EXISTS trg_after_suppr_tf//
+
+CREATE TRIGGER trg_after_suppr_tf AFTER DELETE
+ON transaction_financiere 
+FOR EACH ROW
+
+BEGIN
+
+DECLARE bilan_calcul FLOAT;
+
+SELECT bilan_total_mois INTO bilan_calcul FROM stat_depenses_revenus_mois WHERE budget_id = OLD.budget_id AND niss_util = OLD.niss_util;
+UPDATE budget_mensuel SET bilan = bilan_calcul WHERE budget_id = OLD.budget_id AND niss_util = OLD.niss_util;
+END;//
+
+DELIMITER ;
+
 
 CREATE OR REPLACE VIEW historique_v
 AS
