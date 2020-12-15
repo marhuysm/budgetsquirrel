@@ -67,14 +67,103 @@ INSERT INTO categorie_tf (nom_tf, description_tf) VALUES ('chèque-repas', "Chè
 
 INSERT INTO categorie_tf (nom_tf, description_tf) VALUES ('autre', "Toute autre nature de transaction");
 
-/*Ajout de transactions, et des infos de type de transaction*/
+/*Ajout de diverses transactions, et des infos de type de transaction, pour chaque utilisateur*/
+
+INSERT INTO transaction_financiere(date_tf, montant, niss_util, cat_tf) VALUES ('2020-12-12','-55','19650922666','restauration');
+
+INSERT INTO tf_cash(num_tf) VALUES (LAST_INSERT_ID());
+
+INSERT INTO transaction_financiere(date_tf, montant, niss_util, cat_tf) VALUES ('2020-12-03','132','19650922666','remboursement');
+
+INSERT INTO tf_cash(num_tf) VALUES (LAST_INSERT_ID());
+
+INSERT INTO transaction_financiere(date_tf, montant, niss_util, cat_tf) VALUES ('2020-11-17','-156','19650922666','voyage');
+
+INSERT INTO tf_cash(num_tf) VALUES (LAST_INSERT_ID());
 
 INSERT INTO transaction_financiere(date_tf, montant, niss_util, cat_tf) VALUES ('2020-12-02','300','19650922666','salaire');
 
-INSERT INTO tf_virement(num_tf, communication, destbenef) VALUES (LAST_INSERT_ID(), 'salaire décembre', 'Le Gondor');
+INSERT INTO tf_virement(num_tf, communication, destbenef) VALUES (LAST_INSERT_ID(), 'salaire décembre', 'Thorin');
 
 INSERT INTO transaction_financiere(date_tf, montant, niss_util, cat_tf) VALUES ('2020-11-02','600','19650922666','salaire');
 
-INSERT INTO tf_virement(num_tf, communication, destbenef) VALUES (LAST_INSERT_ID(), 'salaire novembre', 'Le Gondor');
+INSERT INTO tf_virement(num_tf, communication, destbenef) VALUES (LAST_INSERT_ID(), 'salaire novembre', 'Thorin');
 
+INSERT INTO transaction_financiere(date_tf, montant, niss_util, cat_tf) VALUES ('2020-10-02','900','19650922666','salaire');
+
+INSERT INTO tf_virement(num_tf, communication, destbenef) VALUES (LAST_INSERT_ID(), 'salaire octobre', 'Thorin');
+
+INSERT INTO transaction_financiere(date_tf, montant, niss_util, cat_tf) VALUES ('2020-10-25','-30','19650922666','culture');
+
+INSERT INTO tf_carte(num_tf, numero_carte) VALUES (LAST_INSERT_ID(), '2342111111111111');
+
+INSERT INTO transaction_financiere(date_tf, montant, niss_util, cat_tf) VALUES ('2020-12-15','-178','19650922666','vêtements');
+
+INSERT INTO tf_carte(num_tf, numero_carte) VALUES (LAST_INSERT_ID(), '34566666666611111');
+
+
+INSERT INTO transaction_financiere(date_tf, montant, niss_util, cat_tf) VALUES ('2020-12-02','-167','19831206323','restauration');
+
+INSERT INTO tf_cash(num_tf) VALUES (LAST_INSERT_ID());
+
+INSERT INTO transaction_financiere(date_tf, montant, niss_util, cat_tf) VALUES ('2020-12-10','600','19831206323','remboursement');
+
+INSERT INTO tf_cash(num_tf) VALUES (LAST_INSERT_ID());
+
+INSERT INTO transaction_financiere(date_tf, montant, niss_util, cat_tf) VALUES ('2020-11-07','-156','19831206323','frais médicaux');
+
+INSERT INTO tf_cash(num_tf) VALUES (LAST_INSERT_ID());
+
+INSERT INTO transaction_financiere(date_tf, montant, niss_util, cat_tf) VALUES ('2020-12-02','1658','19831206323','salaire');
+
+INSERT INTO tf_virement(num_tf, communication, destbenef) VALUES (LAST_INSERT_ID(), 'salaire décembre', 'Commune Laeken');
+
+INSERT INTO transaction_financiere(date_tf, montant, niss_util, cat_tf) VALUES ('2020-11-02','1658','19831206323','salaire');
+
+INSERT INTO tf_virement(num_tf, communication, destbenef) VALUES (LAST_INSERT_ID(), 'salaire novembre', 'Commune Laeken');
+
+INSERT INTO transaction_financiere(date_tf, montant, niss_util, cat_tf) VALUES ('2020-10-02','1658','19831206323','salaire');
+
+INSERT INTO tf_virement(num_tf, communication, destbenef) VALUES (LAST_INSERT_ID(), 'salaire octobre', 'Commune Laeken');
+
+INSERT INTO transaction_financiere(date_tf, montant, niss_util, cat_tf) VALUES ('2020-10-15','-75','19831206323','culture');
+
+INSERT INTO tf_carte(num_tf, numero_carte) VALUES (LAST_INSERT_ID(), '2340000000065432');
+
+INSERT INTO transaction_financiere(date_tf, montant, niss_util, cat_tf) VALUES ('2020-12-15','-18','19831206323','transports');
+
+INSERT INTO tf_carte(num_tf, numero_carte) VALUES (LAST_INSERT_ID(), '19000054678888325');
+
+
+INSERT INTO transaction_financiere(date_tf, montant, niss_util, cat_tf) VALUES ('2020-12-05','-197','19940307121','remboursement');
+
+INSERT INTO tf_cash(num_tf) VALUES (LAST_INSERT_ID());
+
+INSERT INTO transaction_financiere(date_tf, montant, niss_util, cat_tf) VALUES ('2020-12-10','630','19940307121','cadeau');
+
+INSERT INTO tf_cash(num_tf) VALUES (LAST_INSERT_ID());
+
+INSERT INTO transaction_financiere(date_tf, montant, niss_util, cat_tf) VALUES ('2020-11-07','-15','19940307121','transports');
+
+INSERT INTO tf_cash(num_tf) VALUES (LAST_INSERT_ID());
+
+INSERT INTO transaction_financiere(date_tf, montant, niss_util, cat_tf) VALUES ('2020-12-02','2400','19940307121','salaire');
+
+INSERT INTO tf_virement(num_tf, communication, destbenef) VALUES (LAST_INSERT_ID(), 'salaire décembre', 'Cour des Comptes');
+
+INSERT INTO transaction_financiere(date_tf, montant, niss_util, cat_tf) VALUES ('2020-11-02','2400','19940307121','salaire');
+
+INSERT INTO tf_virement(num_tf, communication, destbenef) VALUES (LAST_INSERT_ID(), 'salaire novembre', 'Cour des Comptes');
+
+INSERT INTO transaction_financiere(date_tf, montant, niss_util, cat_tf) VALUES ('2020-10-02','2400','19940307121','salaire');
+
+INSERT INTO tf_virement(num_tf, communication, destbenef) VALUES (LAST_INSERT_ID(), 'salaire octobre', 'Cour des Comptes');
+
+INSERT INTO transaction_financiere(date_tf, montant, niss_util, cat_tf) VALUES ('2020-10-15','-375','19940307121','facture');
+
+INSERT INTO tf_carte(num_tf, numero_carte) VALUES (LAST_INSERT_ID(), '1895678930000576');
+
+INSERT INTO transaction_financiere(date_tf, montant, niss_util, cat_tf) VALUES ('2020-12-15','-89','19940307121','restauration');
+
+INSERT INTO tf_carte(num_tf, numero_carte) VALUES (LAST_INSERT_ID(), '1000409797979797');
 
