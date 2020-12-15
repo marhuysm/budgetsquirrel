@@ -65,7 +65,7 @@
         <span class="homepage_content">
             <p><b> Enregistrement des transactions </b></p>
             <p style="text-align:justify"> Budget Squirrel est une application souple qui permet l'enregistrement des transactions financières. Pour ce faire, un utilisateur doit être reconnu par le système.
-        Dans l'onglet Enregistrement, vous pouvez ajouter les détails d'une transactions (son montant, sa date, sa catégorie, ainsi que le type de paiement utilisé). Pour enregistrer vos dépenses, ajouter un montant négatif (précédé de "-"). Pour enregistrer vos revenus, ajouter un montant positif. Vous n'avez pas besoin d'entrer de monnaie, noter que l'application utilise l'euro par défaut (€). </p>
+        Dans l'onglet Enregistrement, vous pouvez ajouter les détails d'une transactions (son montant, sa date, sa catégorie, ainsi que le type de paiement utilisé). Pour enregistrer vos dépenses, ajoutez un montant négatif (précédé de "-"). Pour enregistrer vos revenus, ajoutez un montant positif. Vous n'avez pas besoin d'entrer de monnaie, notez que l'application utilise l'euro par défaut (€). </p>
         </span>
         <span class="homepage_image">
             <img class="homepage" src="img/tuto_enregistrement.png" alt="écran enregistrement"> 
@@ -79,15 +79,15 @@
         <span class="homepage_content">
             <p><b> Comment créer son profil ? </b></p>
             <p style="text-align:justify"> Le profil de Budget Squirrel enregistre les données propres aux utilisateurs permettant l'identification ulterieure, ainsi que la gestion des cartes de paiement employées par l'utilisateur. </p>
-            <p style="text-align:justify"> Si vous êtes en train d'ouvrir Budget Squirrel pour la toute première fois, l'application vous offre la possibilité de vous inscrire, et propose la collecte d'une série des données nécessaires pour la création et gestion ulterieure de votre profil (i.e. nom, prénom, date de naissance, etc). Si vous êtes déjà inscrit et vous souhaitez changer les informations de votre profil, vous pouvez y accéder en cliquant sur votre profil (en haut, à droite de la page). Une fois enregistrés il ne serait plus desormais possible de modifier votre nom, numéro NISS, ou date de naissance. Vous pouvez enrichir votre profil en ajoutant des types des cartes employés (dans la section "Ajouter une nouvelle carte"), et vous pouvez également supprimmer les cartes devenues obsoletes (dans la section "Supprimmer une carte"). </p>
+            <p style="text-align:justify"> Si vous ouvrez Budget Squirrel pour la toute première fois, l'application vous offre la possibilité de vous inscrire, et propose la collecte d'une série des données nécessaires pour la création et gestion ulterieure de votre profil (i.e. nom, prénom, date de naissance, etc). Si vous êtes déjà inscrit et que vous souhaitez changer les informations de votre profil, vous pouvez y accéder en cliquant sur votre profil (en haut, à droite de la page). Une fois enregistré, il n'est plus desormais possible de modifier votre nom, numéro NISS, ou date de naissance. Vous pouvez enrichir votre profil en ajoutant des types des cartes employés (dans la section "Ajouter une nouvelle carte"), et vous pouvez également supprimer les cartes devenues obsolètes (dans la section "Supprimer une carte"). </p>
         </span>
     </div>
     
     <div class = "section">
         <span class="homepage_content">
             <p><b> Consulter l'historique </b></p>
-            <p style="text-align:justify"> L'historique de l'application suit chronologiquement toute depense ou revenu enregistré. Pour consulter la liste, l'utilisateur est invité à choisir un mois, et à confirmer son choix avec le buton "Voir le budget du mois sélectionné".
-            La liste des transactions offerte contient pour chaque transaction son type, sa catégorie, son montant et sa date, ainsi que des information sur le type de paiement employé. </p>
+            <p style="text-align:justify"> L'historique de l'application suit chronologiquement toute depense ou revenu enregistré. Pour consulter la liste, l'utilisateur est invité à choisir un mois, et à confirmer son choix avec le bouton "Voir le budget du mois sélectionné".
+            La liste des transactions affichée contient pour chaque transaction son type, sa catégorie, son montant et sa date, ainsi que des informations sur le type de paiement employé. </p>
         </span>
         <span class = "homepage_image">
             <img class="homepage" src="img/tuto_historique.png" alt="écran historique">   

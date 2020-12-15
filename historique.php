@@ -29,10 +29,6 @@
         $connexion = $getConnexion->fetch();
 
         // l'objectif de la page : 
-        // Afficher un formulaire de sélection de mois, puis, une fois envoyé, montrer le tableau des transactions financières pour le mois
-        // et donner la possibilité à l'utilisateur de visualiser son total pour ce mois ainsi que de clore le mois sélectionné.
-        
-        // A essayer si on a le temps : get le dernier budget et l'afficher "par défaut"
 
         // une fois que l'utilisateur a sélectionné le mois qu'il veut consulter, on récupère les données du get
         // ainsi que le mois et l'année , afin de pouvoir afficher le bon budget mensuel par la suite.
@@ -65,28 +61,11 @@
 
                 }
 
-                // Maintenant qu'on a accès au budget_id correspondnant au mois choisi, on attribue une nouvelle valeur à budget_id : 
+                // Maintenant qu'on a accès au budget_id correspondant au mois choisi, on attribue une nouvelle valeur à budget_id : 
 
                 if(!empty($budget_id)){
-                //   pour la ligne 70 le message d'erreur s'il n'y a pas de transaction à été deplacé dans le tableau, plutôt que dans le header du coup le if(empty) n'est plus necessaire et à été remplacé par un if(!empty)     
-                //     echo "Vous n'avez pas encore créé de transaction pour ce mois";
-                //     // dans le cas ou on a pas de budget, budget_id == 0 : 
-                //     // PB ici : comment éviter le message d'erreur lié ? (lié au fait que $budget_id = $fetchedBudget["budget_id"] renvoie
-                //     // Trying to access array offset on value of type bool in /opt/lampp/htdocs/budgetsquirrel/historique.php)
-                //     // SOLUTION proposée : ?? null coalescing operator (voir: https://www.php.net/manual/en/language.operators.comparison.php#language.operators.comparison.coalesce)
 
-                // }
-                // else{
-
-                    // echo($budget_id);
-
-                    // sélection de toutes les transactions pour le mois, pour ensuite les afficher dans un tableau
-
-                    $getTransactions = $bdd->prepare("SELECT * FROM budgetsquirrel.transaction_financiere WHERE niss_util = $niss AND budget_id = $budget_id");
-                    $getTransactions->execute();
-                    $transactions = $getTransactions->fetchAll();
-
-                    //Requête du bilan mensuel: 
+                    //Requête de l'historique et du bilan correspondant au budget de l'utilisateur
 
                     $GetTotalMois = $bdd->prepare("SELECT bilan_total_mois as total FROM budgetsquirrel.stat_depenses_revenus_mois WHERE budget_id = $budget_id");
                     $GetTotalMois->execute();
@@ -101,12 +80,9 @@
             
         
             }
-            // catch inutile?
-            // potentiellement utile pour d'autres erreurs
+
             catch(Exception $e){
                 echo 'Caught exception: ',  $e->getMessage(), "\n";
-                // echo "in catch";
-                // echo 'Message: ' .$e->getMessage();
             }
     }
         
@@ -221,12 +197,9 @@
         <div class="centered_message">
         
            <?php 
-                // remplacement d' isset budget_id par !empty
                 if (isset($_GET['selection_mois']) && !empty($budget_id)){
                     echo("<div class='centered_message'>");
                     echo("<p><b>Total: " . $total_mois ."€</b></p>");
-
-                    // echo("<button class='mybutton full_button' onclick=''>Cloturer ce mois</button>"); Plus nécessaire vu qu'on ne va pas faire de cloture ou de reste
 
                 }
                 else{

@@ -49,18 +49,11 @@
            
         }
 
-        //$getCartes = $bdd->prepare("SELECT * FROM budgetsquirrel.carte WHERE niss_util = $niss");
-        //Si suppression logique (voir lignes 61-65)
 
         if (isset($_POST['suppr_carte'])) {
 
             $numero_carte = htmlspecialchars($_POST['carte_suppr']); 
             
-            //PB : foreign key empêche la suppression : comment gérer la supr de carte?
-            //Solution proposée: supression logique en lieu d'une supression phisique, cad:
-            //Ajouter dans la table "carte" une colonne is_deleted avec des valeurs possibles 0 ou 1
-            //Inclure dans les queries qui font appel au table carte la condition WHERE is_deleted = 0  
-            //Dans le cas present ici au lieu de "DELETE FROM budgetsquirrel.carte.... on peut mettre
             
             $is_deleted = true;
 
@@ -69,8 +62,6 @@
             $query->bindParam(':is_deleted' , $is_deleted, PDO::PARAM_INT);
             $query->execute();
 
-            // PB : SUPPRESSION NE FONCTIONNE TOUJOURS PAS ?! (je sais pas du tout pourquoi, ça passe jusqu'à la boucle ici et le query fonctionne en sql direct)
-            // solution : bind le numero de carte
         }
 
         if (isset($_POST['changer_photo'])) {

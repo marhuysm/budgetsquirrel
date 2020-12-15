@@ -31,7 +31,8 @@
         $connexion = $getConnexion->fetch();
 
         // pour récupérer le total des dépenses, il faut faire une requête qui récupère toutes les transactions appartenant 
-        // à l'utilisateur et étant < 0, et qui en fait la somme :
+        // à l'utilisateur et étant < 0, et qui en fait la somme. On peut également récupérer directement les infos suivantes depuis la vue,
+        // mais cette partie permet de vérifier l'intégrité des données via l'app :
 
         $getDepenses = $bdd->prepare("SELECT SUM(montant) as total_depenses FROM budgetsquirrel.transaction_financiere WHERE niss_util = $niss AND montant < 0");
         $getDepenses->execute();
@@ -45,16 +46,13 @@
         $fetchedRevenus = $getRevenus->fetch();
         $total_revenus = $fetchedRevenus["total_revenus"];
 
-        // enfin , le bilan fait le mm calcul, mais sans condition : 
+        // enfin , le bilan fait le même calcul, mais sans condition : 
 
         $getBilan = $bdd->prepare("SELECT SUM(montant) as bilan FROM budgetsquirrel.transaction_financiere WHERE niss_util = $niss");
         $getBilan->execute();
         $fetchedBilan = $getBilan->fetch();
         $bilan = $fetchedBilan["bilan"];
 
-        
-        // les requêtes suivantes doivent ss doute devenir des vues
-        // et il faut trouver un meilleur moyen de calculer le bilan par mois
 
         $getStatMois = $bdd->prepare("SELECT * FROM stat_depenses_revenus_mois WHERE niss_util = $niss");
         $getStatMois->execute();
