@@ -24,8 +24,7 @@ CREATE TABLE carte(
         type_carte VARCHAR(100) NOT NULL,
     	niss_util VARCHAR(11), 
         is_deleted INT DEFAULT 0,
-       	CONSTRAINT fk_niss_util_carte FOREIGN KEY(niss_util) REFERENCES utilisateur(niss), 
--- ajouter un DROP CASCADE à chaque FK niss pour gérer le cas où l'utilisateur admin veut supprimer un utilisateur de la DB?
+        CONSTRAINT fk_niss_util_carte FOREIGN KEY(niss_util) REFERENCES utilisateur(niss), 
     	CONSTRAINT pk_carte PRIMARY KEY(numero_carte),
         CONSTRAINT chk_numero_carte_low CHECK (LENGTHB(numero_carte) >= 16),
         CONSTRAINT chk_numero_carte_high CHECK (LENGTHB(numero_carte) <= 17), 
@@ -43,24 +42,16 @@ CREATE TABLE budget_mensuel(
         CONSTRAINT fk_niss_util_budget FOREIGN KEY (niss_util) REFERENCES utilisateur(niss),
         CONSTRAINT pk_budget_mensuel PRIMARY KEY(budget_id),
         CONSTRAINT uc_budget_mensuel UNIQUE (mois, annee, niss_util),
-        CONSTRAINT fk_date_util_bm FOREIGN KEY (niss_util) REFERENCES utilisateur (niss)
+        CONSTRAINT fk_niss_util_bm FOREIGN KEY (niss_util) REFERENCES utilisateur (niss)
                 ON DELETE CASCADE
                 ON UPDATE CASCADE
         );
-        -- besoin d'ajouter trigger date > date_naissance
-        -- ! Pour l'instant, bilan de budget_mensuel = null
-        -- ? ajouter un trigger ou une fk après avoir créé la vue qui donne le bilan?
-        -- ALTER TABLE budgetsquirrel.budget_mensuel
-	-- ADD CONSTRAINT fk_bilan_from_view FOREIGN KEY (bilan) REFERENCES stat_depenses_revenus_mois(bilan_total_mois)
         
 CREATE TABLE categorie_tf(
         nom_tf VARCHAR(100),
         description_tf TEXT,
         CONSTRAINT pk_categorie_tf PRIMARY KEY(nom_tf)
         );
-
-        -- Faut-il des contraintes uniques pour la table transaction_financiere ?
-        -- à voir lundi mais a priori je ne crois pas
 
 CREATE TABLE transaction_financiere(
         num_tf INT NOT NULL AUTO_INCREMENT,
@@ -76,7 +67,6 @@ CREATE TABLE transaction_financiere(
         CONSTRAINT fk_date_util_tf FOREIGN KEY (niss_util) REFERENCES utilisateur (niss) 
                 ON DELETE CASCADE
                 ON UPDATE CASCADE
-        -- CONSTRAINT CHECK (date_tf > date_naissance_util) > trigger
         );
 
 
@@ -100,7 +90,7 @@ CREATE TABLE tf_carte(
         CONSTRAINT pk_tf_carte PRIMARY KEY (num_tf),
         CONSTRAINT fk_num_tf_carte FOREIGN KEY (num_tf) REFERENCES transaction_financiere(num_tf) ON DELETE CASCADE,
         CONSTRAINT fk_numero_carte FOREIGN KEY (numero_carte) REFERENCES carte(numero_carte)
-        -- le niss_util.numero carte utilisé appartient toujours à l'utilisateur qui crée la transaction > Trigger 
+
         );
 
 
@@ -173,6 +163,31 @@ DECLARE bilan_calcul FLOAT;
 
 SELECT bilan_total_mois INTO bilan_calcul FROM stat_depenses_revenus_mois WHERE budget_id = OLD.budget_id AND niss_util = OLD.niss_util;
 UPDATE budget_mensuel SET bilan = bilan_calcul WHERE budget_id = OLD.budget_id AND niss_util = OLD.niss_util;
+END;//
+
+DELIMITER ;
+
+-- le niss_util.numero carte utilisé appartient toujours à l'utilisateur qui crée la transaction > Trigger 
+
+DELIMITER //
+DROP TRIGGER IF EXISTS trg_before_ajout_tf_carte//
+
+CREATE TRIGGER trg_before_ajout_tf_carte BEFORE INSERT
+ON tf_carte 
+FOR EACH ROW
+
+BEGIN
+
+DECLARE niss_tf VARCHAR(255);
+DECLARE niss_carte VARCHAR(255);
+
+SELECT niss_util INTO niss_tf FROM transaction_financiere WHERE num_tf = NEW.num_tf;
+SELECT niss_util INTO niss_carte FROM carte WHERE numero_carte = NEW.numero_carte;
+
+IF niss_tf != niss_carte THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = "Impossible d'utiliser une carte que l'utilisateur lié à la transaction ne possède pas";
+END IF;
 END;//
 
 DELIMITER ;
@@ -349,4 +364,3 @@ GRANT INSERT ON budgetsquirrel.tf_virement TO 'utilisateur_app'@'localhost';
 
 GRANT SELECT ON budgetsquirrel.historique_v TO 'utilisateur_app'@'localhost';
 
--- Autres privilèges ?

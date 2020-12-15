@@ -71,10 +71,10 @@ INSERT INTO categorie_tf (nom_tf, description_tf) VALUES ('autre', "Toute autre 
 
 INSERT INTO transaction_financiere(date_tf, montant, niss_util, cat_tf) VALUES ('2020-12-02','300','19650922666','salaire');
 
-INSERT INTO tf_virement(num_tf, communication, destbenef) VALUES ('1', 'salaire décembre', 'Le Gondor');
+INSERT INTO tf_virement(num_tf, communication, destbenef) VALUES (LAST_INSERT_ID(), 'salaire décembre', 'Le Gondor');
 
 INSERT INTO transaction_financiere(date_tf, montant, niss_util, cat_tf) VALUES ('2020-11-02','600','19650922666','salaire');
 
-INSERT INTO tf_virement(num_tf, communication, destbenef) VALUES ('2', 'salaire novembre', 'Le Gondor');
+INSERT INTO tf_virement(num_tf, communication, destbenef) VALUES (LAST_INSERT_ID(), 'salaire novembre', 'Le Gondor');
 
 
