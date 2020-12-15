@@ -255,6 +255,7 @@ NATURAL LEFT JOIN
      FROM historique_v
      WHERE montant > 0 
      GROUP BY budget_id) revenus
+ORDER BY annee ASC, mois ASC
 ;
 
 

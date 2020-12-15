@@ -153,7 +153,9 @@
             </table>
 
              <!-- ajout des graphes en javascript -->
-            <!-- <canvas id="graph_stat_mois"></canvas> -->
+             <div class = "section">
+                <canvas id="graph_stat_mois"></canvas>
+            </div>
             <!-- PB comment convertir le result set obtenu pour les requetes SQL en javascript - le retour maintenant n'est pas un array mais un string concaténé? --> 
         </div>
 
@@ -192,7 +194,14 @@
             </table>
 
              <!-- ajout des graphes en javascript -->
-             <!-- <canvas id="graph_stat_cat"></canvas> -->
+             <div class = "section">
+                <span class="canvas_stat">
+                    <canvas id="graph_stat_cat_depenses"></canvas>
+                </span>
+                <span class="canvas_stat">
+                    <canvas id="graph_stat_cat_revenus"></canvas>
+                </span>
+            </div>
         </div>
 
         <div>
@@ -225,6 +234,9 @@
                         </tbody>
         
                     </table>
+
+            <!-- ajout des graphes en javascript -->
+            <!-- <canvas id="repartition_type_transaction"></canvas> -->
         </div>
 
     </div>
@@ -244,45 +256,50 @@
     var ctx_stat_mois = document.getElementById('graph_stat_mois').getContext('2d');
 
     var bilan = <?php echo json_encode($bilan); ?>;
-   
-    var mois =  "<?php
-                    foreach ($fetchedStatMois as $stat_mois) {
-                        // print_r($stat_mois["mois"]);
-                        $month = json_decode($stat_mois["mois"], true);
-                        echo "$month";
-                    }
-                    ?>"
 
-    var dep = <?php
+    var mois = [<?php
+                    $statMois = array();
                     foreach ($fetchedStatMois as $stat_mois) {
-                        $dep_month = json_decode($stat_mois["bilan_depenses_mois"], true);
-                        echo "$dep_month";
+                        array_push($statMois, "'" . $stat_mois["mois"] . "/" . $stat_mois["annee"] . "'");
                     }
-                    ?>
+                    echo implode(", ", $statMois);
+                    ?>];
+    console.log("mois : " + mois);
 
-    var rev = <?php
+    var dep = [<?php
+                    $depMois = array();
                     foreach ($fetchedStatMois as $stat_mois) {
-                        $rev_month = json_decode($stat_mois["bilan_revenus_mois"], true);
-                        echo "$rev_month";
+                        array_push($depMois, $stat_mois["bilan_depenses_mois"]);
                     }
-                    ?>
+                    echo implode(", ", $depMois);
+                    ?>];
+    console.log("dep : " + dep);
+
+    var rev = [<?php
+                    $revMois = array();
+                    foreach ($fetchedStatMois as $stat_mois) {
+                        array_push($revMois, $stat_mois["bilan_revenus_mois"]);
+                    }
+                    echo implode(", ", $revMois);
+                    ?>];
+    console.log("rev : " + rev);
     
     var data_stat_mois = {
-        labels: [mois],
-        datasets: [
-            {
-                label: 'depenses',
-                backgroundColor: 'rgb(255,99,132)',
-                borderColor: 'rgb(255,99,132)',
-                data: [dep]
-            },
-            {
-                label: 'revenus',
-                backgroundColor: 'rgb(155,99,132)',
-                borderColor: 'rgb(155,99,132)',
-                data: [rev]
-            }
-        ]
+            labels: mois,
+            datasets: [
+                {
+                    label: 'depenses',
+                    backgroundColor: 'rgb(255,99,132)',
+                    borderColor: 'rgb(255,99,132)',
+                    data: dep
+                },
+                {
+                    label: 'revenus',
+                    backgroundColor: 'rgb(155,99,132)',
+                    borderColor: 'rgb(155,99,132)',
+                    data: rev
+                }
+            ]
     } 
 
     var options = {
@@ -300,54 +317,179 @@ var graph_stat_mois = new Chart(ctx_stat_mois, config_stat_mois);
 
 // ajout des graphes en javascript
 // graph statistiques mois
-var ctx_stat_cat = document.getElementById('graph_stat_cat').getContext('2d');
+var ctx_stat_cat_depenses = document.getElementById('graph_stat_cat_depenses').getContext('2d');
+var ctx_stat_cat_revenus = document.getElementById('graph_stat_cat_revenus').getContext('2d');
+var categorie = [<?php
+                    $statCat = array();
+                    foreach ($fetchedStatCat as $stat_cat) {
+                        array_push($statCat, "'" . $stat_cat["nom_tf"] . "'");
+                    }
+                    echo implode(", ", $statCat);
+                   ?>];
 
-var categorie =  "<?php
+var colors = [];
+for (i = 0; i < categorie.length; i++) {
+    r = Math.floor(Math.random() * 200);
+    g = Math.floor(Math.random() * 200);
+    b = Math.floor(Math.random() * 200);
+    c = 'rgb(' + r + ', ' + g + ', ' + b + ')';
+    colors.push(c);
+};
+
+console.log("categorie : " + categorie);
+
+var dep_cat = [<?php
+                $depCat = array();
                 foreach ($fetchedStatCat as $stat_cat) {
-                    echo json_encode($stat_cat["nom_tf"]);
+                    array_push($depCat, $stat_cat["bilan_depenses_cat"]);
                 }
-                ?>"
+                echo implode(", ", $depCat);
+                ?>];
+console.log("dep_cat : " + dep_cat);
 
-var dep_cat = <?php
+var rev_cat = [<?php
+                $revCat = array();
                 foreach ($fetchedStatCat as $stat_cat) {
-                    echo json_encode($stat_cat["bilan_depenses_cat"]);
+                    array_push($revCat, $stat_cat["bilan_revenus_cat"]);
                 }
-                ?>
+                echo implode(", ", $revCat);
+                ?>];
+console.log("rev_cat : " + rev_cat);
 
-var rev_cat = <?php
-                foreach ($fetchedStatCat as $stat_cat) {
-                    echo json_encode($stat_cat["bilan_revenus_cat"]);
-                }
-                ?>
-
-var data_stat_cat = {
-    labels: [categorie],
+var data_stat_cat_depenses = {
+    labels: categorie,
     datasets: [
         {
             label: 'depenses',
-            backgroundColor: 'rgb(255,99,132)',
-            borderColor: 'rgb(255,99,132)',
-            data: [dep_cat]
-        },
-        {
-            label: 'revenus',
-            backgroundColor: 'rgb(155,99,132)',
-            borderColor: 'rgb(155,99,132)',
-            data: [rev_cat]
+            backgroundColor: colors,
+            data: dep_cat
         }
     ]
 } 
 
-var options = {
-    responsive: true
+var data_stat_cat_revenus = {
+    labels: categorie,
+    datasets: [
+        {
+            label: 'revenus',
+            backgroundColor: colors,
+            data: rev_cat
+        }
+    ]
 }
 
-var config_stat_cat = {
-    type: 'bar',
-    data: data_stat_cat,
-    options: options
+var options_dep = {
+    responsive: true,
+    legend: {
+        display: false
+    },
+    title: {
+            display: true,
+            text: 'Dépenses par catégorie'
+        }
 }
 
-var graph_stat_cat = new Chart(ctx_stat_cat, config_stat_cat);
+var options_rev = {
+    responsive: true,
+    legend: {
+        display: false
+    },
+    title: {
+            display: true,
+            text: 'Revenus par catégorie'
+        }
+}
+
+var config_stat_cat_depenses = {
+    type: 'pie',
+    data: data_stat_cat_depenses,
+    options: options_dep
+}
+
+var config_stat_cat_revenus = {
+    type: 'pie',
+    data: data_stat_cat_revenus,
+    options: options_rev
+}
+
+var graph_stat_cat_depenses = new Chart(ctx_stat_cat_depenses, config_stat_cat_depenses);
+var graph_stat_cat_revenus = new Chart(ctx_stat_cat_revenus, config_stat_cat_revenus);
+
+// ajout des graphes en javascript
+// graph repartition_type_transaction
+// var ctx_stat_type = document.getElementById('repartition_type_transaction').getContext('2d');
+// var typeTransaction = [<?php
+//                     $statType = array();
+//                     foreach ($fetchedStatTypes as $stat_type) {
+//                         array_push($statType, "'" . $stat_type["typetf"] . "'");
+//                     }
+//                     echo implode(", ", $statType);
+//                     ?>];
+// console.log("type de Transaction : " + typeTransaction);
+
+// var nbUtilisations = [<?php
+//                 $statType = array();
+//                     foreach ($fetchedStatTypes as $stat_type) {
+//                     array_push($statType, $stat_type["nb_utilisations"]);
+//                 }
+//                 echo implode(", ", $statType);
+//                 ?>];
+// console.log("nombre utilisations : " + nbUtilisations);
+
+// var totalRevType = [<?php
+//                 $revType = array();
+//                 foreach ($fetchedStatTypes as $stat_type) {
+//                     array_push($revType, $stat_type["total_revenus_type"]);
+//                 }
+//                 echo implode(", ", $revType);
+//                 ?>];
+// console.log("Total revenus type : " + totalRevType);
+
+// var totalDepType = [<?php
+//                 $depType = array();
+//                 foreach ($fetchedStatTypes as $stat_type) {
+//                     array_push($depType, $stat_type["total_depenses_type"]);
+//                 }
+//                 echo implode(", ", $depType);
+//                 ?>];
+// console.log("Total depenses type : " + totalDepType);
+
+// var data_stat_type = {
+//     labels: typeTransaction,
+//     datasets: [
+//         {
+//             label: 'bilan',
+//             backgroundColor: 'rgb(255,99,132)',
+//             borderColor: 'rgb(255,99,132)',
+//             data: [{
+//                 x: typeTransaction,
+//                 y: nbUtilisations,
+//                 r: totalDepType
+//             }]
+//         // }, 
+//         // {
+//         //     label: 'revenus',
+//         //     backgroundColor: 'rgb(155,99,132)',
+//         //     borderColor: 'rgb(155,99,132)',
+//         //     data: [{
+//         //         x: typeTransaction,
+//         //         y: totalRevType,
+//         //         r: nbUtilisations
+//         //     }]
+//         }
+//     ]
+// }
+
+// var options = {
+//     responsive: true
+// }
+
+// var config_stat_type = {
+//     type: 'bubble',
+//     data: data_stat_type,
+//     options: options
+// }
+
+// var graph_stat_type = new Chart(ctx_stat_type, config_stat_type);
 
 </script>

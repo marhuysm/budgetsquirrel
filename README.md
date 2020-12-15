@@ -92,6 +92,14 @@ automatiser le processus d'ajout de bilan (qui est pour l'instant manuel côté 
 - graphes avec ChartJS: debugging;
 - homepage.php - ajout tutoriels.
 
+### ma 15/12 :
+
+- Graphes OK;
+- homepage ok;
+- trigger et enregistrement ok;
+- initialisation budget mensuel ok;
+- PB: update bilan budget mensuel ecran enregistrement lignes 119-122 - l'appli fait le calcul de nouveau bilan mais la syntaxe d'update n'est pas correcte.
+
 ## Pour faire fonctionner le projet : 
 1. Démarrer xammp
 2. Tout mettre dans un dossier budgetsquirrel dans xammp/htdocs

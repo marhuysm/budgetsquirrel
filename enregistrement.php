@@ -89,15 +89,15 @@
                 // si trigger sur le budget au niveau de la base des données, la complexité du code devient ridicule sachant que la clause "if" de preparation
                 // dans le cas ou le budget n'existe pas ne peut pas savoir que le trigger à crée un budget BEFORE INSERT
                 // du coup le trigger devient inutile parce que le if gére la création au niveau de client 
-                $getBudgets = $bdd->prepare("SELECT budget_id as budget_id FROM budget_mensuel WHERE mois = $mois_tf AND annee = $annee_tf AND niss_util = $niss");
+                $getBudgets = $bdd->prepare("SELECT budget_id, bilan FROM budget_mensuel WHERE mois = $mois_tf AND annee = $annee_tf AND niss_util = $niss");
                 $getBudgets->execute();
                 $fetchedBudget = $getBudgets->fetch();
 
                 // s'il n'existe pas encore: le créer et récupérer son id
                 if($fetchedBudget == 0){
-                    $query = $bdd->prepare("INSERT INTO budgetsquirrel.budget_mensuel (mois, annee, niss_util, date_naissance_util)
-                    VALUES(?,?,?, ?)");
-                    $query->execute(array($mois_tf, $annee_tf, $niss, $connexion["date_naissance"]));
+                    $query = $bdd->prepare("INSERT INTO budgetsquirrel.budget_mensuel (mois, annee, bilan, niss_util)
+                    VALUES(?,?,?,?)");
+                    $query->execute(array($mois_tf, $annee_tf, $montant, $niss));
                     if ($query->errorCode() == 23000) {  // 23000 est le numéro qui correspond au contrainte sur la date_naissance dans la création du budget mensuel
                         echo "\n Erreur ", $query->errorCode(), ": La date de création du budget ne peut pas être inférieure à votre date de naissance. </br>";
                     } else {
@@ -113,6 +113,14 @@
                 // s'il existe déjà : simplement récupérer l'id
                 else if ($fetchedBudget >= 1){
                     $budget_id = $fetchedBudget["budget_id"];
+                    $bilanTotal = $fetchedBudget["bilan"] + $montant;
+                    echo("bilan : ". $bilanTotal. "<br>");
+
+                    $query = $bdd->prepare("UPDATE budgetsquirrel.budget_mensuel SET bilan = :bilan WHERE budget_id = :budget_id"); 
+                    $query->bindParam(':bilan' , $bilanTotal, PDO::PARAM_INT);
+                    $query->bindParam(':budget_id' , $budget_id, PDO::PARAM_INT);
+                    $query->execute();
+                   
                     echo("Idéntifiant du budget actuel : ". $budget_id. "<br>");
                     
                 }
@@ -134,9 +142,9 @@
                     
                     try {
 
-                        $query = $bdd->prepare("INSERT INTO budgetsquirrel.transaction_financiere (montant, date_tf, niss_util, date_naissance_util, budget_id, cat_tf) 
-                        VALUES (?,?,?,?,?,?)");
-                        $query->execute(array($montant, $date_tf, $niss, $connexion["date_naissance"], $budget_id, $cat_tf));
+                        $query = $bdd->prepare("INSERT INTO budgetsquirrel.transaction_financiere (montant, date_tf, niss_util, budget_id, cat_tf) 
+                        VALUES (?,?,?,?,?)");
+                        $query->execute(array($montant, $date_tf, $niss, $budget_id, $cat_tf));
                         // echo "\nPDO::errorCode(): ", $query->errorCode(); <-- pour retrouver le code erreur
                         if ($query->errorCode() == 22007) {  // 22007 est le numéro qui correspond au contrainte sur la date_naissance dans la création des transactions financieres
                             echo "\n Erreur ", $query->errorCode(), ": La date de création de la transaction que vous essayez d'enregistrer ne peut pas être inférieure à votre date de naissance. </br>";
@@ -175,9 +183,9 @@
 
                         try {
 
-                            $query = $bdd->prepare("INSERT INTO budgetsquirrel.transaction_financiere (montant, date_tf, niss_util, date_naissance_util, budget_id, cat_tf) 
-                            VALUES (?,?,?,?,?,?)");
-                            $query->execute(array($montant, $date_tf, $niss, $connexion["date_naissance"], $budget_id, $cat_tf));
+                            $query = $bdd->prepare("INSERT INTO budgetsquirrel.transaction_financiere (montant, date_tf, niss_util, budget_id, cat_tf) 
+                            VALUES (?,?,?,?,?)");
+                            $query->execute(array($montant, $date_tf, $niss, $budget_id, $cat_tf));
                             if ($query->errorCode() == 22007) {  // 22007 est le numéro qui correspond au contrainte sur la date_naissance dans la création des transactions financieres
                                 echo "\n Erreur ", $query->errorCode(), ": La date de création de la transaction que vous essayez d'enregistrer ne peut pas être inférieure à votre date de naissance. </br>";
                             } else {
@@ -216,9 +224,9 @@
 
                         try {
 
-                            $query = $bdd->prepare("INSERT INTO budgetsquirrel.transaction_financiere (montant, date_tf, niss_util, date_naissance_util, budget_id, cat_tf) 
-                            VALUES (?,?,?,?,?,?)");
-                            $query->execute(array($montant, $date_tf, $niss, $connexion["date_naissance"], $budget_id, $cat_tf));
+                            $query = $bdd->prepare("INSERT INTO budgetsquirrel.transaction_financiere (montant, date_tf, niss_util, budget_id, cat_tf) 
+                            VALUES (?,?,?,?,?)");
+                            $query->execute(array($montant, $date_tf, $niss, $budget_id, $cat_tf));
                             if ($query->errorCode() == 22007) {  // 22007 est le numéro qui correspond au contrainte sur la date_naissance dans la création des transactions financieres
                                 echo "\n Erreur ", $query->errorCode(), ": La date de création de la transaction que vous essayez d'enregistrer ne peut pas être inférieure à votre date de naissance. </br>";
                             } else {

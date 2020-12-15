@@ -308,10 +308,15 @@ input[type="submit"]{
 
 }
 
+.canvas_stat {
+    width: 50%;
+}
+
 .section {
     display: flex;
     justify-content: space-between;
     padding-top: 25px;
+    padding-bottom: 50px;
 }
 
 .homepage_content {

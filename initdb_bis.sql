@@ -129,8 +129,8 @@ SELECT COUNT(*) INTO rowcount FROM budget_mensuel
 WHERE mois = MONTH(NEW.date_tf) AND annee = YEAR(NEW.date_tf) AND niss_util = NEW.niss_util;
 
 IF rowcount = 0 THEN
-    INSERT INTO budget_mensuel(mois, annee, niss_util) 
-    VALUES (MONTH(NEW.date_tf), YEAR(NEW.date_tf), NEW.niss_util);
+    INSERT INTO budget_mensuel(mois, annee, bilan, niss_util) 
+    VALUES (MONTH(NEW.date_tf), YEAR(NEW.date_tf), NEW.montant, NEW.niss_util);
 END IF;
         SELECT budget_id INTO bi FROM budget_mensuel WHERE mois = MONTH(NEW.date_tf) AND annee = YEAR(NEW.date_tf) AND niss_util = NEW.niss_util;
 SET NEW.budget_id = bi;
@@ -158,6 +158,7 @@ LEFT JOIN budgetsquirrel.tf_cash tfcs
 ON tf.num_tf = tfcs.num_tf
 LEFT JOIN budgetsquirrel.carte c
 ON tfct.numero_carte = c.numero_carte
+ORDER BY tf.date_tf
 ;
 
 CREATE OR REPLACE VIEW stat_depenses_revenus_mois
@@ -179,6 +180,7 @@ NATURAL LEFT JOIN
      FROM historique_v
      WHERE montant > 0 
      GROUP BY budget_id) revenus
+ORDER BY annee ASC, mois ASC
 ;
 
 
