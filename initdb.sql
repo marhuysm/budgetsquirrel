@@ -15,10 +15,8 @@ CREATE TABLE utilisateur(
         CONSTRAINT pk_utilisateur PRIMARY KEY(niss) ,
         CONSTRAINT chk_niss CHECK (LENGTHB(niss) = 11),
         CONSTRAINT chk_photo CHECK (photo IN ('froggy.png','gollum.jpg','politecat.jpg', 'raccoon.jpg')),
-        CONSTRAINT uk_utilisateur UNIQUE (niss, date_naissance) -- clé composée à utiliser dans la table transaction financiere
-        -- pour moi, date_naissance ne devrait pas être considéré comme faisant partie de la contrainte unique
+        CONSTRAINT uk_utilisateur UNIQUE (niss) 
         );
--- Vérification de l'écriture côté bdd : OK!
         
 CREATE TABLE carte(
         nom_carte VARCHAR(255) NOT NULL,
@@ -36,24 +34,20 @@ CREATE TABLE carte(
         CONSTRAINT chk_type_carte CHECK (type_carte IN('Visa', 'Visa Prepaid', 'Maestro', 'Mastercard'))
         );
         
--- Vérif de l'écriture côté bdd : OK!
-
 CREATE TABLE budget_mensuel(
         budget_id INT NOT NULL AUTO_INCREMENT,
         mois INT NOT NULL,
         annee INT NOT NULL,
         bilan FLOAT, 
         niss_util VARCHAR(11) NOT NULL,
-        date_naissance_util DATE NOT NULL,
         CONSTRAINT fk_niss_util_budget FOREIGN KEY (niss_util) REFERENCES utilisateur(niss),
         CONSTRAINT pk_budget_mensuel PRIMARY KEY(budget_id),
         CONSTRAINT uc_budget_mensuel UNIQUE (mois, annee, niss_util),
-        CONSTRAINT fk_date_util_bm FOREIGN KEY (niss_util, date_naissance_util) REFERENCES utilisateur (niss, date_naissance)
+        CONSTRAINT fk_date_util_bm FOREIGN KEY (niss_util) REFERENCES utilisateur (niss)
                 ON DELETE CASCADE
-                ON UPDATE CASCADE,
-        CONSTRAINT CHECK (annee >= YEAR(date_naissance_util))
+                ON UPDATE CASCADE
         );
-        
+        -- besoin d'ajouter trigger date > date_naissance
         -- ! Pour l'instant, bilan de budget_mensuel = null
         -- ? ajouter un trigger ou une fk après avoir créé la vue qui donne le bilan?
         -- ALTER TABLE budgetsquirrel.budget_mensuel
@@ -72,44 +66,17 @@ CREATE TABLE transaction_financiere(
         num_tf INT NOT NULL AUTO_INCREMENT,
         date_tf DATE,
         montant FLOAT,
-   	    niss_util VARCHAR(11) NOT NULL,
-        date_naissance_util DATE NOT NULL, -- pb au niveau de la db: obligé d'entrer la date de naissance pour enregistrer une transaction
-        -- Errreur au niveau de la db : Requête : INSERT INTO `transaction_financiere`(`date_tf`, `montant`, `niss_util`, `date_naissance_util`, `cat_tf`) VALUES ('2020-12-12' ,'-30', '19650922666', '1965-09-22', 'accessoires')
-        -- renvoie: #1364 - Field 'date_naissance_util' doesn't have a default value lorsque l'utilisateur n'a pas encore de transaction ajoutée ou si le budget mensuel n'existe pas encore
+   	niss_util VARCHAR(11) NOT NULL,
         budget_id INT,
         cat_tf VARCHAR(100),
         CONSTRAINT fk_niss_util_tf FOREIGN KEY (niss_util) REFERENCES utilisateur(niss),
         CONSTRAINT fk_budget_id FOREIGN KEY (budget_id) REFERENCES budget_mensuel(budget_id),
         CONSTRAINT fk_cat_tf FOREIGN KEY (cat_tf) REFERENCES categorie_tf(nom_tf),
         CONSTRAINT pk_transaction_financiere PRIMARY KEY (num_tf),
-        CONSTRAINT fk_date_util_tf FOREIGN KEY (niss_util, date_naissance_util) REFERENCES utilisateur (niss, date_naissance) 
+        CONSTRAINT fk_date_util_tf FOREIGN KEY (niss_util) REFERENCES utilisateur (niss) 
                 ON DELETE CASCADE
-                ON UPDATE CASCADE,
-        CONSTRAINT CHECK (date_tf > date_naissance_util)
-            -- CONSTRAINT chk_date_tf CHECK(date_tf > utilisateur.date_naissance) -- PB : champ date_naissance inconnu dans CHECK
-            -- ajouter contrainte check date = mois et annee du budget_id
-            -- le niss_util de transaction_financiere correspond au niss_util du budget_mensuel > check ou trigger?
-            -- SOLUTION Proposée: https://stackoverflow.com/questions/3880698/can-a-check-constraint-relate-to-another-table
-            --   Make a compound key of the utilisateur table's key combined with the date.naissance columns, 
-            --   then use this compound key for your foreign key reference in your transaction_financiere table. 
-            --   This will give you the ability to write the necessary row-level CHECK constraints in the transaction_financiere table e.g.
-            -- in table utilisateur under
-            -- date_naissance DATE NOT NULL,
-            -- add
-            -- UNIQUE (niss, date_naissance)
-            -- then in table transaction_financiere add
-            -- after niss_util a new column
-            -- date_naissance_util DATE,
-            -- FOREIGN KEY (niss_util, date_naissance_util) REFERENCES utilisateur (niss, date_naissance)
-            -- ON DELETE CASCADE
-            -- ON UPDATE CASCADE,
-            -- date_naissance_util NOT NULL,
-            -- CHECK (date_tf > tf_date_naissance)
-            -- PB CONSEQUENTE côté client: une fois la contrainte date_tf ajouté: l'utilisateur peut toujours enregistré une transaction avec une date 
-            -- anterieure à sa date de naissance MAIS
-            -- la transaction n'est pas enregistré dans la db (constraint failure, c'est correct)
-            -- le budget pour l'année inferieur à sa naissance est crée
-            -- l'utilisateur ne sait pas que sa transaction n'a pas pu être enregistré et a un message de confirmation de création dans l'app
+                ON UPDATE CASCADE
+        -- CONSTRAINT CHECK (date_tf > date_naissance_util) > trigger
         );
 
 
@@ -133,75 +100,83 @@ CREATE TABLE tf_carte(
         CONSTRAINT pk_tf_carte PRIMARY KEY (num_tf),
         CONSTRAINT fk_num_tf_carte FOREIGN KEY (num_tf) REFERENCES transaction_financiere(num_tf) ON DELETE CASCADE,
         CONSTRAINT fk_numero_carte FOREIGN KEY (numero_carte) REFERENCES carte(numero_carte)
-        -- le niss_util.numero carte utilisé appartient toujours à l'utilisateur qui crée la transaction > Trigger ou check?
+        -- le niss_util.numero carte utilisé appartient toujours à l'utilisateur qui crée la transaction > Trigger 
         );
-    
--- ENGINE=InnoDB;
 
-        -- Trigger de création de budget s'il n'existe pas déjà pour le mois, année, utilisateur donné
-
-        -- Idée à mettre en place : lors de la création d'une nouvelle transaction financière coté db, on entre le montant, la date, le niss et la catégorie
-        -- Ensuite, le trigger vérifie si un budget_mensuel existe déjà pour cette combinaison de NISS, mois et année
-        -- Si oui, l'id du budget mensuel correspondant est extrait et ajouté à la tf créée
-        -- Si non, d'abord, le budget mensuel correspondant au triplet niss-mois-année est créée
-        -- Puis, son id est extrait, et enfin, ajouté à la transaction créée
-        -- Comment mettre en place tout ça ?
-        -- Pour l'instant, ça fonctionne côté appli : les vérifications sont faites manuellement en php
-
-            -- CREATE TRIGGER trg_before_ajout_tf BEFORE INSERT 
-            -- ON transaction_financiere FOR EACH ROW
-            --     BEGIN
-            --      IF (SELECT COUNT(*) FROM budget_mensuel 
-            --             WHERE mois = MONTH(NEW.date_tf)  
-            --             AND annee = YEAR(NEW.date_tf)
-            --             AND niss_utils = (NEW.niss_util)) = 0 
-            --             THEN
-            --         INSERT INTO budget_mensuel(mois, annee, niss) 
-            --         values(MONTH(NEW.date_tf), YEAR(NEW.date_tf), NEW.niss_util);
-            --     END IF;
-
-            --     UPDATE transaction_financiere
-            --     SET budget_id = NEW.budget_id
-            -- END
-            -- ;
-
-            -- CREATE TRIGGER trg_before_ajouttf BEFORE INSERT ON transaction_financiere FOR EACH ROW
-            -- BEGIN
-            -- SET @COUNT=(SELECT COUNT(*) FROM budget_mensuel 
-            --                WHERE (mois = MONTH(NEW.date_tf)  
-            --                AND annee = YEAR(NEW.date_tf)
-            --                AND niss_util = (NEW.niss_util)) );
-            -- IF @COUNT = 0 THEN
-            --     INSERT INTO budget_mensuel(mois, annee, niss) 
-            --            VALUES (MONTH(NEW.date_tf), YEAR(NEW.date_tf), NEW.niss_util)
-            -- END IF;
-            -- END;
-        -- SOLUTION TROUVÉE: problème de syntaxe expliqué ici https://dev.mysql.com/doc/refman/5.7/en/trigger-syntax.html :
-        -- By using the BEGIN ... END construct, you can define a trigger that executes multiple statements. Within the BEGIN block, 
-        -- you also can use other syntax that is permitted within stored routines such as conditionals and loops. However, just as for 
-        -- stored routines, if you use the mysql program to define a trigger that executes multiple statements, it is necessary to 
-        -- redefine the mysql statement delimiter so that you can use the ; statement delimiter within the trigger definition. 
 
 DELIMITER //
+DROP TRIGGER IF EXISTS trg_before_ajout_tf//
+
 CREATE TRIGGER trg_before_ajout_tf BEFORE INSERT 
 ON transaction_financiere 
 FOR EACH ROW
+
 BEGIN
 DECLARE rowcount INT;
+DECLARE bi INT;
+DECLARE naissance DATE;
+-- Verifier la différence entre la date_naissance et la date de transaction
+
+SELECT date_naissance INTO naissance FROM utilisateur WHERE niss = NEW.niss_util;
+IF NEW.date_tf < naissance THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = "Impossible d'entrer une date plus petite que la date de naissance de l'utilisateur";
+        -- message appelé quand, par exemple, la requête suivante est entrée
+        -- INSERT INTO `transaction_financiere`(`date_tf`, `montant`, `niss_util`, `cat_tf`) VALUES ('1920-12-02','666','19650922666','salaire')
+END IF;
 
 SELECT COUNT(*) INTO rowcount FROM budget_mensuel 
 WHERE mois = MONTH(NEW.date_tf) AND annee = YEAR(NEW.date_tf) AND niss_util = NEW.niss_util;
 
 IF rowcount = 0 THEN
-    INSERT INTO budget_mensuel(mois, annee, niss_util) 
-    VALUES (MONTH(NEW.date_tf), YEAR(NEW.date_tf), NEW.niss_util);
+    INSERT INTO budget_mensuel(mois, annee, bilan, niss_util) 
+    VALUES (MONTH(NEW.date_tf), YEAR(NEW.date_tf), NEW.montant, NEW.niss_util);
 END IF;
+        SELECT budget_id INTO bi FROM budget_mensuel WHERE mois = MONTH(NEW.date_tf) AND annee = YEAR(NEW.date_tf) AND niss_util = NEW.niss_util;
+SET NEW.budget_id = bi;
 END;//
+
 DELIMITER ;
 
-        -- Potentiellement, si possible : trigger d'écriture de transaction_financiere dans la bonne table? Comment gérer ça du côté de la db?
-        -- ça me semble pas possible, seul le trigger d'ajout automatique à un budget_mensuel est possible
-        -- à confirmer lundi 
+
+-- Mettre à jour le bilan de budget_mensuel à chaque nouvel insert de transaction
+
+DELIMITER //
+DROP TRIGGER IF EXISTS trg_after_ajout_tf//
+
+CREATE TRIGGER trg_after_ajout_tf AFTER INSERT 
+ON transaction_financiere 
+FOR EACH ROW
+
+BEGIN
+
+DECLARE bilan_calcul FLOAT;
+
+SELECT bilan_total_mois INTO bilan_calcul FROM stat_depenses_revenus_mois WHERE budget_id = NEW.budget_id AND niss_util = NEW.niss_util;
+UPDATE budget_mensuel SET bilan = bilan_calcul WHERE budget_id = NEW.budget_id AND niss_util = NEW.niss_util;
+END;//
+
+DELIMITER ;
+
+-- Pareil après suppression 
+
+DELIMITER //
+DROP TRIGGER IF EXISTS trg_after_suppr_tf//
+
+CREATE TRIGGER trg_after_suppr_tf AFTER DELETE
+ON transaction_financiere 
+FOR EACH ROW
+
+BEGIN
+
+DECLARE bilan_calcul FLOAT;
+
+SELECT bilan_total_mois INTO bilan_calcul FROM stat_depenses_revenus_mois WHERE budget_id = OLD.budget_id AND niss_util = OLD.niss_util;
+UPDATE budget_mensuel SET bilan = bilan_calcul WHERE budget_id = OLD.budget_id AND niss_util = OLD.niss_util;
+END;//
+
+DELIMITER ;
+
 
 CREATE OR REPLACE VIEW historique_v
 AS
@@ -221,20 +196,8 @@ LEFT JOIN budgetsquirrel.tf_cash tfcs
 ON tf.num_tf = tfcs.num_tf
 LEFT JOIN budgetsquirrel.carte c
 ON tfct.numero_carte = c.numero_carte
+ORDER BY tf.date_tf
 ;
-
- -- Pour l'écran de statistiques : 
-
- -- PB de transactions par mois : il faut au moins avoir une dépense et un revenu / mois, sinon le mois ne s'affiche pas
- -- ? solution?
- -- Solution proposée: ajout d'un query pour le bilan total par mois, 
- -- (ça nous permet d'avoir tous les resultats, peut importe si c'est positif ou negatif)
- -- ensuite jointure a gauche avec les depenses pour pouvoir afficher Null si jamais il n'y a pas de depense
- -- (ça nous permet de filtrer que les depenses, et donc le total des depenses)
- -- ensuite jointure a gauche avec les revenus pour pouvoir afficher Null si jamais il n'y a pas de revenu
- -- (ça nous permet de filtrer que les revenus, et donc le total des revenus) 
- -- COALESCE utilisé pour remplacer le NULL avec 0
- -- alias as (i.e. as nb_depenses) utilisé pour faciliter la syntaxe php dans stat.php
 
 CREATE OR REPLACE VIEW stat_depenses_revenus_mois
 AS
@@ -276,7 +239,7 @@ FROM
                 SUM(CASE WHEN HIST.montant < 0 THEN montant ELSE 0 END) as bilan_depenses_cat, 
                 SUM(CASE WHEN HIST.montant > 0 THEN montant ELSE 0 END) as bilan_revenus_cat
         FROM historique_v HIST 
-        GROUP BY HIST.cat_tf) h
+        GROUP BY HIST.cat_tf, HIST.niss_util) h
      ON c.nom_tf = h.cat_tf
 ;
 

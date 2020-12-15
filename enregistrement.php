@@ -46,95 +46,20 @@
             $annee_tf = $parsed_date["year"]; // année en int
             $cat_tf = htmlspecialchars($_POST['categorie_transaction']);
             $type_tf = htmlspecialchars($_POST['type_tf']);
-            $budget_id = 0; // initialisation d'une variable budget_id
-
-            // Une fois le mois et l'année récupérée, on peut voir : 
-            //s'il existe déjà un budget pour ce mois et cette année
-            // ou s'il faut créer un nouveau budget_mensuel : cf if toutes les données sont remplies
-
-
-            //ajout d'une verification de l'existence d'un budget en cours pour la date donnée : fait, cf if ci-dessous
-            //ajoud d'une verification de l'existence d'un reste du bilan précedent : nécessaire seulement dans historique, pas ici
-            //Pour le travail sur la partie budget il faut envisager une contrainte relative au clôture du budget, envisageant que
-            //un utilisateur peut clôturer son budget pendant le mois en cours, MAIS
-            //si l'utilisateur ne clôture pas son budget, le système le fera le premier jour du mois suivant au minuit
-            // Note : je pense que garder juste une cloture manuelle peut être utile (et plus simple)
-
-
-            // $check = $bdd->prepare("SELECT count(1) as total FROM budgetsquirrel.budget_mensuel WHERE statut = 'EnCours')");  //Verif si il n'existe pas déjà un budget
-            // $check->execute();
-            // $budget = $check-> fetch();
-
-            // $check = $bdd->prepare("SELECT MAX(budget_id), reste FROM budgetsquirrel.budget_mensuel WHERE statut = 'Clos' GROUP BY reste)"); //Verif si il n'y a pas un reste du bilan précedent
-            // $check->execute();
-            // $resteBilanPrecedent = $check-> fetch();   // <- il faut corriger le query puis qu'il retourne une seule valeur avec fetch, vu que le select porte sur deux colonnes
-
-            // if ($budget['total'] == 0){
-            //     $query = $bdd->prepare("INSERT INTO budgetsquirrel.budget_mensuel (mois, annee, statut, bilan, reste, niss_util) 
-            //     VALUES (?,?,?,?,?,?)");
-            //     $query->execute(array(MONTH($date_tf), YEAR($date_tf), 'EnCours', $resteBilanPrecedent + $montant, 0, $niss));
-            // }
-            
-            // //recuperer le budget_id du budget_mensuel en cours
-            // $check = $bdd->prepare("SELECT budget_id FROM budgetsquirrel.budget_mensuel WHERE statut = 'EnCours')");  //Verif si il n'existe pas déjà un budget
-            // $check->execute();
-            // $budgetId = $check-> fetch();
 
             // If toutes les données obligatoires sont remplies : 
              if ($montant != null&& $montant != 0&& $date_tf != null&& $date_tf != null&& !empty($type_tf)){
 
-                // Tout d'abord, voir si le resultat de fetched_budget == 0 ou >=1, autrement dit: s'il existe déjà un budget_id en cours correspondant ou non.
-                // NOTE : vraiment pas idéal, à remplacer par une automatisation au niveau de la bdd
-                // COMMENTAIRE sur le trigger de creation budget : 
-                // si trigger sur le budget au niveau de la base des données, la complexité du code devient ridicule sachant que la clause "if" de preparation
-                // dans le cas ou le budget n'existe pas ne peut pas savoir que le trigger à crée un budget BEFORE INSERT
-                // du coup le trigger devient inutile parce que le if gére la création au niveau de client 
-                $getBudgets = $bdd->prepare("SELECT budget_id, bilan FROM budget_mensuel WHERE mois = $mois_tf AND annee = $annee_tf AND niss_util = $niss");
-                $getBudgets->execute();
-                $fetchedBudget = $getBudgets->fetch();
-
-                // s'il n'existe pas encore: le créer et récupérer son id
-                if($fetchedBudget == 0){
-                    $query = $bdd->prepare("INSERT INTO budgetsquirrel.budget_mensuel (mois, annee, bilan, niss_util)
-                    VALUES(?,?,?,?)");
-                    $query->execute(array($mois_tf, $annee_tf, $montant, $niss));
-                    if ($query->errorCode() == 23000) {  // 23000 est le numéro qui correspond au contrainte sur la date_naissance dans la création du budget mensuel
-                        echo "\n Erreur ", $query->errorCode(), ": La date de création du budget ne peut pas être inférieure à votre date de naissance. </br>";
-                    } else {
-                        echo("Budget mensuel créé ! <br>");
-                    }
-                    
-                    $getBudgetId = $bdd->prepare("SELECT budget_id as budget_id FROM budget_mensuel WHERE mois = $mois_tf AND annee = $annee_tf AND niss_util = $niss");
-                    $getBudgets->execute();
-                    $fetchedBudget = $getBudgets->fetch();
-                    $budget_id = $fetchedBudget["budget_id"] ?? ''; // utilisation de '??' (null coalescing operator) pour remplacer un budget qui est Null par un budget vide -> ''
-                    
-                }
-                // s'il existe déjà : simplement récupérer l'id
-                else if ($fetchedBudget >= 1){
-                    $budget_id = $fetchedBudget["budget_id"];
-                    $bilanTotal = $fetchedBudget["bilan"] + $montant;
-                    echo("bilan : ". $bilanTotal. "<br>");
-
-                    $query = $bdd->prepare("UPDATE budgetsquirrel.budget_mensuel SET bilan = :bilan WHERE budget_id = :budget_id"); 
-                    $query->bindParam(':bilan' , $bilanTotal, PDO::PARAM_INT);
-                    $query->bindParam(':budget_id' , $budget_id, PDO::PARAM_INT);
-                    $query->execute();
-                   
-                    echo("Idéntifiant du budget actuel : ". $budget_id. "<br>");
-                    
-                }
-
-                // Maintenant qu'on a une valeur définie pour $budget_id : on peut créer la transaction avec le budget_id correspondant
-                // Mais avant, vérifier que toutes les infos sont remplies, en fonction du champs (cash, virement ou carte)
+                // vérifier que toutes les infos sont remplies, en fonction du champs (cash, virement ou carte)
 
                 // Gestion de types de payement : cash, virement ou carte?
                 // objectif : en plus de l'enregistrement dans la table transaction_financière, il faut enregistrer chaque num_tf
                 // à soit la table tf_cash , soit la table tf_carte, soit la table tf_virement
                 // l'info de la catégorie est donnée par type_tf, qui a déjà été récupérée au dessus dans la variable $type_tf.
                 // ici, on a bien vérifié que type_tf n'est pas vide (pour pouvoir enregistrer la requête), et de toute façon, 
-                // on a déjà défini une valeur par défaut (cash),
-                // il ne reste plus qu'à enregistrer l'id de la transaction qui vient d'être récupéré dans la bonne table 
+                // on a déjà défini une valeur par défaut (cash) dans le form,
+                // il ne reste plus qu'à enregistrer l'id de la transaction qui vient d'être récupéré dans la bonne table, ainsi que les
+                // éventuelles informations supplémentaires
 
                 // si cash : pas d'infos en plus. 
 
@@ -142,9 +67,9 @@
                     
                     try {
 
-                        $query = $bdd->prepare("INSERT INTO budgetsquirrel.transaction_financiere (montant, date_tf, niss_util, budget_id, cat_tf) 
-                        VALUES (?,?,?,?,?)");
-                        $query->execute(array($montant, $date_tf, $niss, $budget_id, $cat_tf));
+                        $query = $bdd->prepare("INSERT INTO budgetsquirrel.transaction_financiere (montant, date_tf, niss_util, cat_tf) 
+                        VALUES (?,?,?,?)");
+                        $query->execute(array($montant, $date_tf, $niss, $cat_tf));
                         // echo "\nPDO::errorCode(): ", $query->errorCode(); <-- pour retrouver le code erreur
                         if ($query->errorCode() == 22007) {  // 22007 est le numéro qui correspond au contrainte sur la date_naissance dans la création des transactions financieres
                             echo "\n Erreur ", $query->errorCode(), ": La date de création de la transaction que vous essayez d'enregistrer ne peut pas être inférieure à votre date de naissance. </br>";
@@ -159,11 +84,23 @@
         
                             echo ("Transaction enregistrée sous le numéro ". $num_tf . "<br>");
 
+                            // Peu importe le type de transaction créée, récup du budget_id de la transaction créée quand toutes les infos sont là: 
+
+                            $query = $bdd->prepare("SELECT budget_id as budget_id FROM transaction_financiere WHERE num_tf = $num_tf");
+                            $query->execute();
+                            $budget_id =  $query->fetch();
+                            $budget_id = $budget_id["budget_id"];
+                            
+                            echo("Id du budget pour cette transaction : " . $budget_id. "<br>");
+        
                             // enregistrement de la transaction dans la table cash
 
                             $query = $bdd->prepare("INSERT INTO budgetsquirrel.tf_cash (num_tf)
                             VALUES (?)");
                             $query->execute(array($num_tf));
+
+                            echo ("Merci d'avoir enregistré ce payement en liquide !");
+
                         }
 
                     }
@@ -183,9 +120,9 @@
 
                         try {
 
-                            $query = $bdd->prepare("INSERT INTO budgetsquirrel.transaction_financiere (montant, date_tf, niss_util, budget_id, cat_tf) 
-                            VALUES (?,?,?,?,?)");
-                            $query->execute(array($montant, $date_tf, $niss, $budget_id, $cat_tf));
+                            $query = $bdd->prepare("INSERT INTO budgetsquirrel.transaction_financiere (montant, date_tf, niss_util, cat_tf) 
+                            VALUES (?,?,?,?)");
+                            $query->execute(array($montant, $date_tf, $niss, $cat_tf));
                             if ($query->errorCode() == 22007) {  // 22007 est le numéro qui correspond au contrainte sur la date_naissance dans la création des transactions financieres
                                 echo "\n Erreur ", $query->errorCode(), ": La date de création de la transaction que vous essayez d'enregistrer ne peut pas être inférieure à votre date de naissance. </br>";
                             } else {
@@ -199,6 +136,15 @@
             
             
                                 echo ("Transaction enregistrée sous le numéro ". $num_tf . "<br>");
+
+                                // Peu importe le type de transaction créée, récup du budget_id de la transaction créée quand toutes les infos sont là: 
+
+                                $query = $bdd->prepare("SELECT budget_id as budget_id FROM transaction_financiere WHERE num_tf = $num_tf");
+                                $query->execute();
+                                $budget_id =  $query->fetch();
+                                $budget_id = $budget_id["budget_id"];
+                                
+                                echo("Id du budget pour cette transaction : " . $budget_id . "<br>");
 
                                 $query = $bdd->prepare("INSERT INTO budgetsquirrel.tf_virement (num_tf, communication, destbenef)
                                 VALUES (?,?,?)");
@@ -224,9 +170,9 @@
 
                         try {
 
-                            $query = $bdd->prepare("INSERT INTO budgetsquirrel.transaction_financiere (montant, date_tf, niss_util, budget_id, cat_tf) 
-                            VALUES (?,?,?,?,?)");
-                            $query->execute(array($montant, $date_tf, $niss, $budget_id, $cat_tf));
+                            $query = $bdd->prepare("INSERT INTO budgetsquirrel.transaction_financiere (montant, date_tf, niss_util, cat_tf) 
+                            VALUES (?,?,?,?)");
+                            $query->execute(array($montant, $date_tf, $niss, $cat_tf));
                             if ($query->errorCode() == 22007) {  // 22007 est le numéro qui correspond au contrainte sur la date_naissance dans la création des transactions financieres
                                 echo "\n Erreur ", $query->errorCode(), ": La date de création de la transaction que vous essayez d'enregistrer ne peut pas être inférieure à votre date de naissance. </br>";
                             } else {
@@ -239,6 +185,15 @@
             
             
                                 echo ("Transaction enregistrée sous le numéro ". $num_tf . "<br>");
+
+                                // Peu importe le type de transaction créée, récup du budget_id de la transaction créée quand toutes les infos sont là: 
+
+                                $query = $bdd->prepare("SELECT budget_id as budget_id FROM transaction_financiere WHERE num_tf = $num_tf");
+                                $query->execute();
+                                $budget_id =  $query->fetch();
+                                $budget_id = $budget_id["budget_id"];
+                                
+                                echo("Id du budget pour cette transaction : " . $budget_id . "<br>");
 
                                 echo("Merci d'avoir enregistré cette transaction par carte !");
 
@@ -293,8 +248,6 @@
     </header>
 
     <!-- Selection hide / parties grisées en fonction du bouton de type de transaction -->
-
-    <!-- ! Pour l'instant, le select de la carte renvoie d'office une donnée (vu que c'est un select) : comment faire un default value = blank? -->
     
     <div class="container">
         <h1>Enregistrer une nouvelle transaction</h1>
