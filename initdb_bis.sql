@@ -239,7 +239,7 @@ FROM
                 SUM(CASE WHEN HIST.montant < 0 THEN montant ELSE 0 END) as bilan_depenses_cat, 
                 SUM(CASE WHEN HIST.montant > 0 THEN montant ELSE 0 END) as bilan_revenus_cat
         FROM historique_v HIST 
-        GROUP BY HIST.cat_tf) h
+        GROUP BY HIST.cat_tf, HIST.niss_util) h
      ON c.nom_tf = h.cat_tf
 ;
 
