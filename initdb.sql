@@ -193,7 +193,7 @@ END;//
 DELIMITER ;
 
 -- une tf ne peut être utilisée qu'une seule fois soit dans la table tf_carte, tf_cash ou tf_virement
--- Pour ça, il faut créer 3 triggers (, tjrs le même, 1 pour chaque table)
+-- Pour ça, il faut créer 3 triggers (, toujours le même, 1 pour chaque table)
 
 DELIMITER //
 DROP TRIGGER IF EXISTS trg_before_ajout_tf_carte//
@@ -204,13 +204,13 @@ FOR EACH ROW
 
 BEGIN
 
-DECLARE rowcount INT;
+DECLARE nb_tf_cash INT;
+DECLARE nb_tf_vir INT;
 
-SELECT * into rowcount FROM 
-	(SELECT COUNT(*) FROM tf_virement WHERE num_tf = NEW.num_tf) num_vir
-  	NATURAL LEFT JOIN
-	(SELECT COUNT(*) FROM tf_cash WHERE num_tf = NEW.num_tf)num_cash;
-IF rowcount != 0 THEN
+SELECT COUNT(*) INTO nb_tf_cash FROM tf_cash WHERE num_tf = NEW.num_tf;
+SELECT COUNT(*) INTO nb_tf_vir FROM tf_virement WHERE num_tf = NEW.num_tf; 
+
+IF (nb_tf_cash != 0) OR (nb_tf_vir != 0) THEN
 		SIGNAL SQLSTATE '45000'
         SET MESSAGE_TEXT = "Impossible d'entrer une même transaction dans plusieurs tables définissant le type de virement.";
 END IF;
@@ -227,18 +227,19 @@ FOR EACH ROW
 
 BEGIN
 
-DECLARE rowcount INT;
+DECLARE nb_tf_carte INT;
+DECLARE nb_tf_vir INT;
 
-SELECT * into rowcount FROM 
-	(SELECT COUNT(*) FROM tf_virement WHERE num_tf = NEW.num_tf) num_vir
-	NATURAL LEFT JOIN
-	(SELECT COUNT(*) FROM tf_carte WHERE num_tf = NEW.num_tf) num_carte;
- 
-IF rowcount != 0 THEN
+SELECT COUNT(*) INTO nb_tf_carte FROM tf_carte WHERE num_tf = NEW.num_tf;
+SELECT COUNT(*) INTO nb_tf_vir FROM tf_virement WHERE num_tf = NEW.num_tf; 
+
+IF (nb_tf_carte != 0) OR (nb_tf_vir != 0) THEN
 		SIGNAL SQLSTATE '45000'
         SET MESSAGE_TEXT = "Impossible d'entrer une même transaction dans plusieurs tables définissant le type de virement.";
 END IF;
 END;//
+
+DELIMITER ;
 
 DELIMITER ;
 
@@ -251,14 +252,13 @@ FOR EACH ROW
 
 BEGIN
 
-DECLARE rowcount INT;
+DECLARE nb_tf_carte INT;
+DECLARE nb_tf_cash INT;
 
-SELECT * into rowcount FROM 
-	(SELECT COUNT(*) FROM tf_cash WHERE num_tf = NEW.num_tf)num_cash
-	NATURAL LEFT JOIN
-	(SELECT COUNT(*) FROM tf_carte WHERE num_tf = NEW.num_tf) num_carte;
- 
-IF rowcount != 0 THEN
+SELECT COUNT(*) INTO nb_tf_carte FROM tf_carte WHERE num_tf = NEW.num_tf;
+SELECT COUNT(*) INTO nb_tf_cash FROM tf_cash WHERE num_tf = NEW.num_tf; 
+
+IF (nb_tf_carte != 0) OR (nb_tf_cash != 0) THEN
 		SIGNAL SQLSTATE '45000'
         SET MESSAGE_TEXT = "Impossible d'entrer une même transaction dans plusieurs tables définissant le type de virement.";
 END IF;
