@@ -216,7 +216,7 @@ Vous trouverez ci-dessous notre traduction du schéma entité association prése
 
 \begin{Verbatim}[commandchars=+\[\]]
 utilisateur(nom, prenom, +underline[niss], date_naissance, photo)
-	utilisateur.niss = {froggy.png, gollum.jpg, politecat.jpg, raccoon.jpg}
+	utilisateur.photo = {froggy.png, gollum.jpg, politecat.jpg, raccoon.jpg}
 
 carte(nom_carte, +underline[numero_carte], type_carte, +underline[niss_util], is_deleted)
 	carte.niss_util référence utilisateur.niss
@@ -231,10 +231,10 @@ transaction_financiere(+underline[num_tf], date_tf, montant, budget_id, niss_uti
 	transaction_fianciere.niss_util référence utilisateur.niss
 
 tf_cash(+underline[num_tf])
-	tfcash.num_tf référence transaction_financiere.num_tf
+	tf_cash.num_tf référence transaction_financiere.num_tf
 
 tf_virement(+underline[num_tf], destbenef, +it[communication])
-	tfvirement.num_tf référence transaction_financiere.num_tf
+	tf_virement.num_tf référence transaction_financiere.num_tf
 
 tf_carte(+underline[num_tf], +underline[numero_carte])
 	tf_carte.num_tf référence transaction_financiere.num_tf	
@@ -308,7 +308,7 @@ Afin de gérer ces deux situations, nous avons ajouté des  \verb\ON DELETE CASC
 
 \textbf{Autres infos à rajouter?}
 
-Après la création des tables que nous venons de présenter, \verb\initdb.sql\ peut être divisé en X grandes parties : la création des triggers/déclencheurs, la création des vues, et la gestion des privilèges.
+Après la création des tables que nous venons de présenter, \verb\initdb.sql\ peut être divisé en 3 grandes parties : la création des triggers/déclencheurs, la création des vues, et la gestion des privilèges.
 Toutes ces parties sont décrites dans les points suivants.
 
 \subsection{Éléments de SQL avancé}
@@ -340,13 +340,25 @@ Ces vues sont utiles à la gestion et à l’agrégation des données, et permet
 Ci-dessous, vous trouverez une description détaillée de leur fonctionnement.
 
 \paragraph{Historique}\mbox{}\\
+La vue \verb\historique_v\ est notre vue principale, sur laquelle les autres vues sont générées.
+Elle permet de rassembler toutes les informations pour une transaction donnée dans une seule table.
+Son résultat permet ainsi de consulter, pour chaque transaction : son identifiant, sa date, son montant, le NISS de l'utilisateur à laquelle elle est liée, l'identifiant de budget auquel elle est liée, sa catégorie, et éventuellement: le numéro et le nom de la carte utilisée, la destinataire/bénéficiaire et la communication.
+
+\textbf{ajouter une description de fonctionnement}
 
 \paragraph{Statistiques mensuelles}\mbox{}\\
+La vue \verb\stat_depenses_revenus_mois\ a pour objectif de donner les informations suivantes par mois et par utilisateur : l'identifiant de budget, le mois, l'année, le bilan, le nombre de transactions effectuées, le total des dépenses et des revenus.
+Cette vue est générée à partir de 3 \verb\SELECT\ basés sur la vue \verb\historique_v\ : un qui reprend les transactions dans leur ensemble, un autre qui ne reprend que les dépenses, et un autre qui ne reprend que les revenus.
 
 \paragraph{Statistiques par catégorie}\mbox{}\\
+L'objectif de la vue est d'obtenir des informations sur la répartition des transactions des utilisateurs par catégories : combien de fois elles ont été appelées pour les dépenses, pour les revenus, ainsi que la somme des dépenses et revenus les concernant.
+Pour ce faire, un \verb\SELECT\ est fait entre la table des catégories et un \verb\SELECT\ de \verb\historique_v\.
+Ce dernier récupère \verb\historique_v.cat_tf\ et \verb\historique_v.niss_util\, compte le nombre d'utilisations par catégories, fait la somme des montants négatifs, celle des montants positifs, et groupe le tout par catégorie et par utilisateur.
 
 \paragraph{Statistiques par type de transaction}\mbox{}\\
-
+Afin d'obtenir une vue répartissant les transactions en fonction de leur type, nous mettons en place une vue agrégeant les information de la vue \verb\historique_v\.
+La vue est assez simple, et fait un \verb\SELECT\ et un \verb\COUNT\ de \verb\historique_v.type_tf\, ainsi qu'un \verb\SELECT\ de \verb\historique_v.niss_util\.
+Ensuite, elle calcule deux sommes, en fonction de si le montant est positif ou négatif : le total des dépense pour un type donné, et le total des revenus pour un type donné.
 
 \subsubsection{Déclencheurs}
 
@@ -410,7 +422,8 @@ L'application contient 9 pages : \verb\index.html\, \verb\inscription.php\, \ver
 \caption{\footnotesize{Landing page pour Budget Squirrel}}
 \end{figure}
 
-S'il choisit de s'inscrire, il est redirigé vers un formulaire d'inscription, \verb\inscription.php\ où il doit rentrer son nom, son prénom, son NISS, et choisir une photo de profil. Si toutes les informations ne sont pas complétées, l'utilisateur est notifié du fait qu'il doit rentrer toutes les informations pour pouvoir s'inscrire.
+S'il choisit de s'inscrire, il est redirigé vers un formulaire d'inscription, \verb\inscription.php\, où il doit rentrer son nom, son prénom, son NISS, et choisir une photo de profil.
+Si toutes les informations ne sont pas complétées, l'utilisateur est notifié du fait qu'il doit rentrer toutes les informations pour pouvoir s'inscrire.
 
 \begin{figure}[!ht]
 \noindent
@@ -465,7 +478,7 @@ L'utilisateur est obligé d'entrer un montant, de sélectionner une date, une ca
 En fonction du type de transaction effectuée, il doit également ajouter des informations supplémentaires, qui permettent de faire l'écriture dans la bonne table de type de transaction.
 L'utilisateur sélectionne, via un radio button, le type de transaction effectuée : soit un payement en liquide, soit un virement bancaire, soit un payement par carte (JavaScript nous permet de cacher une partie du formulaire en fonction du radio button sélectionné).
 Le payement en liquide ne demande aucune information supplémentaire, le virement bancaire demande d'introduire un destinataire ou un bénéficiaire, et éventuellement une communication, et un payement par carte nécessite de sélectionner la carte utilisée.
-Cet aspect est géré uniquement en PHP, et demande donc de faire deux opérations consécutives si l'on veut rentrer le type de transaction sans passer par l'application Web : d'abord, un \verb\INSERT\ dans la table \verb\transaction_financiere\, puis un autre \verb\INSERT\ dans la table correspondant au bon type de transaction (c'est ce que nous faisons dans \verb\basicdata.sql\).
+Cet aspect est géré uniquement en PHP, et demande donc de faire deux opérations consécutives si l'on veut rentrer le type de transaction sans passer par l'application Web : d'abord, un \verb\INSERT\ dans la table \verb\transaction_financiere\, puis un autre \verb\INSERT\ dans la table correspondant au bon type de transaction (c'est également ce que nous faisons dans \verb\basicdata.sql\).
 
 \begin{figure}[!ht]
 \noindent
@@ -492,7 +505,7 @@ Un tableau montrant la répartition des transactions (dépenses et revenus) par 
 Un autre tableau montrant la répartition totale par catégorie, couplé à une description de chaque catégorie, est aussi accompagné de son graphique, cette fois-ci un diagramme circulaire. 
 Enfin, la répartition des transactions entre les différents types de payements (le nombre d'utilisations, le bilan des dépenses et le bilan des revenus pour chaque type de transaction) est affiché.
 
-À tout moment, l'utilisateur peut également se déconnecter, en cliquant, en haut à droite de la barre de navigation, sur "déconnexion".
+À tout moment, l'utilisateur peut également se déconnecter, en cliquant, en haut à droite de la barre de navigation, sur \og déconnexion\fg .
 Il est alors redirigé vers \verb\logout.php\.
 Les informations de session (donc, le NISS sous lequel l'utilisateur est connecté) sont effacées, et l'utilisateur peut choisir de retourner à l'écran d'accueil pour se reconnecter ou s'inscrire.
 
@@ -534,6 +547,7 @@ C'est en suivant ce rapport préliminaire  que nous avons par la suite développ
 
 La partie design à été facilitée par l'emploi d'une structure CSS ouverte\footnote{le boilerplate CSS Skeleton, \url{http://getskeleton.com/}}, que nous avons taillée aux besoins de notre application et combinée à une structure HTML.
 Ensemble, les parties HTML et CSS du projet reprenaient (et amélioraient) notre premier design réalisé sur Figma.
+La section 5 du rapport témoigne des choix qui ont été gardés et implémentés au niveau de design d'application.
 
 \textbf{Tu avais parlé de structure HTML ouverte, mais j'ai corrigé en parlant de CSS, corrige moi si je me trompe tho!}
 
@@ -543,12 +557,11 @@ Par contre, un des défis que nous avons rencontré durant le développement de 
 Certains éléments, facilement mis en place en PHP, étaient difficiles à traduire en SQL.
 Ainsi, aux alentours de la moitié du développement, nous avons revu et restreint notre script de création de base de données, afin que, comme l'application, il réponde exactement comme demandé par les contraintes établies dans les sections 2 et 3.
 
-Une deuxième couche de complexité à été rajouté par l'introduction des éléments JavaScript de visualisation dynamique des données (toggle screen, et graphes dynamiques) et des éléments en SQL d'agrégation des données (vues statistiques).
+Une deuxième couche de complexité à été rajoutée par l'introduction des éléments JavaScript de visualisation dynamique des données (toggle screen, et graphes dynamiques) et des éléments en SQL d'agrégation des données (vues statistiques).
 De manière générale, une des parties la plus difficile à été d'orchestrer, d'une façon robuste et cohérente, la partie d'insertions, mises à jour, et suppressions, afin d'éviter la perte des données, ou bien le double encodage.
 Faire le choix entre l'ajout des contraintes au niveau de client, ou bien au niveau de la base des données, ainsi que naviguer entre les contraintes implémentés, n'a pas toujours été facile.
 Pour parer ces difficultés nous avons employé la technique de programmation en binôme (asynchrone, en utilisant GitHub pour partager les mises à jours au niveau du code, et Teams pour faciliter la communication).
 La taille restreinte du groupe à particulièrement facilité ce méthode de travail, et nous à permis une prise de décision rapide.
-La section 5 du rapport témoigne sur les choix qui ont été gardés et implémentés au niveau de design d'application.
 
 \subsection{Quelques scénarios de test }
 
