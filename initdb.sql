@@ -192,6 +192,86 @@ END;//
 
 DELIMITER ;
 
+-- une tf ne peut être utilisée qu'une seule fois soit dans la table tf_carte, tf_cash ou tf_virement
+-- Pour ça, il faut créer 3 triggers (, tjrs le même, 1 pour chaque table)
+
+DELIMITER //
+DROP TRIGGER IF EXISTS trg_before_ajout_tf_carte//
+
+CREATE TRIGGER trg_before_ajout_tf_carte BEFORE INSERT -- verifier l'intégrité de la rel. (t-e) héritage
+ON tf_carte 
+FOR EACH ROW
+
+BEGIN
+
+DECLARE rowcount INT;
+
+SELECT COUNT(*) into rowcount FROM 
+	(SELECT COUNT(*) FROM tf_virement WHERE num_tf = NEW.num_tf) num_vir
+  	NATURAL LEFT JOIN
+	(SELECT COUNT(*) FROM tf_cash WHERE num_tf = NEW.num_tf)num_cash
+	NATURAL LEFT JOIN
+	(SELECT COUNT(*) FROM tf_carte WHERE num_tf = NEW.num_tf) num_carte;
+ 
+IF rowcount != 0 THEN
+		SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = "Impossible d'entrer une même transaction dans plusieurs tables définissant le type de virement.";
+END IF;
+END;//
+
+DELIMITER ;
+
+DELIMITER //
+DROP TRIGGER IF EXISTS trg_before_ajout_tf_cash//
+
+CREATE TRIGGER trg_before_ajout_tf_cash BEFORE INSERT -- verifier l'intégrité de la rel. (t-e) héritage
+ON tf_cash 
+FOR EACH ROW
+
+BEGIN
+
+DECLARE rowcount INT;
+
+SELECT COUNT(*) into rowcount FROM 
+	(SELECT COUNT(*) FROM tf_virement WHERE num_tf = NEW.num_tf) num_vir
+  	NATURAL LEFT JOIN
+	(SELECT COUNT(*) FROM tf_cash WHERE num_tf = NEW.num_tf)num_cash
+	NATURAL LEFT JOIN
+	(SELECT COUNT(*) FROM tf_carte WHERE num_tf = NEW.num_tf) num_carte;
+ 
+IF rowcount != 0 THEN
+		SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = "Impossible d'entrer une même transaction dans plusieurs tables définissant le type de virement.";
+END IF;
+END;//
+
+DELIMITER ;
+
+DELIMITER //
+DROP TRIGGER IF EXISTS trg_before_ajout_tf_virement//
+
+CREATE TRIGGER trg_before_ajout_tf_virement BEFORE INSERT -- verifier l'intégrité de la rel. (t-e) héritage
+ON tf_virement
+FOR EACH ROW
+
+BEGIN
+
+DECLARE rowcount INT;
+
+SELECT COUNT(*) into rowcount FROM 
+	(SELECT COUNT(*) FROM tf_virement WHERE num_tf = NEW.num_tf) num_vir
+  	NATURAL LEFT JOIN
+	(SELECT COUNT(*) FROM tf_cash WHERE num_tf = NEW.num_tf)num_cash
+	NATURAL LEFT JOIN
+	(SELECT COUNT(*) FROM tf_carte WHERE num_tf = NEW.num_tf) num_carte;
+ 
+IF rowcount != 0 THEN
+		SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = "Impossible d'entrer une même transaction dans plusieurs tables définissant le type de virement.";
+END IF;
+END;//
+
+DELIMITER ;
 
 CREATE OR REPLACE VIEW historique_v
 AS

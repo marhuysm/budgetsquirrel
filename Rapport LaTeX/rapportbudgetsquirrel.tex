@@ -180,6 +180,8 @@ Ainsi, pour proposer une application plus flexible, nous avons fait le choix de 
 La clôture d'un budget n'est donc pas possible.
 Cette suppression reste mineure, car l'application se concentre principalement sur la gestion du budget et des différentes transactions, que se soit de manière rétrospective, ou de manière prédictive. L'objectif principal reste atteint, et la gestion des différents budget n'en est que plus souple pour l'utilisateur.\\
 
+\textbf{SCHEMA : ajouter contrainte (t,e) de l'héritage + faire dernières régularisations p/r au reste du contenu}
+
 \begin{figure}[!ht]
 \noindent
 \makebox[\textwidth][c]{
@@ -233,16 +235,21 @@ Contraintes définies :
 \item transaction\_financiere.date\_tf (et par extension, le mois et l'année de budget\_ mensuel) sont nécessairement ultérieures à utilisateur.date\_naissance;
 \item transaction\_financiere.budget\_id ne peut référencer qu'un budget\_id dont le mois et l'année correspondent à transaction\_ financiere.date\_ tf;
 \item Dans la table tf\_carte, transaction\_financière.num\_tf et carte.numero\_carte référencent obligatoirement le même niss\_util : un utilisateur ne peut qu'utiliser les cartes qui lui sont liées pour les transaction qui lui sont liées;
-\item transaction\_financière.num\_tf doit se retrouver une et une seule fois soit dans la table tf\_carte, soit dans la table tf\_virement, soit dans la table tf\_cash;
+\item transaction\_financière.num\_tf doit se retrouver une et une seule fois soit dans la table tf\_carte, soit dans la table tf\_virement, soit dans la table tf\_cash; \textbf{?? est-ce que la db vérifie cela ??}
 \item \textbf{Autres?}
 \end{itemize}
 
 L'héritage entre la table transaction\_financière et les tables cash, virement, et payement par carte a été traduit par une matérialisation, que nous représentons graphiquement à la figure \ref{materialisation}.
 Nous avons choisi d'utiliser la matérialisation afin de conserver la super-entité, ainsi que les sous-entités, et la relation sémantique qu'elles entretiennent.
 La relation est considérée comme totale et exclusive : une transaction financière est au moins une transaction en liquide, par virement ou payée par carte, mais ne peut pas être de plus d'un type à la fois.
+
 L'association un à plusieurs entre utilisateur et budget\_mensuel a été traduite en plaçant la référence du côté "un" de l'association : ainsi, on retrouve utilisateur.niss dans budget\_mensuel.niss\_util.
 Il en est de même pour la table transaction\_financière, à laquelle nous avons ajouté une référence et au budget\_mensuel, et au NISS de l'utilisateur.
-Toujours en suivant la même logique, l'entité faible carte contient son attribut identifiant lié au NISS de l'utilisateur, et la clé de la table est formée de la combinaison NISS - numéro de carte.
+Toujours en suivant la même logique, l'entité faible carte contient son attribut d'association identifiante, lié au NISS de l'utilisateur, et la clé de la table est formée de la combinaison NISS - numéro de carte; la table transaction\_financiere contient l'attribut qui référence categorie\_tf.nom\_tf; et tf\_carte contient les références à transaction\_financière.num\_tf et à carte.numero\_carte. 
+
+\textbf{A CONFIRMER : } Nous n'avons pas du traduire l'association n-aire entre transaction\_financiere, budget\_mensuel et utilisateur, tout simplement car elle n'est pas nécessaire : la table transaction\_financiere contient déjà toutes les informations de l'association, à savoir l'association num\_tf - budget\_id - niss. Une table séparée représentant le lien entre les trois tables aurait été nécessaire si, par exemple, des données étaient directement liée à l'association "créée".
+
+\textbf{AUTRES JUSTIFICATIONS?}
 
 \begin{figure}[!ht]
 \noindent
@@ -283,8 +290,6 @@ La base des données contient quatre vues qui sont utilisées dans la constructi
 
 Ces vues sont utiles à la gestion et à l’agrégation des données, et permettent notamment d'offrir à l'utilisateur de l'application différents graphiques et informations agrégées sur son budget.
 
-Ce qu'on utilise pour l'historique et les différentes statistiques
-
 \subsubsection{Déclencheurs}
 
 
@@ -311,18 +316,18 @@ S'il choisit de s'inscrire, il est redirigé vers un formulaire d'inscription o�
 \noindent
 \makebox[\textwidth][c]{
 \includegraphics[scale=0.25]{inscription.png}}
-\caption{\footnotesize{Écran inscription Budget Squirrel}}
+\caption{\footnotesize{Écran d'inscription - Budget Squirrel}}
 \end{figure}
 
-Si un utilisateur est déjà inscrit sous le NISS entré, il en est notifié (et a la possibilité de se rediriger vers la page de connexion). Si le NISS n'est pas encore utilisé par un utilisateur, l'enregistrement se fait, l'utilisateur est notifié du succès de ce dernier, et peut se rediriger vers la page de connexion. La vérification de la présence d'un utilisateur utilisant déjà le NISS se fait à deux niveaux : au niveau de la base de données en elle-même, comme nous l'avons vu au dessus, grâce à la contrainte de clé primaire, et également en PHP, en faisant une sélection de la table utilisateur (si la sélection par rapport au niss entrée renvoie un résultat différent de zéro, l'utilisateur est notifié de l'impossibilité de créer un compte avec ce NISS).
+Si un utilisateur est déjà inscrit sous le NISS entré, il en est notifié (et a la possibilité de se rediriger vers la page de connexion). Si le NISS n'est pas encore utilisé par un utilisateur, l'enregistrement se fait, l'utilisateur est notifié du succès de ce dernier, et il peut se rediriger vers la page de connexion. La vérification de la présence d'un utilisateur utilisant déjà le NISS se fait à deux niveaux : au niveau de la base de données en elle-même, comme nous l'avons vu au dessus, grâce à la contrainte de clé primaire, et également en PHP, en faisant une sélection de la table utilisateur (si la sélection par rapport au NISS entrée renvoie un résultat différent de zéro, l'utilisateur est notifié de l'impossibilité de créer un compte avec ce NISS).
 
-La page de connexion, par souci de simplification, est une simple sélection de profil : l'utilisateur a accès à la liste des utilisateurs, sélectionne son profil (nom et prénom) dans la liste , et se connecte. Ensuite, le NISS de l'utilisateur est récupéré par une méthode POST, enregistré par la méthode SESSION et appelé grâce à \verb\session_start();\ à chaque page de l'application où il est enregistré comme connecté).
+La page de connexion, par souci de simplification, est une simple sélection de profil : l'utilisateur a accès à la liste des utilisateurs, sélectionne son profil (nom et prénom) dans la liste, et se connecte. Ensuite, le NISS de l'utilisateur est récupéré par une méthode POST, enregistré par la méthode SESSION et appelé grâce à \verb\session_start();\ à chaque page de l'application où il est enregistré comme connecté.
 
 \begin{figure}[!ht]
 \noindent
 \makebox[\textwidth][c]{
 \includegraphics[scale=0.3]{connexion.png}}
-\caption{\footnotesize{Écran connexion Budget Squirrel}}
+\caption{\footnotesize{Écran de connexion - Budget Squirrel}}
 \end{figure}
 
 Une fois qu'il a sélectionné son profil et choisi de se connecter, l'utilisateur est redirigé vers une page d'accueil. La page d'accueil présente brièvement les différentes pages de l'application. Depuis la barre de navigation, présente sur toutes les pages (sauf celles ou l'utilisateur n'est pas considéré comme connecté), l'utilisateur a accès : à la page d'accueil, à l'historique, à la page d'enregistrement, à la page de statistiques, et à sa page personnelle de profil. Il peut ainsi naviguer librement entre les différentes pages.
