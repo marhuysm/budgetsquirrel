@@ -162,7 +162,7 @@ L'application Budget Squirrel compte 9 écrans, divisés en 4 catégories:
 
 Dans la réalisation d'écrans, des éléments de PHP (76.2 \%), CSS (6.4 \%), HTML (1.9 \%),  et JavaScript (0.1\%) ont été utilisés. Le rapport, quant a lui, a été rédigé en utilisant LaTeX (15.4 \% de notre projet).
 
-Les points suivants présentent succinctement les cas d'utilisation que nous avons mis en place dans le cadre de ce projet.
+Les points suivants présentent succinctement les cas d'utilisation que nous avons définis dans le cadre de ce projet.
 
 \subsubsection{Première connexion au système}
 
@@ -507,11 +507,15 @@ Les informations de session (donc, le NISS sous lequel l'utilisateur est connect
 
 \section{Développement du projet}
 
-Budget Squirrel est une application constituée d'une base des données et d'une interface client. Le design, développement et administration d'une telle application nécessitent donc une chorégraphie particulière, reposant sur des livrables qui doivent être prêts à l'emploi dans une certaine séquence, et qui se trouvent la plupart de temps dans une symbiose étroite. De plus, certaines exigences du projet, établies ou agréées dès le départ, et révisés pendant les séances d'entretien projet, ainsi que certaines contraintes liées à d'autres engagements impératives pour les développeurs se sont vite imposées comme des conditions demandaient une coordination ainsi qu'une communication ouverte et souple au sein du groupe. Le groupe s'est vite mis d'accord sur une division des tâches qui prend en compte les contraintes relatives aux disponibilités de chacune d'entre nous, ainsi qu'aux préférences des techniques et outils des développement, toute en gardant en vue l'impératif d'avoir touché au moins une fois à chaque écran et surtout d'avoir participé en tandem le plus que possible dans les parties couvrant la matière vue au cours.
+Budget Squirrel est une application constituée d'une base des données et d'une interface client.
+Le design, le développement et l'administration d'une telle application nécessitent donc une chorégraphie particulière, reposant sur des livrables qui doivent être prêts à l'emploi dans une certaine séquence, et qui se trouvent la plupart de temps dans une symbiose étroite.
+De plus, certaines exigences du projet, établies ou agréées dès le départ, et révisées pendant les séances de guidance au projet, ainsi que certaines contraintes liées à d'autres engagements impératifs pour les développeurs se sont vite imposées comme des conditions demandant une coordination ainsi qu'une communication ouverte et souple au sein du groupe.
+Notre groupe s'est mis rapidement d'accord sur une division des tâches qui prend en compte les contraintes relatives aux disponibilités de chacune d'entre nous, ainsi qu'aux préférences des techniques et outils des développement, toute en gardant en vue l'impératif d'avoir touché au moins une fois à chaque écran et surtout d'avoir participé en tandem le plus que possible dans les parties couvrant la matière vue au cours.
+Le développement de toutes les parties, de la conception de la base de donnée et des pages de l'application, en passant par le développement PHP, l'écriture de la base de donnée et des scripts SQL, jusqu'à l'écriture de ce rapport, s'est déroulé de manière organique, grâce à l'utilisation d'un repository github et d'un Google Drive commun, et de communications écrites et orales quasi-journalières permettant de faire le point sur notre avancement, nos difficultés, ainsi que l'état du projet.
 
 \subsection{Travail conceptuel et outils employés pour démarrer le projet}
 
-En suivant le calendrier communiqué au cours, le groupe à fait sa proposition de projet le 3 octobre, et a reçu une confirmation pour le deuxième sujet dans un bref délai.
+En suivant le calendrier communiqué au cours, nous avons fait une proposition de projet le 3 octobre, et avons reçu une confirmation pour le deuxième sujet dans un bref délai.
 
 \begin{figure}[!ht]
 \noindent
@@ -520,14 +524,31 @@ En suivant le calendrier communiqué au cours, le groupe à fait sa proposition 
 \caption{\footnotesize{Sujets proposés en vue de développement}}
 \end{figure}
 
-Une fois le choix de projet validé, nous avons commencé le travail de conceptualisation, avec un double-but: la conception d'un modèle entité-association, ainsi qu'une première ébauche d'interface client. Pour nous aider dans le démarche EA, nous avons employé l'application web draw.io, et en ce qui concerne l'interface client, l'outil Figma à été employé dans la construction des wireframes. Le résultat de ce travail s'est matérialisé dans un rapport préliminaire, présenté pour évaluation et validation le 31 octobre. C'est en suivant ce rapport préliminaire  que nous avons par la suite développé les éléments décrits dans les sections 2 et 3 du présent rapport.
+Une fois le choix de projet validé, nous avons commencé le travail de conceptualisation, avec un double objectif: la conception d'un modèle entité-association, ainsi qu'une première ébauche d'interface client.
+Pour nous aider dans la démarche EA, nous avons employé l'application web draw.io\footnote{\url{https://app.diagrams.net/}}.
+En ce qui concerne l'interface client, l'outil Figma\footnote{\url{https://www.figma.com/}} à été employé dans la construction des maquettes.
+Le résultat de ce travail s'est matérialisé dans un rapport préliminaire, présenté pour évaluation et validation le 31 octobre.
+C'est en suivant ce rapport préliminaire  que nous avons par la suite développé les éléments décrits dans les sections 2 et 3 du présent rapport.
  
 \subsection{Design et techniques de travail }
 
-La partie design à été facilité par l'emploi d'une structure html ouverte, que nous avons taillé aux besoins de notre application. Cette étape à rajouté une première couche de complexité en ce qui concerne l'imbrication des langages utilisés, en ajoutant PHP et HTML aux requêtes SQL. Le PHP étant un langage très flexible, il nous a été relativement facile de créer de nombreuses contraintes, et de combiner différentes requêtes SQL pour que l'application réponde exactement comme il faut à tout input de l'utilisateur. 
-Par contre, un des défis que nous avons rencontré durant le développement de ce projet a été l'écriture de données en utilisant du SQL pur, sans l'aide de l'application. Certains éléments, facilement mis en place en PHP, étaient difficiles à traduire en SQL.
-Une deuxième couche de complexité à été rajouté par l'introduction des éléments javascript de visualisation dynamique des données (toggle screen, et graphes dynamiques) et des éléments en SQL d'aggregation des données (vues statistiques). De façon général, une des parties la plus difficile à été d'orchestrer, d'une façon robuste et cohérente, la partie d'insertions, mises à jour, et suppressions, afin d'éviter la perte des données, ou bien le double encodage. Faire le choix entre l'ajout des contraintes au niveau de client, ou bien au niveau de la base des données, ainsi que naviguer les contraintes implémentés, n'était pas toujours facile. Pour parer ces difficultés nous avons employé la technique de programmation en binôme (asynchrone, en utilisant GitHub pour partager les mises à jours au niveau du code, et Teams pour faciliter la communication). La taille restreinte du groupe à particulièrement facilité ce méthode de travail, et nous à permis une prise de décision rapide.
-La section 5 du rapport témoigne sur les choix qui ont été gardés et implémentés au niveau de design d'application.
+La partie design à été facilitée par l'emploi d'une structure CSS ouverte\footnote{le boilerplate CSS Skeleton, \url{http://getskeleton.com/}}, que nous avons taillée aux besoins de notre application et combinée à une structure HTML.
+Ensemble, les parties HTML et CSS du projet reprenaient (et amélioraient) notre premier design réalisé sur Figma.
+La section 5 du rapport témoigne des choix qui ont été gardés et implémentés au niveau de design d'application.
+
+\textbf{Tu avais parlé de structure HTML ouverte, mais j'ai corrigé en parlant de CSS, corrige moi si je me trompe tho!}
+
+L'étape de conception d'une application fonctionnelle a introduit une première couche de complexité en ce qui concerne l'imbrication des langages utilisés, en ajoutant PHP et HTML aux requêtes SQL.
+Le PHP étant un langage très flexible, il nous a été relativement facile de créer de nombreuses contraintes côté client, et de combiner différentes requêtes SQL pour que l'application réponde exactement comme il faut à tout input de l'utilisateur. 
+Par contre, un des défis que nous avons rencontré durant le développement de ce projet a été l'écriture de données en utilisant du SQL pur, sans l'aide de l'application.
+Certains éléments, facilement mis en place en PHP, étaient difficiles à traduire en SQL.
+Ainsi, aux alentours de la moitié du développement, nous avons revu et restreint notre script de création de base de données, afin que, comme l'application, il réponde exactement comme demandé par les contraintes établies dans les sections 2 et 3.
+
+Une deuxième couche de complexité à été rajouté par l'introduction des éléments JavaScript de visualisation dynamique des données (toggle screen, et graphes dynamiques) et des éléments en SQL d'agrégation des données (vues statistiques).
+De manière générale, une des parties la plus difficile à été d'orchestrer, d'une façon robuste et cohérente, la partie d'insertions, mises à jour, et suppressions, afin d'éviter la perte des données, ou bien le double encodage.
+Faire le choix entre l'ajout des contraintes au niveau de client, ou bien au niveau de la base des données, ainsi que naviguer entre les contraintes implémentés, n'a pas toujours été facile.
+Pour parer ces difficultés nous avons employé la technique de programmation en binôme (asynchrone, en utilisant GitHub pour partager les mises à jours au niveau du code, et Teams pour faciliter la communication).
+La taille restreinte du groupe à particulièrement facilité ce méthode de travail, et nous à permis une prise de décision rapide.
 
 \subsection{Quelques scénarios de test }
 

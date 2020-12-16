@@ -63,7 +63,7 @@
 \defcounter {refsection}{0}\relax 
 \contentsline {subsection}{\numberline {6.1}Travail conceptuel et outils employés pour démarrer le projet}{24}{subsection.6.1}%
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {6.2}Design et techniques de travail }{24}{subsection.6.2}%
+\contentsline {subsection}{\numberline {6.2}Design et techniques de travail }{25}{subsection.6.2}%
 \defcounter {refsection}{0}\relax 
 \contentsline {subsection}{\numberline {6.3}Quelques scénarios de test }{25}{subsection.6.3}%
 \defcounter {refsection}{0}\relax 
