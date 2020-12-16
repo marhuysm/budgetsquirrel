@@ -1,5 +1,0 @@
-[0] Config.pm:304> INFO - This is Biber 2.14 (beta)
-[0] Config.pm:307> INFO - Logfile is 'rapportbudgetsquirrel.blg'
-[70] biber:322> INFO - === Wed Dec 16, 2020, 11:35:36
-[83] Biber.pm:415> INFO - Reading 'rapportbudgetsquirrel.bcf'
-[136] Utils.pm:293> WARN - No data sources defined!

@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019/Debian) (preloaded format=pdflatex 2020.4.26)  16 DEC 2020 14:53
+This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019/Debian) (preloaded format=pdflatex 2020.4.26)  16 DEC 2020 17:29
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -855,14 +855,14 @@ Package biblatex Info: Automatic encoding selection.
 \openout4 = `rapportbudgetsquirrel.bcf'.
 
 Package biblatex Info: Trying to load bibliographic data...
-Package biblatex Info: ... file 'rapportbudgetsquirrel.bbl' found.
+Package biblatex Info: ... file 'rapportbudgetsquirrel.bbl' not found.
 
-(./rapportbudgetsquirrel.bbl)
+No file rapportbudgetsquirrel.bbl.
 Package biblatex Info: Reference section=0 on input line 76.
 Package biblatex Info: Reference segment=0 on input line 76.
- ABD: EverySelectfont initializing macros
+ABD: EverySelectfont initializing macros
 LaTeX Info: Redefining \selectfont on input line 76.
-<banner.png, id=88, 1032.85875pt x 158.5925pt>
+<banner.png, id=116, 1032.85875pt x 158.5925pt>
 File: banner.png Graphic file (type png)
 <use banner.png>
 Package pdftex.def Info: banner.png  used on input line 91.
@@ -899,185 +899,241 @@ been already used, duplicate ignored
 l.122 \newpage
                [1]
 LaTeX Font Info:    Trying to load font information for T1+cmtt on input line 1
-36.
+37.
  (/usr/share/texlive/texmf-dist/tex/latex/base/t1cmtt.fd
 File: t1cmtt.fd 2019/12/16 v2.5j Standard LaTeX font definitions
 )
 LaTeX Font Info:    Font shape `FMX/futm/m/n' will be
-(Font)              scaled to size 9.19998pt on input line 137.
+(Font)              scaled to size 9.19998pt on input line 139.
 LaTeX Font Info:    Font shape `FMX/futm/m/n' will be
-(Font)              scaled to size 6.99199pt on input line 137.
+(Font)              scaled to size 6.99199pt on input line 139.
 LaTeX Font Info:    Font shape `FMX/futm/m/n' will be
-(Font)              scaled to size 5.51999pt on input line 137.
+(Font)              scaled to size 5.51999pt on input line 139.
 LaTeX Font Info:    Font shape `U/futm/m/n' will be
-(Font)              scaled to size 9.19998pt on input line 137.
+(Font)              scaled to size 9.19998pt on input line 139.
 LaTeX Font Info:    Font shape `U/futm/m/n' will be
-(Font)              scaled to size 6.99199pt on input line 137.
+(Font)              scaled to size 6.99199pt on input line 139.
 LaTeX Font Info:    Font shape `U/futm/m/n' will be
-(Font)              scaled to size 5.51999pt on input line 137.
+(Font)              scaled to size 5.51999pt on input line 139.
 
-Underfull \hbox (badness 1264) in paragraph at lines 136--138
+Underfull \hbox (badness 1264) in paragraph at lines 137--140
 []\T1/futs/m/n/12 En an-nexe à ce rap-port, vous trou-ve-rez deux fi-chiers sql
  : [][]\T1/cmtt/m/n/12 initdb.sql[]\T1/futs/m/n/12 , qui
  []
 
-[2] [3]
-Underfull \hbox (badness 10000) in paragraph at lines 178--182
+[2] [3] [4]
+Underfull \hbox (badness 10000) in paragraph at lines 197--201
 
  []
 
-[4]
-<schema_ea_final_v2.png, id=144, 866.23625pt x 910.40125pt>
+[5]
+<schema_ea_final_v2.png, id=185, 866.23625pt x 910.40125pt>
 File: schema_ea_final_v2.png Graphic file (type png)
 <use schema_ea_final_v2.png>
-Package pdftex.def Info: schema_ea_final_v2.png  used on input line 188.
+Package pdftex.def Info: schema_ea_final_v2.png  used on input line 207.
 (pdftex.def)             Requested size: 519.74577pt x 546.24496pt.
- [5] [6pdfTeX warning (ext4): destination with the same identifier (name{figure
+ [6] [7pdfTeX warning (ext4): destination with the same identifier (name{figure
 .1}) has been already used, duplicate ignored
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
-l.202 ...carte, +underline[niss_util], is_deleted)
+l.221 ...carte, +underline[niss_util], is_deleted)
                                                    <./schema_ea_final_v2.png>]
-[7]
-<materialisation.png, id=163, 697.60625pt x 607.26875pt>
+[8]
+<materialisation.png, id=203, 697.60625pt x 607.26875pt>
 File: materialisation.png Graphic file (type png)
 <use materialisation.png>
-Package pdftex.def Info: materialisation.png  used on input line 257.
+Package pdftex.def Info: materialisation.png  used on input line 276.
 (pdftex.def)             Requested size: 348.80226pt x 303.63364pt.
- [8] [9pdfTeX warning (ext4): destination with the same identifier (name{figure
-.2}) has been already used, duplicate ignored
+ [9] [10pdfTeX warning (ext4): destination with the same identifier (name{figur
+e.2}) has been already used, duplicate ignored
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
-l.286 \item s
-             tat\textunderscore depenses\textunderscore revenus\textundersco...
- <./materialisation.png>] [10]
-<index.png, id=182, 1425.325pt x 692.5875pt>
+l.293 
+       <./materialisation.png>]
+Underfull \hbox (badness 1286) in paragraph at lines 294--298
+\T1/futs/m/n/12 c'est le cas pour la contrainte [][]\T1/cmtt/m/n/12 carte.uc_ca
+rte[]\T1/futs/m/n/12 , [][]\T1/cmtt/m/n/12 utilisateur.uk_utilisateur[]\T1/futs
+/m/n/12 ,
+ []
+
+
+Underfull \hbox (badness 2368) in paragraph at lines 294--298
+\T1/futs/m/n/12 et [][]\T1/cmtt/m/n/12 uc_budget_mensuel []\T1/futs/m/n/12 . Da
+ns la table [][]\T1/cmtt/m/n/12 budget_mensuel []\T1/futs/m/n/12 comme dans la 
+table
+ []
+
+
+Underfull \hbox (badness 1622) in paragraph at lines 299--300
+[]\T1/futs/m/n/12 Nous avons éga-le-ment ajouté quelques contraintes liées à la
+ notre ap-pli-ca-
+ []
+
+
+Underfull \hbox (badness 3724) in paragraph at lines 299--300
+\T1/futs/m/n/12 tion. Par exemple, nous don-nons une va-leur par dé-faut à l'ur
+l de la photo
+ []
+
+
+Underfull \hbox (badness 1629) in paragraph at lines 299--300
+\T1/futs/m/n/12 ([][]\T1/cmtt/m/n/12 utilisateur.photo[]\T1/futs/m/n/12 ), et n
+ous éta-blis-sons que les seules va-leurs ac-cep-tées par
+ []
+
+[11]
+Underfull \hbox (badness 2443) in paragraph at lines 338--339
+[]\T1/futs/m/n/12 le droit à la sé-lec-tion et à l'in-ser-tion dans la table []
+[]\T1/cmtt/m/n/12 budget_mensuel []\T1/futs/m/n/12 (le
+ []
+
+
+Underfull \hbox (badness 6047) in paragraph at lines 338--339
+\T1/futs/m/n/12 droit à la sé-lec-tion n'est pas réel-le-ment né-ces-saire, vu 
+que le trig-ger
+ []
+
+[12]
+Underfull \hbox (badness 10000) in paragraph at lines 341--342
+[]\T1/futs/m/n/12 le droit de sé-lec-tion des dif-fé-rentes vues que nous avons
+ créées
+ []
+
+
+Underfull \hbox (badness 1859) in paragraph at lines 341--342
+\T1/futs/m/n/12 ([][]\T1/cmtt/m/n/12 stat_depenses_revenus_mois[]\T1/futs/m/n/1
+2 , [][]\T1/cmtt/m/n/12 historique_v[]\T1/futs/m/n/12 , [][]\T1/cmtt/m/n/12 sta
+t_cat []\T1/futs/m/n/12 et [][]\T1/cmtt/m/n/12 stat_types[]\T1/futs/m/n/12 ),
+ []
+
+[13]
+<index.png, id=231, 1425.325pt x 692.5875pt>
 File: index.png Graphic file (type png)
 <use index.png>
-Package pdftex.def Info: index.png  used on input line 309.
+Package pdftex.def Info: index.png  used on input line 359.
 (pdftex.def)             Requested size: 356.33038pt x 173.14644pt.
-<inscription.png, id=183, 1441.385pt x 688.5725pt>
+<inscription.png, id=232, 1441.385pt x 688.5725pt>
 File: inscription.png Graphic file (type png)
 <use inscription.png>
-Package pdftex.def Info: inscription.png  used on input line 318.
+Package pdftex.def Info: inscription.png  used on input line 368.
 (pdftex.def)             Requested size: 360.34537pt x 172.1427pt.
- [11pdfTeX warning (ext4): destination with the same identifier (name{figure.3}
+ [14pdfTeX warning (ext4): destination with the same identifier (name{figure.3}
 ) has been already used, duplicate ignored
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
-l.323 
+l.373 
       pdfTeX warning (ext4): destination with the same identifier (name{figure.
 4}) has been already used, duplicate ignored
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
-l.323 
+l.373 
        <./index.png> <./inscription.png>]
-<connexion.png, id=192, 1435.3625pt x 687.56876pt>
+<connexion.png, id=241, 1435.3625pt x 687.56876pt>
 File: connexion.png Graphic file (type png)
 <use connexion.png>
-Package pdftex.def Info: connexion.png  used on input line 329.
+Package pdftex.def Info: connexion.png  used on input line 379.
 (pdftex.def)             Requested size: 430.61208pt x 206.27222pt.
- [12pdfTeX warning (ext4): destination with the same identifier (name{figure.5}
+ [15pdfTeX warning (ext4): destination with the same identifier (name{figure.5}
 ) has been already used, duplicate ignored
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
-l.335 \newpage
+l.385 \newpage
                <./connexion.png>]
-<homepage.png, id=200, 386.44376pt x 665.48625pt>
+<homepage.png, id=248, 386.44376pt x 665.48625pt>
 File: homepage.png Graphic file (type png)
 <use homepage.png>
-Package pdftex.def Info: homepage.png  used on input line 339.
+Package pdftex.def Info: homepage.png  used on input line 389.
 (pdftex.def)             Requested size: 347.79616pt x 598.93208pt.
- [13pdfTeX warning (ext4): destination with the same identifier (name{figure.6}
+ [16pdfTeX warning (ext4): destination with the same identifier (name{figure.6}
 ) has been already used, duplicate ignored
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
-l.343 \newpage
+l.393 \newpage
                <./homepage.png>]
-<profil.png, id=208, 1431.3475pt x 902.37125pt>
+<profil.png, id=256, 1431.3475pt x 902.37125pt>
 File: profil.png Graphic file (type png)
 <use profil.png>
-Package pdftex.def Info: profil.png  used on input line 349.
+Package pdftex.def Info: profil.png  used on input line 399.
 (pdftex.def)             Requested size: 357.836pt x 225.59225pt.
-<enregistrement.png, id=209, 1442.38875pt x 644.4075pt>
+<enregistrement.png, id=257, 1442.38875pt x 644.4075pt>
 File: enregistrement.png Graphic file (type png)
 <use enregistrement.png>
-Package pdftex.def Info: enregistrement.png  used on input line 358.
+Package pdftex.def Info: enregistrement.png  used on input line 408.
 (pdftex.def)             Requested size: 360.5963pt x 161.10147pt.
- [14pdfTeX warning (ext4): destination with the same identifier (name{figure.7}
+ [17pdfTeX warning (ext4): destination with the same identifier (name{figure.7}
 ) has been already used, duplicate ignored
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
-l.362 \newpage
+l.412 \newpage
                <./profil.png>]
-<historique.png, id=217, 1444.39626pt x 679.53876pt>
+<historique.png, id=265, 1444.39626pt x 679.53876pt>
 File: historique.png Graphic file (type png)
 <use historique.png>
-Package pdftex.def Info: historique.png  used on input line 368.
+Package pdftex.def Info: historique.png  used on input line 418.
 (pdftex.def)             Requested size: 361.09818pt x 169.88428pt.
- [15pdfTeX warning (ext4): destination with the same identifier (name{figure.8}
+ [18pdfTeX warning (ext4): destination with the same identifier (name{figure.8}
 ) has been already used, duplicate ignored
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
-l.374 Ã€
+l.424 Ã€
          tout moment, l'utilisateur peut Ã©galement se dÃ©connecter, en cliq...
 pdfTeX warning (ext4): destination with the same identifier (name{figure.9}) ha
 s been already used, duplicate ignored
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
-l.374 Ã€
+l.424 Ã€
          tout moment, l'utilisateur peut Ã©galement se dÃ©connecter, en cliq...
  <./enregistrement.png> <./historique.png>]
-<stat.png, id=226, 380.42125pt x 706.64pt>
+<stat.png, id=275, 380.42125pt x 706.64pt>
 File: stat.png Graphic file (type png)
 <use stat.png>
-Package pdftex.def Info: stat.png  used on input line 379.
+Package pdftex.def Info: stat.png  used on input line 429.
 (pdftex.def)             Requested size: 266.29305pt x 494.64462pt.
- [16pdfTeX warning (ext4): destination with the same identifier (name{figure.10
+ [19pdfTeX warning (ext4): destination with the same identifier (name{figure.10
 }) has been already used, duplicate ignored
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
-l.383 \newpage
+l.433 \newpage
                <./stat.png>]
-<proposal.png, id=233, 771.88374pt x 195.73125pt>
+<proposal.png, id=282, 771.88374pt x 195.73125pt>
 File: proposal.png Graphic file (type png)
 <use proposal.png>
-Package pdftex.def Info: proposal.png  used on input line 396.
+Package pdftex.def Info: proposal.png  used on input line 446.
 (pdftex.def)             Requested size: 432.25194pt x 109.60873pt.
- [17pdfTeX warning (ext4): destination with the same identifier (name{figure.11
+ [20pdfTeX warning (ext4): destination with the same identifier (name{figure.11
 }) has been already used, duplicate ignored
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
-l.408 
-       <./proposal.png>] [18] [19]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 445.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 445.
+l.458 
+       <./proposal.png>] [21] [22]
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 495.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 495.
  (./rapportbudgetsquirrel.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 445.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 445.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 495.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 495.
 Package rerunfilecheck Info: File `rapportbudgetsquirrel.out' has not changed.
-(rerunfilecheck)             Checksum: E0C53A105459AB9DD485CE936FE8654F;1587.
+(rerunfilecheck)             Checksum: 42E985186BF087915F32AE5DB9DF74CF;2290.
 Package logreq Info: Writing requests to 'rapportbudgetsquirrel.run.xml'.
 \openout1 = `rapportbudgetsquirrel.run.xml'.
 
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 445.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 495.
  ) 
 Here is how much of TeX's memory you used:
- 16206 strings out of 481239
- 273685 string characters out of 5920377
- 954245 words of memory out of 5000000
- 31146 multiletter control sequences out of 15000+600000
+ 16221 strings out of 481239
+ 273924 string characters out of 5920377
+ 954250 words of memory out of 5000000
+ 31153 multiletter control sequences out of 15000+600000
  617128 words of font info for 92 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  35i,8n,35p,1208b,1800s stack positions out of 5000i,500n,10000p,200000b,80000s
@@ -1093,10 +1149,10 @@ e1/adobe/utopia/putb8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/adobe/uto
 pia/putr8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/adobe/utopia/putri8a.
 pfb></usr/share/texmf/fonts/type1/public/cm-super/sftt1000.pfb></usr/share/texm
 f/fonts/type1/public/cm-super/sftt1200.pfb>
-Output written on rapportbudgetsquirrel.pdf (20 pages, 2727054 bytes).
+Output written on rapportbudgetsquirrel.pdf (23 pages, 2740300 bytes).
 PDF statistics:
- 286 PDF objects out of 1000 (max. 8388607)
- 232 compressed objects within 3 object streams
- 63 named destinations out of 1000 (max. 500000)
- 229 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 337 PDF objects out of 1000 (max. 8388607)
+ 280 compressed objects within 3 object streams
+ 73 named destinations out of 1000 (max. 500000)
+ 285 words of extra memory for PDF output out of 10000 (max. 10000000)
 

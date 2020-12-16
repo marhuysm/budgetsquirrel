@@ -54,7 +54,7 @@
 
 \newcolumntype{R}[1]{>{\RaggedRight}p{#1}}
 
-\title{Projet STIC-B505 : Budgetsquirrel, une application de gestion de budget} 
+\title{Projet STIC-B505 : Budget Squirrel, une application de gestion de budget} 
 \author{Milena Albu \and Marie Huysman} % vos prénom et nom
 \date{} % pas de date
 
@@ -127,24 +127,28 @@ Année académique 2020--2021 % vérifiez que l'année est correcte !
 %Notes de bas de page \footnote{informations suppl.}
 
 Dans le cadre de ce projet, nous avons choisi de développer une application appartenant au domaine de la gestion financière et permettant la gestion de budget à une échelle personnelle.
-Le rapport ci-dessous en documente le processus de design et conception, ainsi que les développements successif et les améliorations apportées à l'idée de base décrite dans le rapport précédent.
+Le rapport ci-dessous documente le processus de design et de conception, ainsi que les développements successifs et les améliorations apportées à l'idée originale décrite dans le rapport précédent.
+
 Après une brève présentation du domaine d'application, nous présenterons notre schéma conceptuel, ainsi que sa traduction en schéma relationnel.
 Ensuite, nous décrirons les différents éléments des scripts SQL que nous avons mis en place : clés uniques et étrangères, contraintes au niveau de la base des données, checks et triggers, ainsi que privilèges d'accès.
-Par après, nous exposerons brièvement l'application Web que nous avons développée. 
+Cette description sera suivie d'une brève présentation de l'application Web que nous avons développée. 
 Nous terminerons ce rapport en offrant quelques informations sur le développement du projet, ainsi qu'en exposant les conclusions que nous avons tirées lors de la finalisation de ce dernier.
 
 En annexe à ce rapport, vous trouverez deux fichiers sql : \verb\initdb.sql\, qui contient le script permettant la création de la base de données en elle-même, et \verb\basicdata.sql\, qui peuple la base de données de quelques informations, permettant ainsi de parcourir les différentes pages de l'application ainsi que la base de données afin d'en comprendre leur fonctionnement. 
-Toujours en annexe à ce rapport, nous avons joint les pages de notre application (9 en tout) : \verb\index.html\, \verb\inscription.php\, \verb\connexion.php\, \verb\homepage.php\, \verb\profil.php\, \verb\historique.php\, \verb\enregistrement.php\, \verb\stat.php\, et \verb\logout.php\. S'y trouvent également un dossier css contenant le boilerplate CSS Skeleton\footnote{\url{http://getskeleton.com/}}ainsi que les modifications que nous y avons apporté, un dossier img contenant les images utilisées dans l'application, et un fichier \verb\utils.js\ contenant une fonction JavaScript de redirection de page.
+Toujours en annexe à ce rapport, nous avons joint les pages de notre application (9 en tout) : \verb\index.html\, \verb\inscription.php\, \verb\connexion.php\, \verb\homepage.php\, \verb\profil.php\, \verb\historique.php\, \verb\enregistrement.php\, \verb\stat.php\, et \verb\logout.php\. 
+S'y trouvent également un dossier css contenant le boilerplate CSS Skeleton\footnote{\url{http://getskeleton.com/}} ainsi que les modifications que nous y avons apporté, un dossier img contenant les images utilisées dans l'application, et un fichier \verb\utils.js\ contenant une fonction JavaScript de redirection de page.
 
 \textbf{NOTE : pour le zip final à rendre, ne pas inclure le readme, ni le dossier du rapport latex.}
 
-\subsection{Domaine d'application}
+\subsection{Domaine d'application et utilisateurs cibles}
 
-Une application de gestion de budget est une application qui permet, au minimum, l'enregistrement ainsi que la suppression des transactions dans une base des données, la gestion des utilisateurs et de leur budget, et la possibilité d'agréger une vue d'ensemble sur les transactions financières enregistrés.
-Afin de mettre en œuvre une telle application, les développeurs doivent connaître les besoins minimaux des utilisateurs potentiels, ainsi que les différentes techniques de programmation à employer pour répondre de manière pertinente, voir optimale, à ces besoins.
-Dans le cas de Budget Squirrel, l'application se focalise sur les utilisateurs qui n’ont pas nécessairement une expertise spécifique avec le planning financier, mais qui souhaitent néanmoins avoir une vue d’ensemble, ainsi qu’un suivi quotidien, de leurs dépenses.
+Une application de gestion de budget est une application qui permet, au minimum, l'enregistrement ainsi que la suppression des transactions dans une base des données, la gestion des utilisateurs et de leur budget, et la possibilité d'agréger une vue d'ensemble sur les transactions financières enregistrées.
+Afin de mettre en œuvre une telle application, il est nécessaire de connaître les besoins minimaux des utilisateurs potentiels, ainsi que les différentes techniques de programmation à employer pour répondre de manière pertinente, voir optimale, à ces besoins.
+
+Dans le cas de Budget Squirrel, l'application se focalise sur les utilisateurs qui n’ont pas nécessairement une expertise spécifique en ce qui concerne planning financier, mais qui souhaitent néanmoins avoir une vue d’ensemble, ainsi qu’un suivi quotidien, de leurs dépenses et leurs revenus, afin de mieux les analyser de manière rétrospective, mais aussi prévisionnelle.
 L'application est à usage restreint et, dans sa version actuelle (en usage libre, lié aux profils de ses utilisateurs, mais sans être protégée par un système de mot de passe) nous recommandons qu'elle soit employée au sein d'une réseau domestique, et sur un serveur local.
-L'accès de l'application à la base de données est restreint, mais l'architecture de la base de données est 
+
+\subsection{Cas d'utilisation du système}
 
 Comme convenu dans le rapport précédent, l'application sait gérer plusieurs cas d'utilisation: connexion et déconnexion, création et modification de profil, enregistrement et suppression des transactions, vue historique propre à chaque utilisateur, et accessible en mode consultation ainsi qu'en mode édition (permet la suppression des transactions listées), et vue statistique avec visualisation dynamique des données liées aux transactions par mois (graphique en barres), et par catégorie (diagramme circulaire).
 
@@ -157,6 +161,20 @@ L'application Budget Squirrel compte 9 écrans, divisés en 4 catégories:
 \end{enumerate}
 
 Dans la réalisation d'écrans, des éléments de PHP (76.2 \%), CSS (6.4 \%), HTML (1.9 \%),  et JavaScript (0.1\%) ont été utilisés. Le rapport, quant a lui, a été rédigé en utilisant LaTeX (15.4 \% de notre projet).
+
+Les points suivants présentent succinctement les cas d'utilisation que nous avons mis en place dans le cadre de ce projet.
+
+\subsubsection{Première connexion au système}
+
+\subsubsection{Connexion et déconnexion}
+
+\subsubsection{Gestion du profil}
+
+\subsubsection{Enregistrement de transactions financières}
+
+\subsubsection{Consultation de son historique personnel de transactions et suppression de transactions}
+
+\subsubsection{Consultation de statistiques}
 
 \newpage
 
@@ -181,7 +199,7 @@ Ainsi, pour proposer une application plus flexible, nous avons fait le choix de 
 La clôture d'un budget n'est donc pas possible.
 Cette suppression reste mineure, car l'application se concentre principalement sur la gestion du budget et des différentes transactions, que se soit de manière rétrospective, ou de manière prédictive. L'objectif principal reste atteint, et la gestion des différents budget n'en est que plus souple pour l'utilisateur.\\
 
-\textbf{SCHEMA : ajouter contrainte (t,e) de l'héritage + faire dernières régularisations p/r au reste du contenu}
+\textbf{SCHEMA : ajouter contrainte (t,e) de l'héritage + faire dernières régularisations par rapport au reste du contenu}
 
 \begin{figure}[!ht]
 \noindent
@@ -225,7 +243,7 @@ tf_carte(+underline[num_tf], +underline[numero_carte])
 categorie_tf(+underline[nom_tf], description_tf)
 \end{Verbatim}
 
-Contraintes définies :
+Voici les contraintes que nous avons définies dans cette traduction, afin qu'elle corresponde à notre schéma entité-association :
 
 \begin{itemize}
 \item utilisateur.niss ne peut contenir que 11 caractères, spécifiquement 11 chiffres, pas plus, ni moins;
@@ -248,9 +266,9 @@ L'association un à plusieurs entre utilisateur et budget\_mensuel a été tradu
 Il en est de même pour la table transaction\_financière, à laquelle nous avons ajouté une référence et au budget\_mensuel, et au NISS de l'utilisateur.
 Toujours en suivant la même logique, l'entité faible carte contient son attribut d'association identifiante, lié au NISS de l'utilisateur, et la clé de la table est formée de la combinaison NISS - numéro de carte; la table transaction\_financiere contient l'attribut qui référence categorie\_tf.nom\_tf; et tf\_carte contient les références à transaction\_financière.num\_tf et à carte.numero\_carte. 
 
-\textbf{A CONFIRMER : } Nous n'avons pas dû traduire l'association n-aire entre transaction\_financiere, budget\_mensuel et utilisateur, tout simplement car elle n'est pas nécessaire : la table transaction\_financiere contient déjà toutes les informations de l'association, à savoir l'association num\_tf - budget\_id - niss. Une table séparée représentant le lien entre les trois tables aurait été nécessaire si, par exemple, des données étaient directement liée à l'association "créée".
+\textbf{A CONFIRMER : } Nous n'avons pas dû traduire l'association n-aire entre transaction\_financiere, budget\_mensuel et utilisateur, tout simplement car elle n'est pas nécessaire : la table transaction\_financiere contient déjà toutes les informations de l'association, à savoir l'association num\_tf - budget\_id - niss. Une table séparée représentant le lien entre les trois tables aurait été nécessaire si, par exemple, des données étaient directement liée à l'association qui les lie.
 
-\textbf{AUTRES JUSTIFICATIONS?}
+\textbf{AUTRES JUSTIFICATIONS À AJOUTER?}
 
 \begin{figure}[!ht]
 \noindent
@@ -264,19 +282,32 @@ Toujours en suivant la même logique, l'entité faible carte contient son attrib
 
 \section{Code SQL}
 
+Dans cette section, nous présentons les différents éléments de SQL qui sont présents dans notre projet, ainsi que leur utilité respective.
+Comme décrit dans notre introduction, vous trouverez en annexe deux fichiers SQL : \verb\initdb.sql\, et \verb\basicdata.sql\. Le premier contient le script de création des tables, la mise en place des déclencheurs, la création des vues, et enfin la définition des utilisateurs et de leurs privilèges respectifs. Le second peuple les différentes tables, en ajoutant : 3 utilisateurs, 2 ou 3 cartes par utilisateur, les catégories de transactions et leur descriptions, et quelques transactions pour chaque utilisateurs.
+Ainsi, une fois les deux scripts SQL exécutés, l'application peut être utilisée et des données d'exemple sont déjà disponibles.
+
 \subsection{Description du code de création de la base de données}
 
-Description du code sql de création de la db 
-!! La création de la db doit : créer des tables , avoir des contraintes de clé primaire, unique et externe, avoir des contraintes sous forme de prédicat de table et de colonne, avoir des procédures stockées et des déclencheurs
+Après une requête de suppression de la base de données budgetsquirrel si elle existe déjà, une nouvelle base de données du même nom est créée et appelée à être utilisée.
+Les premières requêtes sont des \verb\CREATE TABLE\, et permettent de créer les tables qui sont nécessaires à l'utilisation de l'application. Elles correspondent à notre schéma logique relationnel. Ainsi, le script SQL crée les tables suivantes : \verb\utilisateur\, \verb\carte\, \verb\budget_mensuel\, \verb\categorie_tf\, \verb\transaction_financiere\, \verb\tf_cash\, \verb\tf_virement\, et \verb\tf_carte\.
+
+Les contraintes prévues par le schéma logique relationnel pouvant être traduites directement dans la création des tables ont été établies. Tous les attributs obligatoires sont déclarés comme non nuls, la longueur de utilisateur.niss est fixée à 11, la longueur de carte.numero\_carte est fixée entre 16 et 17.
+Toutes les clés primaires et étrangères sont également déclarées dans cette partie du script.
+Lorsque cela est nécessaire, nous ajoutons des contraintes \verb\UNIQUE\, toujours pour respecter notre schéma : c'est le cas pour la contrainte \verb\carte.uc_carte\, \verb\utilisateur.uk_utilisateur\, et \verb\uc_budget_mensuel\ .
+Dans la table \verb\budget_mensuel\ comme dans la table \verb\transaction_financiere\, nous utilisons la commande \verb\AUTO_INCREMENT\ afin d'établir que les clés primaires de ces tables, à savoir \verb\budget_mensuel.budget_id\ et \verb\transaction_financiere.num_tf\, sont des colonnes numériques qui sont incrémentées automatiquement à chaque insertion.
+
+Nous avons également ajouté quelques contraintes liées à la notre application. Par exemple, nous donnons une valeur par défaut à l'url de la photo (\verb\utilisateur.photo\), et nous établissons que les seules valeurs acceptées par l'attribut utilisateur.photo sont celles correspondant aux photos de notre dossier d'images. De manière similaire, nous établissons que les seules valeurs acceptées pour \verb\carte.type_carte\ sont Visa, Mastercard, Visa Prepaid, et Maestro. De plus, une carte créée est par défaut considérée comme non supprimée, ainsi, carte.is\_deleted a une valeur par défaut de 0. 
 
 \subsection{Éléments de SQL avancé}
 
 \subsubsection{Contraintes garanties par des check}
 
+Comme décrit précédemment, nous faisont appel à des \verb\CHECK\ afin de vérifier certaines des valeurs dans notre base de données.
+Il y a en tout 5 checks : \verb\chk_niss\, qui vérifie que le NISS enregistré fait bien la bonne longueur (exactement 11 chiffres) \verb\chk_photo\, qui vérifie que la valeur de la photo est bien une de celles que nous avons choisie, \verb\chk_numero_carte_low\ et \verb\chk_numero_carte_high\, qui vérifient que le numéro de carte entré correspond bien à la longueur demandée (entre 16 et 17 chiffres), et enfin, \verb\chk_type_carte\, qui vérifie que \verb\type_carte\ correspond bien aux différents types de cartes définis précédemment. 
+
 \subsubsection{Requêtes de consultation}
 
 \subsubsection{Requêtes de mise à jour}
-
 
 \subsubsection{Vues utilisées}
 
@@ -296,7 +327,23 @@ Ces vues sont utiles à la gestion et à l’agrégation des données, et permet
 
 \subsubsection{Droits d'accès}
 
+Enfin, le script \verb\initdb.sql\ définit également deux utilisateurs principaux, ainsi que leurs privilèges.
+Nous y définissons deux utilisateurs : \verb\utilisateur_app\, qui est celui qui est appelé tout au long de l'application, et \verb\utilisateur_admin_db\, qui, comme son nom l'indique, est l'utilisateur-administrateur.
+Alors que ce dernier a un accès illimité à la base de données (défini grâce à \verb\GRANT ALL PRIVILEGES\), \verb\utilisateur_app\ ne peut faire que les actions définies par le script.
+
+Les actions définies sont les suivantes: 
+\begin{itemize}
+\item L'insertion, la modification et la sélection de lignes pour la table \verb\utilisateur\, ce qui lui permet de s'inscrire, de modifier ses informations, et de pouvoir avoir accès à la liste des utilisateurs (cf. écran de connexion) ainsi qu'à ses informations;
+\item le droit de sélection et d'insertion sur la table \verb\transaction_financiere\, ce qui lui permet de visualiser et d'insérer de nouvelles transactions financières;
+\item le droit à la sélection, la modification et l'insertion pour la table carte, afin de pouvoir utiliser, supprimer/désactiver, et créer ses cartes
+\item   le droit de sélection des différentes vues que nous avons créées (\verb\stat_depenses_revenus_mois\, \verb\historique_v\, \verb\stat_cat\ et \verb\stat_types\), afin d'avoir accès aux parties de l'application qui rassemblent des statistiques sur ses transactions;
+\end{itemize}
+
+
+\textbf{SUPPRIMER doublon GRANT INSERT on budgetsquirrel.utilisateur to app}
+
 \newpage
+
 \section{Description de l'application Web}
 
 L'application web que nous avons développé a pour objectif de permettre aux utilisateurs de s'inscrire, d'enregistrer leurs transactions, de consulter leur historique par mois, ainsi que des statistiques sur la répartition de leurs dépenses, de leur revenus, et un bilan total de leur budget. 
