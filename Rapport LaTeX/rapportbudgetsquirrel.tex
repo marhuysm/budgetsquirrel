@@ -283,7 +283,8 @@ Toujours en suivant la même logique, l'entité faible carte contient son attrib
 \section{Code SQL}
 
 Dans cette section, nous présentons les différents éléments de SQL qui sont présents dans notre projet, ainsi que leur utilité respective.
-Comme décrit dans notre introduction, vous trouverez en annexe deux fichiers SQL : \verb\initdb.sql\, et \verb\basicdata.sql\. Le premier contient le script de création des tables, la mise en place des déclencheurs, la création des vues, et enfin la définition des utilisateurs et de leurs privilèges respectifs. Le second peuple les différentes tables, en ajoutant : 3 utilisateurs, 2 ou 3 cartes par utilisateur, les catégories de transactions et leur descriptions, et quelques transactions pour chaque utilisateurs.
+Comme décrit dans notre introduction, vous trouverez en annexe deux fichiers SQL : \verb\initdb.sql\, et \verb\basicdata.sql\. Le premier contient le script de création des tables, la mise en place des déclencheurs, la création des vues, et enfin la définition des utilisateurs et de leurs privilèges respectifs. Le second peuple les différentes tables, en ajoutant : 3 utilisateurs, 2 ou 3 cartes par utilisateur, les catégories de transaction et leur description, et quelques transactions pour chaque utilisateurs.
+
 Ainsi, une fois les deux scripts SQL exécutés, l'application peut être utilisée et des données d'exemple sont déjà disponibles.
 
 \subsection{Description du code de création de la base de données}
@@ -324,6 +325,28 @@ Ces vues sont utiles à la gestion et à l’agrégation des données, et permet
 
 \subsubsection{Déclencheurs}
 
+Afin de conserver toutes les contraintes définies dans notre schéma, nous avons défini 7 déclencheurs : \verb\trg_before_ajout_tf\, \verb\trg_after_ajout_tf\, \verb\trg_after_suppr_tf\, \verb\trg_before_ajout_tf_carte\, \verb\trg_before_ajout_tf_carte\, \verb\trg_before_ajout_tf_cash\, et \verb\trg_before_ajout_tf_virement\. La création de ces déclencheurs suit directement la création des tables, et permet, entre autre, d'établir les contraintes les plus complexes (qui incluent plusieurs tables). Nous expliquons le fonctionnement de chacun des ces déclencheurs dans les points suivants.
+
+\paragraph{Vérifier les informations avant l'ajout d'une transaction financière}\mbox{}\\
+Le déclencheur \verb\trg_before_ajout_tf\, qui se fait avant chaque insertion sur la table financière, permet de vérifier plusieurs informations.
+Tout d'abord, une vérification sur la date est faite : si la date de transaction est antérieure à la date de naissance de l'utilisateur, un message d'erreur est renvoyé et la transaction de s'enregistre pas.
+Ensuite, l'objectif est de trouver le \verb\budget_id\ à lier à la transaction financière à créer.
+Pour ce faire, nous vérifions d'abord, via un \verb\SELECT\, s'il existe déjà un \verb\budget_mensuel\ correspondant à la combinaison de mois, d'année et de NISS.
+Si ce n'est pas le cas (que le résultat \verb\COUNT(*)\ = 0), le \verb\budget_mensuel\ correspondant est créé.
+Ensuite, dans tous les cas, le \verb\budget_id\ du \verb\budget_mensuel\ correspondant est sélectionné, et défini comme à écrire dans l'insertion de la nouvelle \verb\transaction_financiere\.
+
+\paragraph{Écrire (et réécrire) le bilan du budget mensuel en cas d'insertion ou de suppression dans la table des transactions financières}\mbox{}\\
+Deux déclencheurs sont utilisés pour que \verb\budget_mensuel.bilan\ corresponde toujours à la bonne somme de transactions : \verb\trg_after_ajout_tf\ et \verb\trg_after_suppr_tf\.
+Dans les deux cas, après une insertion ou une suppression de la table \verb\transaction_financiere\, le résultat \verb\bilan_total_mois\ de la vue\verb\stat_depenses_revenus_mois\ correspondant au \verb\budget_id\ et au \verb\niss_utilisateur\ de l'insertion ou de la suppression est sélectionné, et permet de faire une modification de \verb\budget_mensuel.bilan\.
+
+\paragraph{Vérifier que la carte utilisée lors de la transaction appartient bien à l'utilisateur}\mbox{}\\
+Lors de l'ajout d'une transaction dans la table \verb\tf_carte\, il est important, afin de respecter une des contraintes que nous avions définies, de vérifier que la carte qui est utilisée appartient bien à l'utilisateur qui a fait la transaction.
+Le déclencheur \verb\trg_before_ajout_tf_carte\, avant l'insertion dans la table enregistrant les transactions par carte, va donc récupérer le NISS présent dans la table des transactions financières créées qui correspond au bon numéro de transaction, et le NISS correspondant à la carte utilisée.
+Si les deux NISS récupérés diffèrent, un message d'erreur s'affiche, et l'enregistrement ne se fait pas dans la table \verb\tf_carte\.
+
+\paragraph{Conserver la contrainte de généralisation totale et exclusive}\mbox{}\\
+Afin d'assurer que les transactions financières ne sont pas écrites plusieurs fois, mais bien une seule, dans une des trois tables qui définissent leur type (\verb\tf_carte\, \verb\tf_virement\ et \verb\tf_cash\), nous utilisons trois triggers :  \verb\trg_before_ajout_tf_carte\, \verb\trg_before_ajout_tf_cash\, et \verb\trg_before_ajout_tf_virement\.
+Chacun de ces déclencheurs fait la même vérification avant ajout. Grâce à des \verb\SELECT\ dans les deux autres tables, s'il existe déjà une ligne qui correspond au numéro de transaction, l'ajout dans la table de type ne se fait pas, et un message apparaît.
 
 \subsubsection{Droits d'accès}
 
