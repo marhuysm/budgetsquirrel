@@ -144,6 +144,7 @@ Une application de gestion de budget est une application qui permet, au minimum,
 Afin de mettre en œuvre une telle application, les développeurs doivent connaître les besoins minimaux des utilisateurs potentiels, ainsi que les différentes techniques de programmation à employer pour répondre de manière pertinente, voir optimale, à ces besoins.
 Dans le cas de Budget Squirrel, l'application se focalise sur les utilisateurs qui n’ont pas nécessairement une expertise spécifique avec le planning financier, mais qui souhaitent néanmoins avoir une vue d’ensemble, ainsi qu’un suivi quotidien, de leurs dépenses.
 L'application est à usage restreint et, dans sa version actuelle (en usage libre, lié aux profils de ses utilisateurs, mais sans être protégée par un système de mot de passe) nous recommandons qu'elle soit employée au sein d'une réseau domestique, et sur un serveur local.
+L'accès de l'application à la base de données est restreint, mais l'architecture de la base de données est 
 
 Comme convenu dans le rapport précédent, l'application sait gérer plusieurs cas d'utilisation: connexion et déconnexion, création et modification de profil, enregistrement et suppression des transactions, vue historique propre à chaque utilisateur, et accessible en mode consultation ainsi qu'en mode édition (permet la suppression des transactions listées), et vue statistique avec visualisation dynamique des données liées aux transactions par mois (graphique en barres), et par catégorie (diagramme circulaire).
 
@@ -235,7 +236,7 @@ Contraintes définies :
 \item transaction\_financiere.date\_tf (et par extension, le mois et l'année de budget\_ mensuel) sont nécessairement ultérieures à utilisateur.date\_naissance;
 \item transaction\_financiere.budget\_id ne peut référencer qu'un budget\_id dont le mois et l'année correspondent à transaction\_ financiere.date\_ tf;
 \item Dans la table tf\_carte, transaction\_financière.num\_tf et carte.numero\_carte référencent obligatoirement le même niss\_util : un utilisateur ne peut qu'utiliser les cartes qui lui sont liées pour les transaction qui lui sont liées;
-\item transaction\_financière.num\_tf doit se retrouver une et une seule fois soit dans la table tf\_carte, soit dans la table tf\_virement, soit dans la table tf\_cash; \textbf{?? est-ce que la db vérifie cela ??}
+\item transaction\_financière.num\_tf doit se retrouver une et une seule fois soit dans la table tf\_carte, soit dans la table tf\_virement, soit dans la table tf\_cash; \textbf{Côté DB, on ne vérifiait pas, j'ai donc ajouté 3 trigger qui le font (1 pour chaque table)}
 \item \textbf{Autres?}
 \end{itemize}
 
@@ -247,7 +248,7 @@ L'association un à plusieurs entre utilisateur et budget\_mensuel a été tradu
 Il en est de même pour la table transaction\_financière, à laquelle nous avons ajouté une référence et au budget\_mensuel, et au NISS de l'utilisateur.
 Toujours en suivant la même logique, l'entité faible carte contient son attribut d'association identifiante, lié au NISS de l'utilisateur, et la clé de la table est formée de la combinaison NISS - numéro de carte; la table transaction\_financiere contient l'attribut qui référence categorie\_tf.nom\_tf; et tf\_carte contient les références à transaction\_financière.num\_tf et à carte.numero\_carte. 
 
-\textbf{A CONFIRMER : } Nous n'avons pas du traduire l'association n-aire entre transaction\_financiere, budget\_mensuel et utilisateur, tout simplement car elle n'est pas nécessaire : la table transaction\_financiere contient déjà toutes les informations de l'association, à savoir l'association num\_tf - budget\_id - niss. Une table séparée représentant le lien entre les trois tables aurait été nécessaire si, par exemple, des données étaient directement liée à l'association "créée".
+\textbf{A CONFIRMER : } Nous n'avons pas dû traduire l'association n-aire entre transaction\_financiere, budget\_mensuel et utilisateur, tout simplement car elle n'est pas nécessaire : la table transaction\_financiere contient déjà toutes les informations de l'association, à savoir l'association num\_tf - budget\_id - niss. Une table séparée représentant le lien entre les trois tables aurait été nécessaire si, par exemple, des données étaient directement liée à l'association "créée".
 
 \textbf{AUTRES JUSTIFICATIONS?}
 

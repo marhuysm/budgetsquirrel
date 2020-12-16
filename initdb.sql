@@ -206,13 +206,10 @@ BEGIN
 
 DECLARE rowcount INT;
 
-SELECT COUNT(*) into rowcount FROM 
+SELECT * into rowcount FROM 
 	(SELECT COUNT(*) FROM tf_virement WHERE num_tf = NEW.num_tf) num_vir
   	NATURAL LEFT JOIN
-	(SELECT COUNT(*) FROM tf_cash WHERE num_tf = NEW.num_tf)num_cash
-	NATURAL LEFT JOIN
-	(SELECT COUNT(*) FROM tf_carte WHERE num_tf = NEW.num_tf) num_carte;
- 
+	(SELECT COUNT(*) FROM tf_cash WHERE num_tf = NEW.num_tf)num_cash;
 IF rowcount != 0 THEN
 		SIGNAL SQLSTATE '45000'
         SET MESSAGE_TEXT = "Impossible d'entrer une même transaction dans plusieurs tables définissant le type de virement.";
@@ -232,10 +229,8 @@ BEGIN
 
 DECLARE rowcount INT;
 
-SELECT COUNT(*) into rowcount FROM 
+SELECT * into rowcount FROM 
 	(SELECT COUNT(*) FROM tf_virement WHERE num_tf = NEW.num_tf) num_vir
-  	NATURAL LEFT JOIN
-	(SELECT COUNT(*) FROM tf_cash WHERE num_tf = NEW.num_tf)num_cash
 	NATURAL LEFT JOIN
 	(SELECT COUNT(*) FROM tf_carte WHERE num_tf = NEW.num_tf) num_carte;
  
@@ -258,9 +253,7 @@ BEGIN
 
 DECLARE rowcount INT;
 
-SELECT COUNT(*) into rowcount FROM 
-	(SELECT COUNT(*) FROM tf_virement WHERE num_tf = NEW.num_tf) num_vir
-  	NATURAL LEFT JOIN
+SELECT * into rowcount FROM 
 	(SELECT COUNT(*) FROM tf_cash WHERE num_tf = NEW.num_tf)num_cash
 	NATURAL LEFT JOIN
 	(SELECT COUNT(*) FROM tf_carte WHERE num_tf = NEW.num_tf) num_carte;

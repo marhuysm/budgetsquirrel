@@ -235,7 +235,7 @@ Contraintes définies :
 \item transaction\_financiere.date\_tf (et par extension, le mois et l'année de budget\_ mensuel) sont nécessairement ultérieures à utilisateur.date\_naissance;
 \item transaction\_financiere.budget\_id ne peut référencer qu'un budget\_id dont le mois et l'année correspondent à transaction\_ financiere.date\_ tf;
 \item Dans la table tf\_carte, transaction\_financière.num\_tf et carte.numero\_carte référencent obligatoirement le même niss\_util : un utilisateur ne peut qu'utiliser les cartes qui lui sont liées pour les transaction qui lui sont liées;
-\item transaction\_financière.num\_tf doit se retrouver une et une seule fois soit dans la table tf\_carte, soit dans la table tf\_virement, soit dans la table tf\_cash; \textbf{?? est-ce que la db vérifie cela ??}
+\item transaction\_financière.num\_tf doit se retrouver une et une seule fois soit dans la table tf\_carte, soit dans la table tf\_virement, soit dans la table tf\_cash; \textbf{Côté DB, on ne vérifiait pas, j'ai donc ajouté 3 trigger qui le font (1 pour chaque table)}
 \item \textbf{Autres?}
 \end{itemize}
 
@@ -247,7 +247,7 @@ L'association un à plusieurs entre utilisateur et budget\_mensuel a été tradu
 Il en est de même pour la table transaction\_financière, à laquelle nous avons ajouté une référence et au budget\_mensuel, et au NISS de l'utilisateur.
 Toujours en suivant la même logique, l'entité faible carte contient son attribut d'association identifiante, lié au NISS de l'utilisateur, et la clé de la table est formée de la combinaison NISS - numéro de carte; la table transaction\_financiere contient l'attribut qui référence categorie\_tf.nom\_tf; et tf\_carte contient les références à transaction\_financière.num\_tf et à carte.numero\_carte. 
 
-\textbf{A CONFIRMER : } Nous n'avons pas du traduire l'association n-aire entre transaction\_financiere, budget\_mensuel et utilisateur, tout simplement car elle n'est pas nécessaire : la table transaction\_financiere contient déjà toutes les informations de l'association, à savoir l'association num\_tf - budget\_id - niss. Une table séparée représentant le lien entre les trois tables aurait été nécessaire si, par exemple, des données étaient directement liée à l'association "créée".
+\textbf{A CONFIRMER : } Nous n'avons pas dû traduire l'association n-aire entre transaction\_financiere, budget\_mensuel et utilisateur, tout simplement car elle n'est pas nécessaire : la table transaction\_financiere contient déjà toutes les informations de l'association, à savoir l'association num\_tf - budget\_id - niss. Une table séparée représentant le lien entre les trois tables aurait été nécessaire si, par exemple, des données étaient directement liée à l'association "créée".
 
 \textbf{AUTRES JUSTIFICATIONS?}
 
