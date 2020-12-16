@@ -27,9 +27,9 @@
 \defcounter {refsection}{0}\relax 
 \contentsline {subsection}{\numberline {4.1}Description du code de création de la base de données}{10}{subsection.4.1}%
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {4.2}Éléments de SQL avancé}{11}{subsection.4.2}%
+\contentsline {subsection}{\numberline {4.2}Éléments de SQL avancé}{12}{subsection.4.2}%
 \defcounter {refsection}{0}\relax 
-\contentsline {subsubsection}{\numberline {4.2.1}Contraintes garanties par des check}{11}{subsubsection.4.2.1}%
+\contentsline {subsubsection}{\numberline {4.2.1}Contraintes garanties par des check}{12}{subsubsection.4.2.1}%
 \defcounter {refsection}{0}\relax 
 \contentsline {subsubsection}{\numberline {4.2.2}Requêtes de consultation}{12}{subsubsection.4.2.2}%
 \defcounter {refsection}{0}\relax 
@@ -37,30 +37,38 @@
 \defcounter {refsection}{0}\relax 
 \contentsline {subsubsection}{\numberline {4.2.4}Vues utilisées}{12}{subsubsection.4.2.4}%
 \defcounter {refsection}{0}\relax 
-\contentsline {subsubsection}{\numberline {4.2.5}Déclencheurs}{12}{subsubsection.4.2.5}%
+\contentsline {paragraph}{Historique}{12}{section*.2}%
 \defcounter {refsection}{0}\relax 
-\contentsline {paragraph}{Vérifier les informations avant l'ajout d'une transaction financière}{12}{section*.2}%
+\contentsline {paragraph}{Statistiques mensuelles}{13}{section*.3}%
 \defcounter {refsection}{0}\relax 
-\contentsline {paragraph}{Écrire (et réécrire) le bilan du budget mensuel en cas d'insertion ou de suppression dans la table des transactions financières}{13}{section*.3}%
+\contentsline {paragraph}{Statistiques par catégorie}{13}{section*.4}%
 \defcounter {refsection}{0}\relax 
-\contentsline {paragraph}{Vérifier que la carte utilisée lors de la transaction appartient bien à l'utilisateur}{13}{section*.4}%
+\contentsline {paragraph}{Statistiques par type de transaction}{13}{section*.5}%
 \defcounter {refsection}{0}\relax 
-\contentsline {paragraph}{Conserver la contrainte de généralisation totale et exclusive}{13}{section*.5}%
+\contentsline {subsubsection}{\numberline {4.2.5}Déclencheurs}{13}{subsubsection.4.2.5}%
 \defcounter {refsection}{0}\relax 
-\contentsline {subsubsection}{\numberline {4.2.6}Droits d'accès}{13}{subsubsection.4.2.6}%
+\contentsline {paragraph}{Vérifier les informations avant l'ajout d'une transaction financière}{13}{section*.6}%
 \defcounter {refsection}{0}\relax 
-\contentsline {section}{\numberline {5}Description de l'application Web}{15}{section.5}%
+\contentsline {paragraph}{Écrire (et réécrire) le bilan du budget mensuel en cas d'insertion ou de suppression dans la table des transactions financières}{13}{section*.7}%
 \defcounter {refsection}{0}\relax 
-\contentsline {section}{\numberline {6}Développement du projet}{21}{section.6}%
+\contentsline {paragraph}{Vérifier que la carte utilisée lors de la transaction appartient bien à l'utilisateur}{14}{section*.8}%
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {6.1}Travail conceptuel et outils employés pour démarrer le projet}{21}{subsection.6.1}%
+\contentsline {paragraph}{Conserver la contrainte de généralisation totale et exclusive}{14}{section*.9}%
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {6.2}Design et techniques de travail }{22}{subsection.6.2}%
+\contentsline {subsubsection}{\numberline {4.2.6}Droits d'accès}{14}{subsubsection.4.2.6}%
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {6.3}Quelques scénarios de test }{22}{subsection.6.3}%
+\contentsline {section}{\numberline {5}Description de l'application Web}{16}{section.5}%
 \defcounter {refsection}{0}\relax 
-\contentsline {section}{\numberline {7}Conclusion}{23}{section.7}%
+\contentsline {section}{\numberline {6}Développement du projet}{23}{section.6}%
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {7.1}Défis et solutions}{23}{subsection.7.1}%
+\contentsline {subsection}{\numberline {6.1}Travail conceptuel et outils employés pour démarrer le projet}{24}{subsection.6.1}%
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {7.2}Limites et possibilités de développement}{23}{subsection.7.2}%
+\contentsline {subsection}{\numberline {6.2}Design et techniques de travail }{24}{subsection.6.2}%
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{\numberline {6.3}Quelques scénarios de test }{25}{subsection.6.3}%
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{\numberline {7}Conclusion}{26}{section.7}%
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{\numberline {7.1}Défis et solutions}{26}{subsection.7.1}%
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{\numberline {7.2}Limites et possibilités de développement}{26}{subsection.7.2}%
