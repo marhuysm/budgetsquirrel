@@ -162,19 +162,52 @@ L'application Budget Squirrel compte 9 écrans, divisés en 4 catégories:
 
 Dans la réalisation d'écrans, des éléments de PHP (76.2 \%), CSS (6.4 \%), HTML (1.9 \%),  et JavaScript (0.1\%) ont été utilisés. Le rapport, quant a lui, a été rédigé en utilisant LaTeX (15.4 \% de notre projet).
 
-Les points suivants présentent succinctement les cas d'utilisation que nous avons définis dans le cadre de ce projet.
+Les points suivants présentent succinctement les cas d'utilisation que nous avons définis dans le cadre de ce projet pour l'utilisation du système.
 
 \subsubsection{Première connexion au système}
 
+Lors de la première utilisation de l'application, l'utilisateur peut choisir de créer son profil.
+Il remplit les champs obligatoires de nom, prénom, NISS, et date de naissance, et sélectionne une photo de profil.
+Il est notifié de l'échec ou de la réussite de son inscription.
+Une fois inscrit, c'est-à-dire que ses information ont peuplé une ligne de la table contenant les informations des utilisateurs, il peut se connecter.
+
 \subsubsection{Connexion et déconnexion}
+
+L'écran d'accueil propose, en plus de l'inscription, la connexion.
+Sur la page de connexion, l'utilisateur doit choisir son profil parmi une liste déroulante des profils disponibles.
+Une fois le profil sélectionné, l'utilisateur peut se connecter et effectuer différentes actions : consulter et gérer son profil, enregistrer des transactions financières, consulter son historique personnel, y supprimer des transactions, et consulter ses statistiques de budget.
+Une fois qu'il a effectué toutes les actions qu'il voulait, il a la possibilité de se déconnecté, et est alors redirigé vers l'écran d'accueil.
 
 \subsubsection{Gestion du profil}
 
+Le profil permet de visualiser quelques informations propres à l'utilisateur : son nom, prénom, sa date de naissance, son NISS, mais aussi les cartes qu'il possède (y compris celles qu'il a désactivé/supprimé).
+L'utilisateur peut ajouter des cartes, et en supprimer.
+Il peut aussi changer sa photo de profil sur cette page.
+Il est notifié du succès ou de l'échec de l'enregistrement et des changements d'informations.
+
 \subsubsection{Enregistrement de transactions financières}
 
-\subsubsection{Consultation de son historique personnel de transactions et suppression de transactions}
+Sur une page dédiée, l'utilisateur peut enregistrer des transactions financières.
+Il doit obligatoirement rentrer un montant, sélectionner une date et une catégorie.
+Il doit également sélectionner un type de transaction, et enregistrer des informations supplémentaires en fonction de ce dernier : sélectionner une de ses cartes, si c'est une transaction par carte, et entrer un destinataire/bénéficiaire,  et éventuellement une communication, si c'est une transaction par virement.
+Une fois la transaction enregistrée, l'utilisateur est notifié de la réussite de l'enregistrement. 
+Dans le cas contraire, il est invité à remplir tous les champs correctement.
+
+\subsubsection{Consultation de son historique personnel et suppression de transactions}
+
+L'utilisateur a la possibilité, sur une page d'historique, de consulter les transactions financières qu'il a créées, mois après mois, ainsi que le bilan pour ce mois.
+La page lui permet également de supprimer (une par une) les transactions qu'il aurait créé par erreur.
 
 \subsubsection{Consultation de statistiques}
+
+La page de consultation des statistiques permet à l'utilisateur d'avoir une meilleure compréhension de sa gestion de budget en offrant une vue d'ensemble de la répartition des transactions de différentes manières.
+L'utilisateur a accès à des informations sur le statut du budget dans son ensemble, mais aussi sur la répartition des transactions par mois, par catégorie, et par type de transaction.
+
+\subsubsection{Administration}
+
+Même si ce n'est pas le point central de notre projet, une situation d'utilisateur au profil administratif, qui peut gérer la base de données, est également prévu.
+Aucune interface d'application n'a été développée pour ce profil, que nous considérons comme assez "avancé" que pour gérer la base de données directement dans une interface comme phpMyAdmin.
+L'administrateur peut supprimer des profils, et modifier des informations auxquelles l'utilisateur n'a pas accès : il peut ajouter des catégories, changer des informations comme le nom, la date de naissance, ... de l'utilisateur, changer des informations sur les transactions, créer de nouvelles vues (de log par exemple)...
 
 \newpage
 
@@ -184,9 +217,9 @@ Le schéma conceptuel de la base des données Budget Squirrel reste conforme au 
 
 En ce qui concerne les attributs, chaque table contient au minimum un identifiant (clé primaire), ainsi que des contraintes (clé étrangère, ou bien contraintes d'unicité, selon les besoins).
 
-Nous avons appliqué quelques corrections par rapport au schéma conceptuel de notre premier rapport. La structure générale reste très proche de celle de notre premier schéma, mais nous avons apporté des modifications aux tables catégorie\_tf, virement, budget\_mensuel, et carte, soit pour nous conformer aux corrections demandées après la remise du premier rapport, soit après discussion lors d'une des guidances, lorsque nous nous sommes rendues compte que certains de nos éléments rajoutaient une complexité inutile à l'utilisation de l'application.
+Nous avons appliqué quelques corrections par rapport au schéma conceptuel de notre premier rapport. La structure générale reste très proche de celle de notre premier schéma, mais nous avons apporté des modifications aux tables \verb\catégorie_tf\, \verb\virement\, \verb\budget_mensuel\, et \verb\carte\, soit pour nous conformer aux corrections demandées après la remise du premier rapport, soit après discussion lors d'une des guidances, lorsque nous nous sommes rendues compte que certains de nos éléments rajoutaient une complexité inutile à l'utilisation de l'application.
 
-La table carte est devenue une entité faible, car nous considérons qu'une carte ne peut pas être identifiée seulement par son numéro, mais par la combinaison entre son numéro et le NISS de l'utilisateur. De plus, pour permettre une \og suppression \fg des cartes par l'utilisateur (ou plutôt une désactivation), nous avons ajouté un attribut permettant de définir le statut (activé ou non) de la carte. Enfin, pour ne pas afficher le numéro de la carte à travers l'application, nous avons ajouté un attribut de nom, qui permet à l'utilisateur de nommer sa carte. 
+La table carte est devenue une entité faible, car nous considérons qu'une carte ne peut pas être identifiée seulement par son numéro, mais par la combinaison entre son numéro et le NISS de l'utilisateur. De plus, pour permettre une \og suppression \fg des cartes par l'utilisateur (ou plutôt une désactivation\footnote{Cela permet de conserver les informations de transaction liées à des cartes qui ont été supprimées, par exemple.}), nous avons ajouté un attribut permettant de définir le statut (activé ou non) de la carte. Enfin, pour ne pas afficher le numéro de la carte à travers l'application, nous avons ajouté un attribut de nom, qui permet à l'utilisateur de nommer sa carte. 
 
 Nous avons aussi ajouté un élément de description à la table catégorie, ce qui permet de mieux comprendre chaque élément de la table, autant dans la base de données que du côté de l'application.
 
@@ -195,7 +228,7 @@ Des contraintes concernant les dates ont également été ajoutées, car il n'es
 Une communication n'étant pas obligatoire lors d'un virement, nous considérons dans cette nouvelle version du schéma que l'attribut communication de la table virement est un attribut facultatif.
 
 Enfin, en cours de développement, nous avons fait le choix de supprimer les contraintes de reste et de clôture de chaque budget mensuel, car cela pouvait poser des problèmes de calcul : si le budget du mois de février est clos avant celui de janvier, et que son reste est ajouté au mois de mars, par exemple, à la clôture du budget du mois de janvier, il faudrait ajouter le reste au mois de février, et répercuter le changement sur le mois de mars (et ainsi de suite).
-Pour proposer une application plus flexible, nous avons fait le choix de simplifier la table budget\_mensuel et son fonctionnement, en supprimant les attributs de reste et de statut.
+Pour proposer une application plus flexible, nous avons fait le choix de simplifier la table \verb\budget_mensuel\ et son fonctionnement, en supprimant les attributs de reste et de statut.
 La clôture d'un budget n'est donc pas possible.
 Cette suppression reste mineure, car l'application se concentre principalement sur la gestion du budget et des différentes transactions, que se soit de manière rétrospective, ou de manière prédictive. L'objectif principal reste atteint, et la gestion des différents budget n'en est que plus souple pour l'utilisateur.\\
 
@@ -246,20 +279,20 @@ categorie_tf(+underline[nom_tf], description_tf)
 Voici les contraintes que nous avons définies dans cette traduction, afin qu'elle corresponde à notre schéma entité-association :
 
 \begin{itemize}
-\item utilisateur.niss ne peut contenir que 11 caractères, spécifiquement 11 chiffres, pas plus, ni moins;
-\item La valeur par défaut de carte.is\_deleted est 0 (zéro);
-\item La valeur de carte.numero\_carte contient uniquement des chiffres, et ne peut contenir que 16 ou 17 chiffres;
-\item budget\_mensuel.budget\_id correspond a une combinaison unique de niss\_util, mois et année, ainsi, il est impossible pour un même utilisateur de posséder plusieurs budgets pour le même mois et la même année;
-\item budget\_mensuel.bilan correspond à la somme de toutes les transactions pour un utilisateur, un mois et une année données;
-\item transaction\_financiere.date\_tf (et par extension, le mois et l'année de budget\_mensuel) sont nécessairement ultérieures à utilisateur.date\_naissance;
-\item transaction\_financiere.budget\_id ne peut référencer qu'un budget\_id dont le mois et l'année correspondent à transaction\_financiere.date\_tf;
-\item Dans la table tf\_carte, transaction\_financière.num\_tf et carte.numero\_carte référencent obligatoirement le même niss\_util : un utilisateur ne peut qu'utiliser les cartes qui lui sont liées pour les transaction qui lui sont liées;
-\item transaction\_financière.num\_tf doit se retrouver une et une seule fois soit dans la table tf\_carte, soit dans la table tf\_virement, soit dans la table tf\_cash; \textbf{Côté DB, on ne vérifiait pas, j'ai donc ajouté 3 trigger qui le font (1 pour chaque table)}
+\item \verb\utilisateur.niss\ ne peut contenir que 11 caractères, spécifiquement 11 chiffres, pas plus, ni moins;
+\item La valeur par défaut de \verb\carte.is_deleted\ est 0 (zéro);
+\item La valeur de \verb\carte.numero_carte\ contient uniquement des chiffres, et ne peut contenir que 16 ou 17 chiffres;
+\item \verb\budget_mensuel.budget_id\ correspond a une combinaison unique de \verb\niss_util\, \verb\mois\ et \verb\annee\, ainsi, il est impossible pour un même utilisateur de posséder plusieurs budgets pour le même mois et la même année;
+\item \verb\budget_mensuel.bilan\ correspond à la somme de toutes les transactions pour un utilisateur, un mois et une année données;
+\item \verb\transaction_financiere.date_tf\ (et par extension,  \verb\budget_mensuel.mois\ et \verb\budget_mensuel.annee\) sont nécessairement ultérieures à \verb\utilisateur.date_naissance\;
+\item \verb\transaction_financiere.budget_id\ ne peut référencer qu'un \verb\budget_id\ dont le mois et l'année correspondent à \verb\transaction_financiere.date_tf\;
+\item Dans la table \verb\tf_carte\, \verb\transaction_financière.num_tf\ et \verb\carte.numero_carte\ référencent obligatoirement le même \verb\niss_util\ : un utilisateur ne peut qu'utiliser les cartes qui lui sont liées pour les transaction qui lui sont liées;
+\item \verb\transaction_financiere.num_tf\ doit se retrouver une et une seule fois soit dans la table \verb\tf_carte\, soit dans la table \verb\tf_virement\, soit dans la table \verb\tf_cash\; \textbf{Côté DB, on ne vérifiait pas, j'ai donc ajouté 3 trigger qui le font (1 pour chaque table)}
 \item \textbf{Autres?}
 \end{itemize}
 
-L'héritage entre la table transaction\_financière et les tables cash, virement, et payement par carte a été traduit par une matérialisation, que nous représentons graphiquement à la figure \ref{materialisation}.
-Nous avons choisi d'utiliser la matérialisation afin de conserver la super-entité, ainsi que les sous-entités, et la relation sémantique qu'elles entretiennent.
+L'héritage entre la table \verb\transaction_financiere\ et les tables \verb\tf_cash\, \verb\tf_virement\, et \verb\tf_carte\ a été traduit par une matérialisation, que nous représentons graphiquement à la figure \ref{materialisation}, en page \pageref{materialisation}.
+Nous avons choisi d'utiliser la matérialisation afin de conserver la super-entité, les sous-entités, ainsi que la relation sémantique qu'elles entretiennent.
 La relation est considérée comme totale et exclusive : une transaction financière est au moins une transaction en liquide, par virement ou payée par carte, mais ne peut pas être de plus d'un type à la fois.
 
 L'association un à plusieurs entre utilisateur et budget\_mensuel a été traduite en plaçant la référence du côté "un" de l'association : ainsi, on retrouve utilisateur.niss dans budget\_mensuel.niss\_util.
@@ -322,7 +355,12 @@ Il y a en tout 5 checks : \verb\chk_niss\, qui vérifie que le NISS enregistré 
 
 \subsubsection{Requêtes de consultation}
 
+\textbf{?? qu'est ce qu'il faudrait mettre ici?}
+
 \subsubsection{Requêtes de mise à jour}
+
+\textbf{?? qu'est ce qu'il faudrait mettre ici?}
+
 
 \subsubsection{Vues utilisées}
 
@@ -487,7 +525,6 @@ Cet aspect est géré uniquement en PHP, et demande donc de faire deux opératio
 \caption{\footnotesize{Enregistrement des transactions en Budget Squirrel}}
 \end{figure}
 
-\newpage
 La page historique, \verb\historique.php\, permet à l'utilisateur de visualiser les transactions effectuées : pour cela, il doit d'abord sélectionner le mois et l'année dont il veut consulter le budget.
 Il a alors accès à un tableau affichant le montant, la date, la catégorie, et le type de transaction effectuée, et éventuellement la carte utilisée, le destinataire/bénéficiaire, et la communication.
 En dessous de la table, l'utilisateur peut également voir le bilan total du mois. Enfin, il peut également choisir de supprimer une des transactions affichées.
@@ -549,7 +586,7 @@ La partie design à été facilitée par l'emploi d'une structure CSS ouverte\fo
 Ensemble, les parties HTML et CSS du projet reprenaient (et amélioraient) notre premier design réalisé sur Figma.
 La section 5 du rapport témoigne des choix qui ont été gardés et implémentés au niveau de design d'application.
 
-\textbf{Tu avais parlé de structure HTML ouverte, mais j'ai corrigé en parlant de CSS, corrige moi si je me trompe tho!}
+\textbf{Tu avais parlé de structure HTML ouverte, mais j'ai corrigé en parlant de CSS, corrige moi si je me trompe though}
 
 L'étape de conception d'une application fonctionnelle a introduit une première couche de complexité en ce qui concerne l'imbrication des langages utilisés, en ajoutant PHP et HTML aux requêtes SQL.
 Le PHP étant un langage très flexible, il nous a été relativement facile de créer de nombreuses contraintes côté client, et de combiner différentes requêtes SQL pour que l'application réponde exactement comme il faut à tout input de l'utilisateur. 
@@ -572,14 +609,11 @@ La taille restreinte du groupe à particulièrement facilité ce méthode de tra
 
 \subsection{Défis et solutions}
 \subsection{Limites et possibilités de développement}
-Les points forts et faiblesses d’application, le temps nécessaire pour développer le concept avec deux personnes, les sources consultées pour la partie pratique (i.e. les slides, ou techniques vues au TP, ainsi que les conseils d’assistante, mais aussi w3schools ou bien stackoverflow).
-Finalement quelques mots sur l'expérience du projet.
-
-Améliorations : 
-- vérification du niss par rapport à la date de naissance de l'utilisateur
-- finalement, le bilan dans la table budget mensuel n'est pas obligatoire
-- choix de la matérialisation pour la traduction de l'héritage : remise en question
-
+\textbf{Les points forts et faiblesses d’application, le temps nécessaire pour développer le concept avec deux personnes, les sources consultées pour la partie pratique (i.e. les slides, ou techniques vues au TP, ainsi que les conseils d’assistante, mais aussi w3schools ou bien stackoverflow).}
+\textbf{Finalement quelques mots sur l'expérience du projet.
+}
+\textbf{Améliorations : 
+- vérification du niss par rapport à la date de naissance de l'utilisateur - finalement, le bilan dans la table budget mensuel n'est pas obligatoire, pour éviter des informations redondantes - choix de la matérialisation pour la traduction de l'héritage : remise en question - ajout d'un enregistrement de connexions pour chaque utilisateur ainsi qu'un système de log in et mot de passe - l'ajout d'une interface admin du côté de l'application}
 
 
 
