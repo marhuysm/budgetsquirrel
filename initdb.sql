@@ -6,6 +6,8 @@ CREATE DATABASE budgetsquirrel CHARACTER SET 'utf8';
 
 USE budgetsquirrel;
 
+-- Création des tables
+
 CREATE TABLE utilisateur(
         nom VARCHAR(100) NOT NULL,
         prenom VARCHAR(100) NOT NULL,
@@ -24,7 +26,9 @@ CREATE TABLE carte(
         type_carte VARCHAR(100) NOT NULL,
     	niss_util VARCHAR(11), 
         is_deleted INT DEFAULT 0,
-        CONSTRAINT fk_niss_util_carte FOREIGN KEY(niss_util) REFERENCES utilisateur(niss), 
+        CONSTRAINT fk_niss_util_carte FOREIGN KEY(niss_util) REFERENCES utilisateur(niss) 
+                ON DELETE CASCADE
+                ON UPDATE CASCADE, 
     	CONSTRAINT pk_carte PRIMARY KEY(numero_carte),
         CONSTRAINT chk_numero_carte_low CHECK (LENGTHB(numero_carte) >= 16),
         CONSTRAINT chk_numero_carte_high CHECK (LENGTHB(numero_carte) <= 17), 
@@ -39,7 +43,6 @@ CREATE TABLE budget_mensuel(
         annee INT NOT NULL,
         bilan FLOAT, 
         niss_util VARCHAR(11) NOT NULL,
-        CONSTRAINT fk_niss_util_budget FOREIGN KEY (niss_util) REFERENCES utilisateur(niss),
         CONSTRAINT pk_budget_mensuel PRIMARY KEY(budget_id),
         CONSTRAINT uc_budget_mensuel UNIQUE (mois, annee, niss_util),
         CONSTRAINT fk_niss_util_bm FOREIGN KEY (niss_util) REFERENCES utilisateur (niss)
@@ -60,11 +63,10 @@ CREATE TABLE transaction_financiere(
    	niss_util VARCHAR(11) NOT NULL,
         budget_id INT,
         cat_tf VARCHAR(100),
-        CONSTRAINT fk_niss_util_tf FOREIGN KEY (niss_util) REFERENCES utilisateur(niss),
         CONSTRAINT fk_budget_id FOREIGN KEY (budget_id) REFERENCES budget_mensuel(budget_id),
         CONSTRAINT fk_cat_tf FOREIGN KEY (cat_tf) REFERENCES categorie_tf(nom_tf),
         CONSTRAINT pk_transaction_financiere PRIMARY KEY (num_tf),
-        CONSTRAINT fk_date_util_tf FOREIGN KEY (niss_util) REFERENCES utilisateur (niss) 
+        CONSTRAINT fk_niss_util_tf FOREIGN KEY (niss_util) REFERENCES utilisateur (niss) 
                 ON DELETE CASCADE
                 ON UPDATE CASCADE
         );
@@ -266,6 +268,8 @@ END;//
 
 DELIMITER ;
 
+-- Création des différentes vues
+
 CREATE OR REPLACE VIEW historique_v
 AS
 SELECT tf.num_tf, tf.date_tf, tf.montant, tf.niss_util, tf.budget_id, tf.cat_tf, tfct.numero_carte, tfv.destbenef, tfv.communication, c.nom_carte,
@@ -370,10 +374,6 @@ GRANT UPDATE ON budgetsquirrel.utilisateur TO 'utilisateur_app'@'localhost';
 -- sur cette table aussi pour récupérer les informations qui le concernent :
 
 GRANT SELECT ON budgetsquirrel.utilisateur TO 'utilisateur_app'@'localhost';
-
--- l'utilisateur app peut aussi ajouter ses cartes : il peut donc créer des lignes dans la table carte
-
-GRANT INSERT ON budgetsquirrel.utilisateur TO 'utilisateur_app'@'localhost';
 
 -- L'utilisateur peut consulter la table des transactions financières créées
 

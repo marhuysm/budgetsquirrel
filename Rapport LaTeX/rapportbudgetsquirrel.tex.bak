@@ -130,15 +130,13 @@ Dans le cadre de ce projet, nous avons choisi de développer une application app
 Le rapport ci-dessous documente le processus de conception, ainsi que les développements successifs et les améliorations apportées à l'idée originale décrite dans le rapport précédent.
 
 Après une brève présentation du domaine d'application, nous présenterons notre schéma conceptuel, ainsi que sa traduction en schéma relationnel.
-Ensuite, nous décrirons les différents éléments des scripts SQL que nous avons mis en place : clés uniques et étrangères, contraintes au niveau de la base des données, checks et triggers, ainsi que privilèges d'accès.
+Ensuite, nous décrirons les différents éléments des scripts SQL que nous avons mis en place \textbclés uniques et étrangères, contraintes au niveau de la base des données, checks et triggers, ainsi que privilèges d'accès.}
 Cette description sera suivie d'une brève présentation de l'application Web que nous avons développée. 
 Nous terminerons ce rapport en offrant quelques informations sur le développement du projet, ainsi qu'en exposant les conclusions que nous avons tirées lors de la finalisation de ce dernier.
 
 En annexe à ce rapport, vous trouverez deux fichiers sql : \verb\initdb.sql\, qui contient le script permettant la création de la base de données en elle-même, et \verb\basicdata.sql\, qui peuple la base de données de quelques informations, permettant ainsi de parcourir les différentes pages de l'application ainsi que la base de données afin d'en comprendre leur fonctionnement. 
 Toujours en annexe à ce rapport, nous avons joint les pages de notre application (9 en tout) : \verb\index.html\, \verb\inscription.php\, \verb\connexion.php\, \verb\homepage.php\, \verb\profil.php\, \verb\historique.php\, \verb\enregistrement.php\, \verb\stat.php\, et \verb\logout.php\. 
-S'y trouvent également un dossier css contenant le boilerplate CSS Skeleton\footnote{\url{http://getskeleton.com/}} ainsi que les modifications que nous y avons apporté, un dossier img contenant les images utilisées dans l'application, et un fichier \verb\utils.js\ contenant une fonction JavaScript de redirection de page.
-
-\textbf{NOTE : pour le zip final à rendre, ne pas inclure le readme, ni le dossier du rapport latex.}
+S'y trouvent également un dossier css contenant le boilerplate CSS Skeleton\footnote{\url{http://getskeleton.com/}} ainsi que les modifications que nous y avons apportées, un dossier img contenant les images utilisées dans l'application, et un fichier \verb\utils.js\ contenant une fonction JavaScript de redirection de page.
 
 \subsection{Domaine d'application et utilisateurs cibles}
 
@@ -154,13 +152,11 @@ Comme convenu dans le rapport précédent, l'application sait gérer plusieurs c
 
 L'application Budget Squirrel compte 9 écrans, divisés en 4 catégories:
 \begin{enumerate}
-\item gestion de profil (écran d’accueil index.html, page d'accueil de l'application, connexion, inscription, profil, et log out);
+\item gestion de profil (landing page, page d'accueil de l'application, connexion, inscription, profil, et déconnexion);
 \item enregistrement (écran d'enregistrement de transaction);
 \item historique des transactions (écran historique), et 
 \item statistiques (écran statistiques).
 \end{enumerate}
-
-Dans la réalisation d'écrans, des éléments de PHP (76.2 \%), CSS (6.4 \%), HTML (1.9 \%),  et JavaScript (0.1\%) ont été utilisés. Le rapport, quant a lui, a été rédigé en utilisant LaTeX (15.4 \% de notre projet).
 
 Les points suivants présentent succinctement les cas d'utilisation que nous avons définis dans le cadre de ce projet pour l'utilisation du système.
 
@@ -176,7 +172,7 @@ Une fois inscrit, c'est-à-dire que ses information ont peuplé une ligne de la 
 L'écran d'accueil propose, en plus de l'inscription, la connexion.
 Sur la page de connexion, l'utilisateur doit choisir son profil parmi une liste déroulante des profils disponibles.
 Une fois le profil sélectionné, l'utilisateur peut se connecter et effectuer différentes actions : consulter et gérer son profil, enregistrer des transactions financières, consulter son historique personnel, y supprimer des transactions, et consulter ses statistiques de budget.
-Une fois qu'il a effectué toutes les actions qu'il voulait, il a la possibilité de se déconnecté, et est alors redirigé vers l'écran d'accueil.
+Une fois qu'il a effectué toutes les actions qu'il voulait, il a la possibilité de se déconnecter, et est alors redirigé vers l'écran d'accueil.
 
 \subsubsection{Gestion du profil}
 
@@ -205,21 +201,21 @@ L'utilisateur a accès à des informations sur le statut du budget dans son ense
 
 \subsubsection{Administration}
 
-Même si ce n'est pas le point central de notre projet, une situation d'utilisateur au profil administratif, qui peut gérer la base de données, est également prévu.
+Même si ce n'est pas le point central de notre projet, une situation d'utilisateur au profil administratif, qui peut gérer la base de données, est également prévue.
 Aucune interface d'application n'a été développée pour ce profil, que nous considérons comme assez "avancé" que pour gérer la base de données directement dans une interface comme phpMyAdmin.
-L'administrateur peut supprimer des profils, et modifier des informations auxquelles l'utilisateur n'a pas accès : il peut ajouter des catégories, changer des informations comme le nom, la date de naissance, ... de l'utilisateur, changer des informations sur les transactions, créer de nouvelles vues (de log par exemple)...
+L'administrateur peut supprimer des profils, et modifier des informations auxquelles l'utilisateur n'a pas accès : il peut ajouter des catégories, changer des informations comme le nom, la date de naissance, ... de l'utilisateur, changer des informations sur les transactions, créer de nouvelles vues (de log par exemple)... Les restrictions et contraintes, ainsi que les triggers, permettent de conserver l'intégrité des données autant lors de l'insertion/modification/suppression en utilisant l'application que lors d'actions générées directement par des requêtes SQL.
 
 \newpage
 
 \section{Schéma conceptuel}
 
-Le schéma conceptuel de la base des données Budget Squirrel reste conforme au schéma validé lors de la première étape du projet. Nous comptons 5 tables principales, ainsi que 3 tables issues de la matérialisation de l’héritage sur la table transaction financière.
+Le schéma conceptuel de la base des données Budget Squirrel reste conforme au schéma validé lors de la première étape du projet. Pour plus de cohérence, nous avons adapté l'écriture des noms des entités et de leur attributs, afin qu'ils correspondent le plus possible à la base de donnée, ainsi, les accents et espaces ne sont plus présents dans ces éléments. Nous comptons 5 tables principales, ainsi que 3 tables issues de la matérialisation de l’héritage sur la table transaction financière.
 
 En ce qui concerne les attributs, chaque table contient au minimum un identifiant (clé primaire), ainsi que des contraintes (clé étrangère, ou bien contraintes d'unicité, selon les besoins).
 
-Nous avons appliqué quelques corrections par rapport au schéma conceptuel de notre premier rapport. La structure générale reste très proche de celle de notre premier schéma, mais nous avons apporté des modifications aux tables \verb\catégorie_tf\, \verb\virement\, \verb\budget_mensuel\, et \verb\carte\, soit pour nous conformer aux corrections demandées après la remise du premier rapport, soit après discussion lors d'une des guidances, lorsque nous nous sommes rendues compte que certains de nos éléments rajoutaient une complexité inutile à l'utilisation de l'application.
+Nous avons appliqué quelques corrections par rapport au schéma conceptuel de notre premier rapport. La structure générale reste très proche de celle de notre premier schéma, mais nous avons apporté des modifications aux tables \verb\catégorie_tf\, \verb\virement\, \verb\budget_mensuel\, et \verb\carte\, soit pour nous conformer aux corrections demandées après la remise du premier rapport, soit après discussion lors d'une des guidances, lorsque nous nous sommes rendues compte que certains de nos éléments rajoutaient une complexité inutile à la mise en place du système.
 
-La table carte est devenue une entité faible, car nous considérons qu'une carte ne peut pas être identifiée seulement par son numéro, mais par la combinaison entre son numéro et le NISS de l'utilisateur. De plus, pour permettre une \og suppression \fg des cartes par l'utilisateur (ou plutôt une désactivation\footnote{Cela permet de conserver les informations de transaction liées à des cartes qui ont été supprimées, par exemple.}), nous avons ajouté un attribut permettant de définir le statut (activé ou non) de la carte. Enfin, pour ne pas afficher le numéro de la carte à travers l'application, nous avons ajouté un attribut de nom, qui permet à l'utilisateur de nommer sa carte. 
+La table carte est devenue une entité faible, car nous considérons qu'une carte ne peut pas être identifiée seulement par son numéro, mais par la combinaison entre son numéro et le NISS de l'utilisateur. De plus, pour permettre une \og suppression\fg ~des cartes par l'utilisateur (ou plutôt une désactivation\footnote{Cela permet de conserver les informations de transaction liées à des cartes qui ont été supprimées, par exemple.}), nous avons ajouté un attribut permettant de définir le statut (activé ou non) de la carte. Enfin, pour ne pas afficher le numéro de la carte à travers l'application, nous avons ajouté un attribut de nom, qui permet à l'utilisateur de nommer ses cartes. 
 
 Nous avons aussi ajouté un élément de description à la table catégorie, ce qui permet de mieux comprendre chaque élément de la table, autant dans la base de données que du côté de l'application.
 
@@ -230,14 +226,12 @@ Une communication n'étant pas obligatoire lors d'un virement, nous considérons
 Enfin, en cours de développement, nous avons fait le choix de supprimer les contraintes de reste et de clôture de chaque budget mensuel, car cela pouvait poser des problèmes de calcul : si le budget du mois de février est clos avant celui de janvier, et que son reste est ajouté au mois de mars, par exemple, à la clôture du budget du mois de janvier, il faudrait ajouter le reste au mois de février, et répercuter le changement sur le mois de mars (et ainsi de suite).
 Pour proposer une application plus flexible, nous avons fait le choix de simplifier la table \verb\budget_mensuel\ et son fonctionnement, en supprimant les attributs de reste et de statut.
 La clôture d'un budget n'est donc pas possible.
-Cette suppression reste mineure, car l'application se concentre principalement sur la gestion du budget et des différentes transactions, que se soit de manière rétrospective, ou de manière prédictive. L'objectif principal reste atteint, et la gestion des différents budget n'en est que plus souple pour l'utilisateur.\\
-
-\textbf{SCHEMA : ajouter contrainte (t,e) de l'héritage + faire dernières régularisations par rapport au reste du contenu}
+Cette suppression reste mineure, car l'application se concentre principalement sur la gestion du budget et des différentes transactions, que se soit de manière rétrospective, ou de manière prédictive. L'objectif principal reste atteint, et la gestion des différents budget n'en est que plus souple pour l'utilisateur.
 
 \begin{figure}[!ht]
 \noindent
 \makebox[\textwidth][c]{
-\includegraphics[scale=0.6]{schema_ea_final_v2.png}}
+\includegraphics[scale=0.53]{ea_reg.png}}
 \caption{\footnotesize{Schéma conceptuel entité-association de la base de données exploitée par Budget Squirrel}}
 \end{figure}
 
@@ -246,6 +240,7 @@ Cette suppression reste mineure, car l'application se concentre principalement s
 \section{Schéma logique relationnel}
 
 Vous trouverez ci-dessous notre traduction du schéma entité association présenté à la section précédente, ainsi que les contraintes supplémentaires, et quelques explications concernant nos choix de traduction.
+Le schéma ci-dessous a été utilisé pour passer de notre schéma entité association au script SQL de création de base de données.
 
 \begin{Verbatim}[commandchars=+\[\]]
 utilisateur(nom, prenom, +underline[niss], date_naissance, photo)
@@ -286,27 +281,25 @@ Voici les contraintes que nous avons définies dans cette traduction, afin qu'el
 \item \verb\budget_mensuel.bilan\ correspond à la somme de toutes les transactions pour un utilisateur, un mois et une année données;
 \item \verb\transaction_financiere.date_tf\ (et par extension,  \verb\budget_mensuel.mois\ et \verb\budget_mensuel.annee\) sont nécessairement ultérieures à \verb\utilisateur.date_naissance\;
 \item \verb\transaction_financiere.budget_id\ ne peut référencer qu'un \verb\budget_id\ dont le mois et l'année correspondent à \verb\transaction_financiere.date_tf\;
-\item Dans la table \verb\tf_carte\, \verb\transaction_financière.num_tf\ et \verb\carte.numero_carte\ référencent obligatoirement le même \verb\niss_util\ : un utilisateur ne peut qu'utiliser les cartes qui lui sont liées pour les transaction qui lui sont liées;
-\item \verb\transaction_financiere.num_tf\ doit se retrouver une et une seule fois soit dans la table \verb\tf_carte\, soit dans la table \verb\tf_virement\, soit dans la table \verb\tf_cash\; \textbf{Côté DB, on ne vérifiait pas, j'ai donc ajouté 3 trigger qui le font (1 pour chaque table)}
-\item \textbf{Autres?}
+\item Dans la table \verb\tf_carte\, \verb\transaction_financiere.num_tf\ et \verb\carte.numero_carte\ référencent obligatoirement le même \verb\niss_util\ : un utilisateur ne peut qu'utiliser les cartes qui lui sont liées pour les transaction qui lui sont liées;
+\item \verb\transaction_financiere.num_tf\ doit se retrouver une et une seule fois soit dans la table \verb\tf_carte\, soit dans la table \verb\tf_virement\, soit dans la table \verb\tf_cash\; 
 \end{itemize}
 
 L'héritage entre la table \verb\transaction_financiere\ et les tables \verb\tf_cash\, \verb\tf_virement\, et \verb\tf_carte\ a été traduit par une matérialisation, que nous représentons graphiquement à la figure \ref{materialisation}, en page \pageref{materialisation}.
 Nous avons choisi d'utiliser la matérialisation afin de conserver la super-entité, les sous-entités, ainsi que la relation sémantique qu'elles entretiennent.
 La relation est considérée comme totale et exclusive : une transaction financière est au moins une transaction en liquide, par virement ou payée par carte, mais ne peut pas être de plus d'un type à la fois.
+Cela a donc nécessité l'ajout d'une contrainte spécifique.
 
-L'association un à plusieurs entre utilisateur et budget\_mensuel a été traduite en plaçant la référence du côté "un" de l'association : ainsi, on retrouve utilisateur.niss dans budget\_mensuel.niss\_util.
-Il en est de même pour la table transaction\_financière, à laquelle nous avons ajouté une référence et au budget\_mensuel, et au NISS de l'utilisateur.
-Toujours en suivant la même logique, l'entité faible carte contient son attribut d'association identifiante, lié au NISS de l'utilisateur, et la clé de la table est formée de la combinaison NISS - numéro de carte; la table transaction\_financiere contient l'attribut qui référence categorie\_tf.nom\_tf; et tf\_carte contient les références à transaction\_financière.num\_tf et à carte.numero\_carte. 
+L'association un à plusieurs entre \verb\utilisateur\ et \verb\budget_mensuel\ a été traduite en plaçant la référence du côté "un" de l'association : ainsi, on retrouve \verb\utilisateur.niss\ dans \verb\budget_mensuel.niss_util\.
+Il en est de même pour la table \verb\transaction_financiere\, à laquelle nous avons ajouté une référence à la fois au \verb\budget_mensuel.budget_id\, et à \verb\utilisateur.niss\.
+Toujours en suivant la même logique, l'entité faible \verb\carte\ contient son attribut d'association identifiante, lié au NISS de l'utilisateur, et la clé de la table est formée de la combinaison NISS - numéro de carte; la table \verb\transaction_financiere\ contient l'attribut qui référence \verb\categorie_tf.nom_tf\; et \verb\tf_carte\ contient les références à \verb\transaction_financiere.num_tf\ et à \verb\carte.numero_carte\. 
 
-\textbf{A CONFIRMER : } Nous n'avons pas dû traduire l'association n-aire entre transaction\_financiere, budget\_mensuel et utilisateur, tout simplement car elle n'est pas nécessaire : la table transaction\_financiere contient déjà toutes les informations de l'association, à savoir l'association num\_tf - budget\_id - niss. Une table séparée représentant le lien entre les trois tables aurait été nécessaire si, par exemple, des données étaient directement liée à l'association qui les lie.
-
-\textbf{AUTRES JUSTIFICATIONS À AJOUTER?}
+Nous n'avons pas dû traduire l'association n-aire entre \verb\transaction_financiere\, \verb\budget_mensuel\ et \verb\utilisateur\, tout simplement car elle n'est pas nécessaire : la table \verb\transaction_financiere\ contient déjà toutes les informations de l'association, à savoir l'association \verb\num_tf\ - \verb\budget_id\ - \verb\niss\. Une table séparée représentant le lien entre les trois tables aurait été nécessaire si, par exemple, des données étaient directement liée à l'association qui les lie, ou si l'on avait décidé de ne pas enregistrer le niss de l'utilisateur dans la table des transactions financières.
 
 \begin{figure}[!ht]
 \noindent
 \makebox[\textwidth][c]{
-\includegraphics[scale=0.5]{materialisation.png}}
+\includegraphics[scale=0.5]{mat_reg.png}}
 \caption{\footnotesize{Matérialisation de l'héritage entre les transactions}}
 \label{materialisation}
 \end{figure}
@@ -322,24 +315,20 @@ Ainsi, une fois les deux scripts SQL exécutés, l'application peut être utilis
 
 \subsection{Description du code de création de la base de données}
 
-Après une requête de suppression de la base de données budgetsquirrel si elle existe déjà, une nouvelle base de données du même nom est créée et appelée à être utilisée.
+Après une requête de suppression de la base de données \verb\budgetsquirrel\ si elle existe déjà, une nouvelle base de données du même nom est créée et appelée à être utilisée.
 Les premières requêtes sont des \verb\CREATE TABLE\, et permettent de créer les tables qui sont nécessaires à l'utilisation de l'application. Elles correspondent à notre schéma logique relationnel. Ainsi, le script SQL crée les tables suivantes : \verb\utilisateur\, \verb\carte\, \verb\budget_mensuel\, \verb\categorie_tf\, \verb\transaction_financiere\, \verb\tf_cash\, \verb\tf_virement\, et \verb\tf_carte\.
 
-Les contraintes prévues par le schéma logique relationnel pouvant être traduites directement dans la création des tables sont alors établies. Tous les attributs obligatoires sont déclarés comme non nuls et la longueur de utilisateur.niss est fixée à 11, la longueur de carte.numero\_carte est fixée entre 16 et 17, grâce à des \verb\CHECK\ que nous décrivons plus loin.
+Les contraintes prévues par le schéma logique relationnel pouvant être traduites directement dans la création des tables sont alors établies. Tous les attributs obligatoires sont déclarés comme non nuls et la longueur de \verb\utilisateur.niss\ est fixée à 11, la longueur de \verb\carte.numero_carte\ est fixée entre 16 et 17, grâce à des \verb\CHECK\ que nous décrivons plus loin (vu que ce ne sont pas des chiffres sur lesquels il faut faire des calculs, ces données sont enregistrées en \verb\VARCHAR\, de manière similaire à des numéros de téléphone).
 Toutes les clés primaires et étrangères sont également déclarées dans cette partie du script.
 Lorsque cela est nécessaire, nous ajoutons des contraintes \verb\UNIQUE\, toujours pour respecter notre schéma : c'est le cas pour la contrainte \verb\carte.uc_carte\, \verb\utilisateur.uk_utilisateur\, et \verb\uc_budget_mensuel\.
 
 Dans la table \verb\budget_mensuel\ comme dans la table \verb\transaction_financiere\, nous utilisons la commande \verb\AUTO_INCREMENT\ afin d'établir que les clés primaires de ces tables, à savoir \verb\budget_mensuel.budget_id\ et \verb\transaction_financiere.num_tf\, sont des colonnes numériques qui sont incrémentées automatiquement à chaque nouvelle insertion.
 
-Nous avons également ajouté quelques contraintes liées à la notre application. Par exemple, nous donnons une valeur par défaut à l'url de la photo (\verb\utilisateur.photo\), et nous établissons que les seules valeurs acceptées par l'attribut utilisateur.photo sont celles correspondant aux photos de notre dossier d'images. De manière similaire, nous établissons que les seules valeurs acceptées pour \verb\carte.type_carte\ sont Visa, Mastercard, Visa Prepaid, et Maestro. De plus, une carte créée est par défaut considérée comme non supprimée, ainsi, carte.is\_deleted a une valeur par défaut de 0. 
+Nous avons également ajouté quelques contraintes liées à la notre application. Par exemple, nous donnons une valeur par défaut à l'url de la photo (\verb\utilisateur.photo\), et nous établissons que les seules valeurs acceptées par l'attribut \verb\utilisateur.photo\ sont celles correspondant aux photos de notre dossier d'images. De manière similaire, nous établissons que les seules valeurs acceptées pour \verb\carte.type_carte\ sont Visa, Mastercard, Visa Prepaid, et Maestro. De plus, une carte créée est par défaut considérée comme non supprimée, ainsi, \verb\carte.is_deleted\ a une valeur par défaut de 0. 
 
 Puisque l'utilisateur peut supprimer ses transactions, nous avons ajouté des \verb\ON DELETE CASCADE\ aux \verb\num_tf\ référencés dans les tables \verb\tf_cash\, \verb\tf_virement\, et \verb\tf_carte\, afin que la transaction soit supprimée des tables qui contiennent des informations sur son type.
 Un administrateur pourrait éventuellement vouloir supprimer totalement un utilisateur de la base de données, lui et toutes ses cartes, transactions, ou encore changer certaines informations liées à ce dernier, et que cela se répercute sur le reste de la base de données.
 Afin de gérer ces deux situations, nous avons ajouté des  \verb\ON DELETE CASCADE\ et des \verb\ON UPDATE CASCADE\ à chaque référence du NISS de l'utilisateur en tant que clé étrangère.
-
-\textbf{TERMINER CET AJOUT de delete et update cascade, j'ai l'impression qu'il en manque dans initdb.sql}
-
-\textbf{Autres infos à rajouter?}
 
 Après la création des tables que nous venons de présenter, \verb\initdb.sql\ peut être divisé en 3 grandes parties : la création des triggers/déclencheurs, la création des vues, et la gestion des privilèges.
 Toutes ces parties sont décrites dans les points suivants.
@@ -351,20 +340,21 @@ Vous trouverez dans les points suivants la description de divers éléments de S
 \subsubsection{Contraintes garanties par des check}
 
 Comme décrit précédemment, nous faisons appel à des \verb\CHECK\ afin de vérifier la validité de certaines valeurs d'attributs dans notre base de données.
-Il y a en tout 5 checks : \verb\chk_niss\, qui vérifie que le NISS enregistré fait bien la bonne longueur (exactement 11 chiffres) \verb\chk_photo\, qui vérifie que la valeur de la photo est bien une de celles que nous avons choisie, \verb\chk_numero_carte_low\ et \verb\chk_numero_carte_high\, qui vérifient que le numéro de carte entré correspond bien à la longueur demandée (entre 16 et 17 chiffres), et enfin, \verb\chk_type_carte\, qui vérifie que \verb\type_carte\ correspond bien aux différents types de cartes définis précédemment. 
+Il y a en tout 5 checks : \verb\chk_niss\, qui vérifie que le NISS enregistré fait bien la bonne longueur (exactement 11 chiffres) \verb\chk_photo\, qui vérifie que la valeur de la photo est bien une de celles que nous avons définies, \verb\chk_numero_carte_low\ et \verb\chk_numero_carte_high\, qui vérifient que le numéro de carte entré correspond bien à la longueur demandée (entre 16 et 17 chiffres), et enfin, \verb\chk_type_carte\, qui vérifie que \verb\type_carte\ correspond bien aux différents types de cartes définis précédemment. 
 
 \subsubsection{Requêtes de consultation}
 
-\textbf{?? qu'est ce qu'il faudrait mettre ici?}
+Nous faisons appel à de nombreuses requêtes de consultation plus ou moins complexes dans le cadre de notre système : nous faisons appel à des \verb\SELECT\ tout au long de l'application pour récupérer différentes informations (noms d'utilisateurs, cartes, historique...), mais également dans les vues que nous décrirons plus loin, afin de sélectionner les informations nécessaire à la création de ces dernières. 
 
 \subsubsection{Requêtes de mise à jour}
 
-\textbf{?? qu'est ce qu'il faudrait mettre ici?}
-
+Des requêtes \verb\UPDATE\ sont également utilisées : dans l'application, nous faisons appel à ces dernières pour mettre à jour le statut des cartes et changer la photo de profil de l'utilisateur.
+Du côté du système de gestion de base de données, les \verb\UPDATE\ sur d'autres données sont rendus possible grâce à l'ajout de \verb\ON UPDATE CASCADE\ sur différentes données. 
+Ainsi, il est possible pour l'administrateur de supprimer des utilisateur s'il le souhaite, ou encore d'en modifier des informations comme le NISS, et que ces valeurs se répercutent sur le reste de la base de données.
 
 \subsubsection{Vues utilisées}
 
-La base des données contient quatre vues qui sont utilisées dans la construction d'historiques et des statistiques dans l'application : 
+La base des données contient quatre vues qui sont utilisées dans la construction d'historiques et de statistiques dans l'application : 
 
 \begin{enumerate}
 \item historique\textunderscore v, qui liste chronologiquement les informations liés aux transactions effectuées par un utilisateur,
@@ -374,15 +364,17 @@ La base des données contient quatre vues qui sont utilisées dans la constructi
 \end{enumerate}
 
 Ces vues sont utiles à la gestion et à l’agrégation des données, et permettent notamment d'offrir à l'utilisateur de l'application différents graphiques et informations agrégées sur son budget.
+Leur création est appelée juste après la création des triggers dans \verb\initdb.sql\.
 
 Ci-dessous, vous trouverez une description détaillée de leur fonctionnement.
 
 \paragraph{Historique}\mbox{}\\
-La vue \verb\historique_v\ est notre vue principale, sur laquelle les autres vues sont générées.
+La vue \verb\historique_v\ est notre vue principale, sur base de laquelle les autres vues sont générées.
 Elle permet de rassembler toutes les informations pour une transaction donnée dans une seule table.
 Son résultat permet ainsi de consulter, pour chaque transaction : son identifiant, sa date, son montant, le NISS de l'utilisateur à laquelle elle est liée, l'identifiant de budget auquel elle est liée, sa catégorie, et éventuellement: le numéro et le nom de la carte utilisée, la destinataire/bénéficiaire et la communication.
-
-\textbf{ajouter une description de fonctionnement}
+Le type est défini en utilisant un \verb\CASE\ : si \verb\num_tf\ est dans la table \verb\transaction_financiere\ et dans la table \verb\tf_virement\, la colonne \verb\typetf\ est remplie pour ce \verb\num_tf\ par \og virement\fg, et ainsi de suite pour les autres types de transaction.
+Ensuite, des \verb\LEFT JOIN\ permettent de combiner les informations liées aux tables \verb\transaction_financiere\, \verb\tf_carte\, \verb\tf_cash\ et \verb\tf_virement\ sans perdre d'informations.
+Finalement, cette vue permet de compléter la table \verb\transaction_financières\ des données supplémentaires liées aux sous-tables de type, et ce pour chaque transaction effectuée.
 
 \paragraph{Statistiques mensuelles}\mbox{}\\
 La vue \verb\stat_depenses_revenus_mois\ a pour objectif de donner les informations suivantes par mois et par utilisateur : l'identifiant de budget, le mois, l'année, le bilan, le nombre de transactions effectuées, le total des dépenses et des revenus.
@@ -400,19 +392,20 @@ Ensuite, elle calcule deux sommes, en fonction de si le montant est positif ou n
 
 \subsubsection{Déclencheurs}
 
-Afin de conserver toutes les contraintes définies dans notre schéma, nous avons défini 7 déclencheurs : \verb\trg_before_ajout_tf\, \verb\trg_after_ajout_tf\, \verb\trg_after_suppr_tf\, \verb\trg_before_ajout_tf_carte\, \verb\trg_before_ajout_tf_carte\, \verb\trg_before_ajout_tf_cash\, et \verb\trg_before_ajout_tf_virement\. La création de ces déclencheurs suit directement la création des tables, et permet, entre autres, d'établir les contraintes les plus complexes (qui incluent plusieurs tables). Nous expliquons le fonctionnement de chacun des ces déclencheurs dans les points suivants.
+Afin de conserver toutes les contraintes définies dans notre schéma, nous avons défini 7 déclencheurs : \verb\trg_before_ajout_tf\, \verb\trg_after_ajout_tf\, \verb\trg_after_suppr_tf\, \verb\trg_before_ajout_tf_carte\, \verb\trg_before_ajout_tf_carte\, \verb\trg_before_ajout_tf_cash\, et \verb\trg_before_ajout_tf_virement\. La création de ces déclencheurs suit directement la création des tables, et permet, entre autres, d'établir les contraintes les plus complexes (qui incluent les informations de plusieurs tables). Nous expliquons le fonctionnement de chacun des ces déclencheurs dans les points suivants.
 
 \paragraph{Vérifier les informations avant l'ajout d'une transaction financière}\mbox{}\\
-Le déclencheur \verb\trg_before_ajout_tf\, qui se fait avant chaque insertion sur la table financière, permet de vérifier plusieurs informations.
+Le déclencheur \verb\trg_before_ajout_tf\, qui se fait avant chaque insertion sur la table \verb\transaction_financiere\, permet de vérifier plusieurs informations.
 Tout d'abord, une vérification sur la date est faite : si la date de transaction est antérieure à la date de naissance de l'utilisateur, un message d'erreur est renvoyé et la transaction de s'enregistre pas.
 Ensuite, l'objectif est de trouver le \verb\budget_id\ à lier à la transaction financière à créer.
-Pour ce faire, nous vérifions d'abord, via un \verb\SELECT\, s'il existe déjà un \verb\budget_mensuel\ correspondant à la combinaison de mois, d'année et de NISS.
+Pour ce faire, nous vérifions d'abord, via un \verb\SELECT\, qu'il existe déjà un \verb\budget_mensuel\ correspondant à la combinaison de mois, d'année et de NISS.
 Si ce n'est pas le cas (que le résultat \verb\COUNT(*)\ = 0), le \verb\budget_mensuel\ correspondant est créé.
 Ensuite, dans tous les cas, le \verb\budget_id\ du \verb\budget_mensuel\ correspondant est sélectionné, et défini comme à écrire dans l'insertion de la nouvelle \verb\transaction_financiere\.
+Ce trigger permet donc de conserver nos contraintes de dates, autant par rapport à la date de naissance de l'utilisateur, qu'au fait que la date d'une transaction correspond nécessairement au mois et à l'année d'un budget mensuel donné (ainsi qu'au NISS de l'utilisateur qui l'a créée).
 
 \paragraph{Écrire (et réécrire) le bilan du budget mensuel en cas d'insertion ou de suppression dans la table des transactions financières}\mbox{}\\
 Deux déclencheurs sont utilisés pour que \verb\budget_mensuel.bilan\ corresponde toujours à la bonne somme de transactions : \verb\trg_after_ajout_tf\ et \verb\trg_after_suppr_tf\.
-Dans les deux cas, après une insertion ou une suppression de la table \verb\transaction_financiere\, le résultat \verb\bilan_total_mois\ de la vue\verb\stat_depenses_revenus_mois\ correspondant au \verb\budget_id\ et au \verb\niss_utilisateur\ de l'insertion ou de la suppression est sélectionné, et permet de faire une modification de \verb\budget_mensuel.bilan\.
+Dans les deux cas, après une insertion ou une suppression de la table \verb\transaction_financiere\, le résultat \verb\bilan_total_mois\ de la vue \verb\stat_depenses_revenus_mois\ correspondant au \verb\budget_id\ et au \verb\niss_utilisateur\ de l'insertion ou de la suppression est sélectionné, et permet de faire une modification de \verb\budget_mensuel.bilan\.
 
 \paragraph{Vérifier que la carte utilisée lors de la transaction appartient bien à l'utilisateur}\mbox{}\\
 Lors de l'ajout d'une transaction dans la table \verb\tf_carte\, il est important, afin de respecter une des contraintes que nous avions définies, de vérifier que la carte qui est utilisée appartient bien à l'utilisateur qui a fait la transaction.
@@ -429,7 +422,7 @@ Enfin, le script \verb\initdb.sql\ définit également deux utilisateurs princip
 Nous y définissons deux utilisateurs : \verb\utilisateur_app\, qui est celui qui est appelé tout au long de l'application, et \verb\utilisateur_admin_db\, qui, comme son nom l'indique, est l'utilisateur-administrateur.
 Alors que ce dernier a un accès illimité à la base de données (défini grâce à \verb\GRANT ALL PRIVILEGES\), \verb\utilisateur_app\ ne peut faire que les actions définies par le script.
 
-Les actions définies sont les suivantes: 
+Les actions définies sont les suivantes, et correspondent aux actions rendues possibles par l'utilisation de l'application : 
 \begin{itemize}
 \item L'insertion, la modification et la sélection de lignes pour la table \verb\utilisateur\, ce qui lui permet de s'inscrire, de modifier ses informations, et de pouvoir avoir accès à la liste des utilisateurs (cf. écran de connexion) ainsi qu'à ses informations;
 \item le droit de sélection et d'insertion sur la table \verb\transaction_financiere\, ce qui lui permet de visualiser et d'insérer de nouvelles transactions financières;
@@ -437,12 +430,8 @@ Les actions définies sont les suivantes:
 \item le droit à la sélection, la modification et l'insertion pour la table carte, afin de pouvoir utiliser, supprimer/désactiver, et créer ses cartes;
 \item le droit de sélection sur la table \verb\categorie_tf\, afin de définir la catégorie d'une transaction, et pouvoir consulter la description d'une catégorie sélectionnée dans son tableau statistique;
 \item   le droit de sélection des différentes vues que nous avons créées (\verb\stat_depenses_revenus_mois\, \verb\historique_v\, \verb\stat_cat\ et \verb\stat_types\), afin d'avoir accès aux parties de l'application qui rassemblent des statistiques sur ses transactions;
-\item \textbf{Autres?}
 \end{itemize}
 
-\textbf{!! SUPPRIMER doublon GRANT INSERT on budgetsquirrel.utilisateur to app dans initdb.sql}
-
-\newpage
 
 \section{Description de l'application Web}
 
@@ -457,7 +446,7 @@ L'application contient 9 pages : \verb\index.html\, \verb\inscription.php\, \ver
 \noindent
 \makebox[\textwidth][c]{
 \includegraphics[scale=0.25]{index.png}}
-\caption{\footnotesize{Landing page pour Budget Squirrel}}
+\caption{\footnotesize{Landing page - Budget Squirrel}}
 \end{figure}
 
 S'il choisit de s'inscrire, il est redirigé vers un formulaire d'inscription, \verb\inscription.php\, où il doit rentrer son nom, son prénom, son NISS, et choisir une photo de profil.
@@ -487,19 +476,18 @@ Ensuite, le NISS de l'utilisateur est récupéré par une méthode POST, enregis
 Une fois qu'il a sélectionné son profil et choisi de se connecter, l'utilisateur est redirigé vers une page d'accueil, \verb\homepage.php\.
 La page d'accueil présente brièvement les différentes pages de l'application.
 Depuis la barre de navigation, visible sur toutes les pages (sauf celles ou l'utilisateur n'est pas considéré comme connecté), l'utilisateur a accès : à la page d'accueil, à l'historique, à la page d'enregistrement, à la page de statistiques, et à sa page personnelle de profil.
-Il peut ainsi naviguer librement entre les différentes pages.
+Il peut ainsi naviguer librement entre les différentes pages de l'application.
 
-\newpage
 \begin{figure}[!ht]
 \noindent
 \makebox[\textwidth][c]{
-\includegraphics[scale=0.90]{homepage.png}}
-\caption{\footnotesize{Page d'accueil Budget Squirrel}}
+\includegraphics[scale=0.8]{homepage.png}}
+\caption{\footnotesize{Page d'accueil - Budget Squirrel}}
 \end{figure}
 
 \newpage
 La page personnelle de profil, \verb\profil.php\, permet à l'utilisateur de visualiser ses informations : nom, prénom, NISS, date de naissance.
-Il peut également y ajouter et y supprimer ses cartes\footnote{Cette suppression est, comme nous l'avions expliqué, une suppression logique du côté de la base de données : les cartes possèdent une colonne is\_deleted , par défaut la valeur de la colonne est à 0, et si l'utilisateur \og supprime\fg sa carte, la valeur passe à 1, et la carte est considérée comme virtuellement supprimée}.
+Il peut également y ajouter et y supprimer ses cartes\footnote{Cette suppression est, comme nous l'avions expliqué, une suppression logique du côté de la base de données : les cartes possèdent une colonne is\_deleted\, par défaut la valeur de la colonne est à 0, et si l'utilisateur \og supprime\fg sa carte, la valeur passe à 1, et la carte est considérée comme virtuellement supprimée}.
 Les listes de ses cartes disponibles et de ses anciennes cartes sont également visibles depuis la page de profil.
 Il peut également y actualiser sa photo de profil.
 
@@ -507,7 +495,7 @@ Il peut également y actualiser sa photo de profil.
 \noindent
 \makebox[\textwidth][c]{
 \includegraphics[scale=0.25]{profil.png}}
-\caption{\footnotesize{Page personnelle Budget Squirrel}}
+\caption{\footnotesize{Page personnelle - Budget Squirrel}}
 \end{figure}
 
 La page d'enregistrement, \verb\enregistrement.php\, permet d'enregistrer des transactions.
@@ -522,7 +510,7 @@ Cet aspect est géré uniquement en PHP, et demande donc de faire deux opératio
 \noindent
 \makebox[\textwidth][c]{
 \includegraphics[scale=0.25]{enregistrement.png}}
-\caption{\footnotesize{Enregistrement des transactions en Budget Squirrel}}
+\caption{\footnotesize{Enregistrement des transactions - Budget Squirrel}}
 \end{figure}
 
 La page historique, \verb\historique.php\, permet à l'utilisateur de visualiser les transactions effectuées : pour cela, il doit d'abord sélectionner le mois et l'année dont il veut consulter le budget.
@@ -533,7 +521,7 @@ En dessous de la table, l'utilisateur peut également voir le bilan total du moi
 \noindent
 \makebox[\textwidth][c]{
 \includegraphics[scale=0.25]{historique.png}}
-\caption{\footnotesize{Historique des transactions en Budget Squirrel}}
+\caption{\footnotesize{Historique des transactions - Budget Squirrel}}
 \end{figure}
 
 L'écran de statistiques, \verb\stat.php\, offre différentes informations sur les données concernant l'utilisateur.
@@ -542,16 +530,16 @@ Un tableau montrant la répartition des transactions (dépenses et revenus) par 
 Un autre tableau montrant la répartition totale par catégorie, couplé à une description de chaque catégorie, est aussi accompagné de son graphique, cette fois-ci un diagramme circulaire. 
 Enfin, la répartition des transactions entre les différents types de payements (le nombre d'utilisations, le bilan des dépenses et le bilan des revenus pour chaque type de transaction) est affiché.
 
-À tout moment, l'utilisateur peut également se déconnecter, en cliquant, en haut à droite de la barre de navigation, sur \og déconnexion\fg .
-Il est alors redirigé vers \verb\logout.php\.
-Les informations de session (donc, le NISS sous lequel l'utilisateur est connecté) sont effacées, et l'utilisateur peut choisir de retourner à l'écran d'accueil pour se reconnecter ou s'inscrire.
-
 \begin{figure}[!ht]
 \noindent
 \makebox[\textwidth][c]{
-\includegraphics[scale=0.7]{stat.png}}
-\caption{\footnotesize{Statistiques Budget Squirrel}}
+\includegraphics[scale=0.55]{stat.png}}
+\caption{\footnotesize{Statistiques - Budget Squirrel}}
 \end{figure}
+
+À tout moment, l'utilisateur peut également se déconnecter, en cliquant, en haut à droite de la barre de navigation, sur \og déconnexion\fg .
+Il est alors redirigé vers \verb\logout.php\.
+Les informations de session (donc, le NISS sous lequel l'utilisateur est connecté) sont effacées, et l'utilisateur peut choisir de retourner à l'écran d'accueil pour se reconnecter ou s'inscrire.
 
 \newpage
 
@@ -559,7 +547,7 @@ Les informations de session (donc, le NISS sous lequel l'utilisateur est connect
 
 Budget Squirrel est une application constituée d'une base des données et d'une interface client.
 Le design, le développement et l'administration d'une telle application nécessitent donc une chorégraphie particulière, reposant sur des livrables qui doivent être prêts à l'emploi dans une certaine séquence, et qui se trouvent la plupart de temps dans une symbiose étroite.
-De plus, certaines exigences du projet, établies ou agréées dès le départ, et révisées pendant les séances de guidance au projet, ainsi que certaines contraintes liées à d'autres engagements impératifs pour les développeurs se sont vite imposées comme des conditions demandant une coordination ainsi qu'une communication ouverte et souple au sein du groupe.
+De plus, certaines exigences du projet, établies ou agréées dès le départ, et révisées pendant les séances de guidance au projet, ainsi que certaines contraintes liées à d'autres engagements impératifs se sont vite imposées comme des conditions demandant une coordination ainsi qu'une communication ouverte et souple au sein du groupe.
 Notre groupe s'est mis rapidement d'accord sur une division des tâches qui prend en compte les contraintes relatives aux disponibilités de chacune d'entre nous, ainsi qu'aux préférences des techniques et outils des développement, toute en gardant en vue l'impératif d'avoir touché au moins une fois à chaque écran et surtout d'avoir participé en tandem le plus que possible dans les parties couvrant la matière vue au cours.
 Le développement de toutes les parties, de la conception de la base de donnée et des pages de l'application, en passant par le développement PHP, l'écriture de la base de donnée et des scripts SQL, jusqu'à l'écriture de ce rapport, s'est déroulé de manière organique, grâce à l'utilisation d'un repository github et d'un Google Drive commun, et de communications écrites et orales quasi-journalières permettant de faire le point sur notre avancement, nos difficultés, ainsi que l'état du projet.
 
@@ -578,21 +566,20 @@ Une fois le choix de projet validé, nous avons commencé le travail de conceptu
 Pour nous aider dans la démarche EA, nous avons employé l'application web draw.io\footnote{\url{https://app.diagrams.net/}}.
 En ce qui concerne l'interface client, l'outil Figma\footnote{\url{https://www.figma.com/}} à été employé dans la construction des maquettes.
 Le résultat de ce travail s'est matérialisé dans un rapport préliminaire, présenté pour évaluation et validation le 31 octobre.
-C'est en suivant ce rapport préliminaire  que nous avons par la suite développé les éléments décrits dans les sections 2 et 3 du présent rapport.
+C'est en suivant ce rapport préliminaire que nous avons par la suite développé les éléments décrits dans les sections 2 et 3 du présent rapport.
  
 \subsection{Design et techniques de travail }
 
 La partie design à été facilitée par l'emploi d'une structure CSS ouverte\footnote{le boilerplate CSS Skeleton, \url{http://getskeleton.com/}}, que nous avons taillée aux besoins de notre application et combinée à une structure HTML.
-Ensemble, les parties HTML et CSS du projet reprenaient (et amélioraient) notre premier design réalisé sur Figma.
+Ensemble, les parties HTML et CSS du projet reprenaient (et amélioraient) notre premier design réalisé sur Figma, et posaient les bases de notre structure à compléter en y introduisant des éléments de PHP.
 La section 5 du rapport témoigne des choix qui ont été gardés et implémentés au niveau de design d'application.
 
-\textbf{Tu avais parlé de structure HTML ouverte, mais j'ai corrigé en parlant de CSS, corrige moi si je me trompe though}
-
 L'étape de conception d'une application fonctionnelle a introduit une première couche de complexité en ce qui concerne l'imbrication des langages utilisés, en ajoutant PHP et HTML aux requêtes SQL.
-Le PHP étant un langage très flexible, il nous a été relativement facile de créer de nombreuses contraintes côté client, et de combiner différentes requêtes SQL pour que l'application réponde exactement comme il faut à tout input de l'utilisateur. 
+Le PHP étant un langage très flexible, il nous a été relativement facile de créer de nombreuses contraintes côté client, et de combiner différentes requêtes SQL pour que l'application réponde exactement comme il faut à tout input de l'utilisateur, écrivant (et restreignant) les informations entrées du côté de l'application vers la base de données. 
 Par contre, un des défis que nous avons rencontré durant le développement de ce projet a été l'écriture de données en utilisant du SQL pur, sans l'aide de l'application.
 Certains éléments, facilement mis en place en PHP, étaient difficiles à traduire en SQL.
-Ainsi, aux alentours de la moitié du développement, nous avons revu et restreint notre script de création de base de données, afin que, comme l'application, il réponde exactement comme demandé par les contraintes établies dans les sections 2 et 3.
+Ainsi, aux alentours de la moitié du développement, nous avons révisé notre script de création de base de données, afin que, comme l'application, il réponde exactement comme demandé par les contraintes établies dans les sections 2 et 3 : c'est ce qui a permis la création de la plupart de nos déclencheurs.
+Finalement, l'application n'en est que plus solide, car les vérifications se font à deux niveaux lors de l'écriture de données via l'application : une fois du côté client, et une seconde fois du côté de la base de données.
 
 Une deuxième couche de complexité à été rajoutée par l'introduction des éléments JavaScript de visualisation dynamique des données (toggle screen, et graphes dynamiques) et des éléments en SQL d'agrégation des données (vues statistiques).
 De manière générale, une des parties la plus difficile à été d'orchestrer, d'une façon robuste et cohérente, la partie d'insertions, mises à jour, et suppressions, afin d'éviter la perte des données, ou bien le double encodage.
@@ -600,24 +587,24 @@ Faire le choix entre l'ajout des contraintes au niveau de client, ou bien au niv
 Pour parer ces difficultés nous avons employé la technique de programmation en binôme (asynchrone, en utilisant GitHub pour partager les mises à jours au niveau du code, et Teams pour faciliter la communication).
 La taille restreinte du groupe à particulièrement facilité ce méthode de travail, et nous à permis une prise de décision rapide.
 
-\subsection{Quelques scénarios de test }
-
-\textbf{Nécessaire, si l'on donne déjà les cas d'utilisation du système ?}
-
 \newpage
 \section{Conclusion}
 
-\subsection{Défis et solutions}
-\subsection{Limites et possibilités de développement}
-\textbf{Les points forts et faiblesses d’application, le temps nécessaire pour développer le concept avec deux personnes, les sources consultées pour la partie pratique (i.e. les slides, ou techniques vues au TP, ainsi que les conseils d’assistante, mais aussi w3schools ou bien stackoverflow).}
-\textbf{Finalement quelques mots sur l'expérience du projet.
-}
-\textbf{Améliorations : 
-- vérification du niss par rapport à la date de naissance de l'utilisateur - finalement, le bilan dans la table budget mensuel n'est pas obligatoire, pour éviter des informations redondantes - choix de la matérialisation pour la traduction de l'héritage : remise en question - ajout d'un enregistrement de connexions pour chaque utilisateur ainsi qu'un système de log in et mot de passe - l'ajout d'une interface admin du côté de l'application}
+Le principal défi de ce projet a finalement été d'assurer une cohérence entre la partie SQL et l'application PHP.
+Le temps a également été un facteur qui a restreint notre développement, et nous avons parfois dû choisir d'aller au plus simple en ce qui concerne certains éléments du système développé.
+Toutefois, grâce à ce projet, nous avons pu explorer concrètement différents aspects théoriques vus aux cours de base de données de master 1 et master 2, ce qui a été une expérience très enrichissante, et de construire une application PHP relativement complète, couplée à une base de données possédant quelques éléments "automatiques" (par exemple, la création automatisée de budgets mensuels). Nous pensons ainsi avoir acquis une meilleure compréhension de divers éléments de SQL, ainsi que développé des connaissances de base en PHP.
+¨
+La présence de nombreuses ressources disponibles sur le web a été un avantage, mais aussi un inconvénient : pour les parties où nous avions le moins de connaissance, comme l'application concrète de déclencheurs, il nous a parfois été difficile de faire la part des choses à travers les nombreux conseils disponibles sur StackOverflow et d'autres ressources du même type.
+La documentation officielle de PHP étant toutefois parfois assez obscure, StackOverflow a également été une ressource précieuse sans laquelle il nous aurait été plus difficile de développer certains éléments (de PHP, mais aussi de JavaScript).
 
-
-
-\newpage
+Le système que nous rendons en l'état est bien sûr encore perfectible. Nous pensons notamment qu'il serait intéressant d'y apporter les améliorations suivantes, afin de le rendre plus robuste : 
+\begin{itemize}
+\item La vérification du NISS par rapport à la date de naissance de l'utilisateur, vu que les premiers chiffres du NISS correspondent à la date de naissance;
+\item L'ajout d'une connexion par mot de passe pour l'utilisateur de l'application;
+\item L'ajout d'une interface administrateur dans l'application;
+\item La suppression du bilan dans la table budget mensuel : avec nos connaissances de départ, nous n'avions pas pu prévoir tout ce que permettaient les vues. Après le développement du système, nous nous rendons compte que finalement, \verb\budget_mensuel.bilan\ n'est pas réellement nécessaire;
+\item Enfin, le choix de la matérialisation pour la traduction de l'héritage peut également être remise en question. Peut-être que conserver simplement la super-entité, ou encore seulement les sous-entités, aurait été plus adéquat dans notre système? Toutefois, ce choix nous a permis de comprendre concrètement l'impact des choix de traduction et de conceptualisation sur un système de base de données.
+\end{itemize}
 
 %voir si bibliographie nécessaire
 %\chapter*{Bibliographie} 
