@@ -70,8 +70,8 @@
                         $query = $bdd->prepare("INSERT INTO budgetsquirrel.transaction_financiere (montant, date_tf, niss_util, cat_tf) 
                         VALUES (?,?,?,?)");
                         $query->execute(array($montant, $date_tf, $niss, $cat_tf));
-                        // echo "\nPDO::errorCode(): ", $query->errorCode(); <-- pour retrouver le code erreur
-                        if ($query->errorCode() == 22007) {  // 22007 est le numéro qui correspond au contrainte sur la date_naissance dans la création des transactions financieres
+                        // echo "\nPDO::errorCode(): ", $query->errorCode();// <-- pour retrouver le code erreur
+                        if ($query->errorCode() == 45000) {  // 45000 est le numéro qui correspond au contrainte sur la date_naissance dans la création des transactions financieres
                             echo "\n Erreur ", $query->errorCode(), ": La date de création de la transaction que vous essayez d'enregistrer ne peut pas être inférieure à votre date de naissance. </br>";
                         } else {
                             
@@ -123,7 +123,7 @@
                             $query = $bdd->prepare("INSERT INTO budgetsquirrel.transaction_financiere (montant, date_tf, niss_util, cat_tf) 
                             VALUES (?,?,?,?)");
                             $query->execute(array($montant, $date_tf, $niss, $cat_tf));
-                            if ($query->errorCode() == 22007) {  // 22007 est le numéro qui correspond au contrainte sur la date_naissance dans la création des transactions financieres
+                            if ($query->errorCode() == 45000) {  // 45000 est le numéro qui correspond au contrainte sur la date_naissance dans la création des transactions financieres
                                 echo "\n Erreur ", $query->errorCode(), ": La date de création de la transaction que vous essayez d'enregistrer ne peut pas être inférieure à votre date de naissance. </br>";
                             } else {
                                 

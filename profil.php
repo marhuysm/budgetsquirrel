@@ -42,6 +42,9 @@
                 $query = $bdd->prepare("INSERT INTO budgetsquirrel.carte (nom_carte, numero_carte, type_carte, niss_util) 
                 VALUES (?,?,?,?)");
                 $query->execute(array($nom_carte, $numero_carte, $type_carte, $niss_util));
+                if ($query->errorCode() == 23000) {  // 23000 est le numéro qui correspond au contrainte sur la carte en double emploi
+                    echo "\n Erreur ", $query->errorCode(), ": Cette carte est déjà utilisée. Merci d'enregistrer une autre carte. </br>";
+                }
             }
             else if ($fetchedDonnees == 1){
                 ;
