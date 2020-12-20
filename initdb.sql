@@ -172,9 +172,9 @@ DELIMITER ;
 -- le niss_util.numero carte utilisé appartient toujours à l'utilisateur qui crée la transaction > Trigger 
 
 DELIMITER //
-DROP TRIGGER IF EXISTS trg_before_ajout_tf_carte//
+DROP TRIGGER IF EXISTS trg_before_ajout_tf_carte_niss//
 
-CREATE TRIGGER trg_before_ajout_tf_carte BEFORE INSERT
+CREATE TRIGGER trg_before_ajout_tf_carte_niss BEFORE INSERT
 ON tf_carte 
 FOR EACH ROW
 
